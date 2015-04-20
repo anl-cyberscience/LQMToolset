@@ -1,0 +1,9 @@
+<project name="ToCSV" default="deploy" basedir=".">
+	<target name="deploy" depends="">
+		<copy todir="${deploy.dir}/to_csv">
+			<fileset dir="to_csv">
+				<include name="**/*.py"/>
+			</fileset>
+		</copy>
+	</target>
+</project>

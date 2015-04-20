@@ -1,0 +1,9 @@
+<project name="LQMToolsToCEF" default="deploy" basedir=".">
+	<target name="deploy" depends="">
+		<copy todir="${deploy.dir}/to_cef">
+			<fileset dir="to_cef">
+				<include name="**/*.py"/>
+			</fileset>
+		</copy>
+	</target>
+</project>

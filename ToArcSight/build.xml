@@ -1,0 +1,9 @@
+<project name="LQMToolsToArcSight" default="deploy" basedir=".">
+	<target name="deploy" depends="">
+		<copy todir="${deploy.dir}/to_arcsight">
+			<fileset dir="to_arcsight">
+				<include name="**/*.py"/>
+			</fileset>
+		</copy>
+	</target>
+</project>

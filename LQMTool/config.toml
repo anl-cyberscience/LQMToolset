@@ -1,0 +1,61 @@
+
+#parsers
+[parsers]
+  path = "lqm"
+  additional_paths = [ "ft" ]
+
+[parsers.cfm13]
+  module = "parsers.FlexTransform"
+  parser_class = "FlexTransformParser"
+  format = "Cfm13Alert"
+
+[parsers.cfm13.configs]
+  Cfm13Alert = "resources/sampleConfigurations/cfm13.cfg"
+  LQMTools = "resources/sampleConfigurations/lqmtools.cfg"
+
+[parsers.cfm20]
+  module = "parsers.FlexTransform"
+  parser_class = "FlexTransformParser"
+  format = "Cfm20Alert"
+  
+[parsers.cfm20.configs]
+  Cfm20Alert = "resources/sampleConfigurations/cfm20alert.cfg"
+  LQMTools = "resources/sampleConfigurations/lqmtools.cfg"
+
+
+#global tool config
+[tools]
+  path = "tools"
+
+[tools.PaloAlto]
+  module = "to_paloalto"
+  tool_class = "ToPaloAlto"  
+  config_class = "PaloAltoConfig"
+  additional_paths = [ "tpl" ]
+
+[tools.Checkpoint]
+  module = "to_checkpoint"
+  tool_class = "ToCheckpoint"
+  config_class = "CheckpointConfig"
+
+[tools.CEF]
+  module = "to_cef"
+  tool_class = "ToCEF"
+  config_class = "CEFConfig"
+
+[tools.ArcSight]
+  module = "to_arcsight"
+  tool_class = "ToArcSight"
+  config_class = "ArcSightConfig"
+
+[tools.CSV]
+  module = "to_csv"
+  tool_class = "ToCSV"
+  config_class = "CSVConfig"
+
+[UnprocessedCSV]
+  name="for-unprocessed"
+  fields = [ "dataItemID","fileID","detectedTime","reportedTime","processedTime","indicator","indicatorType","indicatorDirection","secondaryIndicator",
+             "secondaryIndicatorType","secondaryIndicatorDirection","directSource","secondarySource","action1","duration1","action2","duration2","reason1","reference1","reason2",
+             "reference2","majorTags","minorTags","restriction","sensitivity","reconAllowed","priors","confidence","severity","relevancy","relatedID","relationType","comment","fileHasMore" ]
+

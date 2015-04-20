@@ -1,0 +1,59 @@
+<project name="toStar" default="deploy" basedir=".">
+	<target name="init-deploy-dir">
+		<tstamp/> <!-- tstamp task creates variable DSTAMP -->
+		<property name="deploy.dir" location="../../../LQMTools/${DSTAMP}/LQMTool" />
+		<property name="tool.dir" location="${deploy.dir}/tools" />
+		<property name="tpl.dir" location="${deploy.dir}/tpl" />
+		<mkdir dir="${deploy.dir}" />
+	</target>
+	<target name="deploy" depends="init-deploy-dir,parsers,tools,whitelist">
+		<copy todir="${deploy.dir}">
+			<fileset dir=".">
+				<include name="*.py"/>
+				<include name="*.toml"/>
+				<include name="lqm/*.py"/>
+			</fileset>
+		</copy>
+  		<ant dir="../TOML-uiri" target="deploy" >
+  			<property name="deploy.dir" location="${tpl.dir}" />
+  		</ant>
+	</target>
+	<target name="whitelist">
+  		<ant dir="../IndicatorWhitelist" target="deploy" >
+  			<property name="deploy.dir" location="${deploy.dir}" />
+  			<property name="tpl.dir" location="${tpl.dir}" />
+  		</ant>
+	</target>
+	<target name="parsers">
+  		<ant dir="../Parsers" target="deploy" >
+  			<property name="deploy.dir" location="${deploy.dir}" />
+  			<property name="tpl.dir" location="${tpl.dir}" />
+  		</ant>
+  		<ant dir="../FlexTransform" target="deploy" >
+  			<property name="deploy.dir" location="${deploy.dir}" />
+  			<property name="tpl.dir" location="${tpl.dir}" />
+  		</ant>
+	</target>
+	<target name="tools">
+  		<ant dir="../toArcSight" target="deploy" >
+  			<property name="deploy.dir" location="${tool.dir}" />
+  			<property name="tpl.dir" location="${tpl.dir}" />
+  		</ant>
+  		<ant dir="../toCEF" target="deploy" >
+  			<property name="deploy.dir" location="${tool.dir}" />
+  			<property name="tpl.dir" location="${tpl.dir}" />
+  		</ant>
+  		<ant dir="../toCheckpoint" target="deploy" >
+  			<property name="deploy.dir" location="${tool.dir}" />
+  			<property name="tpl.dir" location="${tpl.dir}" />
+  		</ant>
+  		<ant dir="../toPaloAlto" target="deploy" >
+  			<property name="deploy.dir" location="${tool.dir}" />
+  			<property name="tpl.dir" location="${tpl.dir}" />
+  		</ant>
+  		<ant dir="../toCSV" target="deploy" >
+  			<property name="deploy.dir" location="${tool.dir}" />
+  			<property name="tpl.dir" location="${tpl.dir}" />
+  		</ant>
+	</target>
+</project>

@@ -1,0 +1,9 @@
+<project name="LQMToolsToCheckpoint" default="deploy" basedir=".">
+	<target name="deploy" depends="">
+		<copy todir="${deploy.dir}/to_checkpoint">
+			<fileset dir="to_checkpoint">
+				<include name="**/*.py"/>
+			</fileset>
+		</copy>
+	</target>
+</project>

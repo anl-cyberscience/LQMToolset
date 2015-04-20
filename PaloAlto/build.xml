@@ -1,0 +1,9 @@
+<project name="LQMToolsPaloAlto" default="deploy" basedir=".">
+	<target name="deploy" depends="">
+		<copy todir="${deploy.dir}/pan">
+			<fileset dir="pan/lib/pan">
+				<include name="**/*.py"/>
+			</fileset>
+		</copy>
+	</target>
+</project>

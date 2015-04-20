@@ -1,0 +1,3 @@
+[Whitelist]
+  whitelist = "testdata/whitelist.txt"
+  dbfile = "testdata/whitelist.db"

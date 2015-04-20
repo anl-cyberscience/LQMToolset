@@ -1,0 +1,9 @@
+<project name="LQMTWhitelist" default="deploy" basedir=".">
+	<target name="deploy" depends="">
+		<copy todir="${deploy.dir}/whitelist">
+			<fileset dir="whitelist">
+				<include name="**/*.py"/>
+			</fileset>
+		</copy>
+	</target>
+</project>
