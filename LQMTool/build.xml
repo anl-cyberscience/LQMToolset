@@ -1,4 +1,4 @@
-<project name="toStar" default="deploy" basedir=".">
+<project name="LQMToolset" default="deploy" basedir=".">
 	<target name="init-deploy-dir">
 		<tstamp/> <!-- tstamp task creates variable DSTAMP -->
 		<property name="deploy.dir" location="../../../LQMTools/${DSTAMP}/LQMTool" />
