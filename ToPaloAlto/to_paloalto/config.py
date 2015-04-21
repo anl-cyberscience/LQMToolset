@@ -6,6 +6,7 @@ import os.path
 import sqlite3
 from lxml import objectify
 import ssl
+import sys
 
 class PaloAltoConfig(ToolConfig):
 
@@ -22,9 +23,15 @@ class PaloAltoConfig(ToolConfig):
             self._userName=config['api_username']
         else:
             self._userName=None
+        cur_version = sys.version_info
         if('cafile' in config):
+            if(cur_version < (3,4)):
+                self._logger.info("cafile specified, but not needed due to python version")
             self._cafile=config['cafile']
         else:
+            if(cur_version >= (3,4)):
+                self._logger.error("cafile must be specified in the configuration")
+                hasError=True
             self._cafile=None
         if('api_password' in config):
             self._password=config['api_password']
@@ -81,8 +88,10 @@ class PaloAltoConfig(ToolConfig):
             self.disable()
             raise ConfigurationError()
         ctx=None
-        #Currently not supporting 3.4
-        #ctx=ssl.create_default_context(cafile=self._cafile)
+        cur_version = sys.version_info
+        if(cur_version >= (3,4)):
+            # required by pan api if python 3.4 is used
+            ctx=ssl.create_default_context(cafile=self._cafile)
         self._xapi=pan.xapi.PanXapi(api_username=self._userName, api_password=self._password, api_key=self._apiKey, hostname=self._hostname, ssl_context=ctx)
         self._ipsPerBL=self._getIPsPerBL()
         self._ensureDBExists()
