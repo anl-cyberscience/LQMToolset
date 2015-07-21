@@ -18,9 +18,6 @@
 				<include name="lqm/*.py"/>
 			</fileset>
 		</copy>
-  		<ant dir="../TOML-uiri" target="deploy" >
-  			<property name="deploy.dir" location="${tpl.dir}" />
-  		</ant>
 	</target>
 	<target name="whitelist">
   		<ant dir="../IndicatorWhitelist" target="deploy" >

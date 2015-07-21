@@ -5,9 +5,5 @@
 				<include name="**/*.py"/>
 			</fileset>
 		</copy>
-  		<ant dir="../PaloAlto" target="deploy" >
-  			<property name="deploy.dir" location="${tpl.dir}" />
-  		</ant>
-
 	</target>
 </project>

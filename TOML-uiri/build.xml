@@ -1,9 +1,0 @@
-<project name="LQMToolsTOML" default="deploy" basedir=".">
-	<target name="deploy" depends="">
-		<copy todir="${deploy.dir}/toml">
-			<fileset dir="toml">
-				<include name="**/*.py"/>
-			</fileset>
-		</copy>
-	</target>
-</project>
