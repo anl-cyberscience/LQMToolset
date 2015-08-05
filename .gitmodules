@@ -1,9 +1,3 @@
 [submodule "FlexTransform/FlexTransform"]
 	path = FlexTransform/FlexTransform
-	url = https://github.com/anl-cyberscience/Flexible-Transform.git
-[submodule "PaloAlto/pan"]
-	path = PaloAlto/pan
-	url = https://github.com/kevinsteves/pan-python.git
-[submodule "TOML-uiri/toml"]
-	path = TOML-uiri/toml
-	url = https://github.com/uiri/toml.git
+	url = https://github.com/anl-cyberscience/FlexTransform.git
