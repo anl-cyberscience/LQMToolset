@@ -6,16 +6,19 @@
 		<property name="tpl.dir" location="${deploy.dir}/tpl" />
 		<mkdir dir="${deploy.dir}" />
 	</target>
-	<target name="create-tgz">
+	<target name="create-tgz" depends="init-deploy-dir,deploy">
 		<tar destfile="${deploy.dir}/../LQMTools.tgz" compression="gzip" basedir="${deploy.dir}">
 		</tar>
 	</target>
-	<target name="deploy" depends="init-deploy-dir,parsers,tools,whitelist,create-tgz">
+	<target name="deploy" depends="init-deploy-dir,parsers,tools,whitelist">
 		<copy todir="${deploy.dir}">
 			<fileset dir=".">
 				<include name="*.py"/>
 				<include name="*.toml"/>
 				<include name="lqm/*.py"/>
+			</fileset>
+			<fileset dir="..">
+				<include name="LQMT*.pdf"/>
 			</fileset>
 		</copy>
 	</target>
