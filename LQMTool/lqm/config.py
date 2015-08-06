@@ -74,6 +74,7 @@ class LQMToolConfig():
             parserinfo = parsers[key]
             if(path != None):
                 sys.path.append(path)
+            importlib.import_module(parserinfo['module'])
             mod=importlib.import_module(parserinfo['module']+".parser")
             parserClass=getattr(mod, parserinfo['parser_class'])
             parserConfig=None

@@ -15,7 +15,7 @@ class FlexTransformParser(object):
         self._logger = logging.getLogger("LQMT.Parsers")
         # get the FlexTransform directory
         currentdir,name = os.path.split(inspect.getfile(FlexTransform))
-        self._transform=FlexTransform()
+        self._transform=FlexTransform.FlexTransform()
         #configItems contains a list of key,value pairs key=Parser/Format name, value=FX config file
         for p,c in config.items():
             f=open(os.path.join(currentdir,c), 'r')
