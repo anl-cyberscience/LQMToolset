@@ -1,7 +1,7 @@
 <project name="LQMToolsFlexTransform" default="deploy" basedir=".">
 	<target name="deploy" depends="">
 		<copy todir="${deploy.dir}/ft">
-			<fileset dir="FlexTransform/FlexTransform">
+			<fileset dir="FlexTransform">
 				<include name="**/*.py"/>
 				<include name="**/*.json"/>
 				<include name="**/*.xsd"/>
