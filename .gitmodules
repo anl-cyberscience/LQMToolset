@@ -1,6 +1,3 @@
-[submodule "FlexTransform/FlexTransform"]
-	path = FlexTransform/FlexTransform
-	url = https://github.com/anl-cyberscience/FlexTransform.git
 [submodule "ft"]
 	path = ft
 	url = https://github.com/anl-cyberscience/FlexTransform
