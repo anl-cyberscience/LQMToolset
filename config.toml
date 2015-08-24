@@ -48,6 +48,11 @@
   tool_class = "ToArcSight"
   config_class = "ArcSightConfig"
 
+#[tools.SysLog]
+#  module = "to_syslog"
+#  tool_class = "ToSysLog"
+#  config_class="SysLogConfig"
+
 [tools.CSV]
   module = "to_csv"
   tool_class = "ToCSV"

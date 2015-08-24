@@ -1,9 +1,0 @@
-<project name="LQMToolsParsers" default="deploy" basedir=".">
-	<target name="deploy" depends="">
-		<copy todir="${deploy.dir}/lqm/parsers">
-			<fileset dir="parsers">
-				<include name="**/*.py"/>
-			</fileset>
-		</copy>
-	</target>
-</project>

@@ -1,3 +1,7 @@
 *.pyc
 .DS_Store
-.panrc
+*.panrc
+*.debug.log
+*.err.log
+*.ft.log
+*.info.log
