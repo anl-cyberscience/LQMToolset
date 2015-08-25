@@ -5,3 +5,12 @@
 *.err.log
 *.ft.log
 *.info.log
+
+# virtualenv stuff
+bin/
+include/
+lib/
+pip-selfcheck.json
+
+# vim stuff
+*.swp
