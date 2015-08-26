@@ -5,3 +5,5 @@
 *.err.log
 *.ft.log
 *.info.log
+.idea
+*.db
