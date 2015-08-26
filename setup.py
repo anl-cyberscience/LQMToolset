@@ -37,7 +37,16 @@ setup(
     ],
     keywords='firewall endpoint last quarter mile toolset cisco palo alto',
     packages=find_packages(exclude=['contrib', 'doc', 'tests*']),
-    install_requires=['toml'],
+    install_requires=[
+        'python-dateutil',
+        'lxml',
+        'pytz',
+        'dumper',
+        'rdflib',
+        'netaddr',
+        'pan-python',
+        'toml'
+    ],
     scripts=['LQMTool.py'],
     package_data={
         'doc': ['LQMToolset_Getting_Started.pdf'],
