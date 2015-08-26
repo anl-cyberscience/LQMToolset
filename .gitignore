@@ -14,3 +14,8 @@ pip-selfcheck.json
 
 # vim stuff
 *.swp
+
+# setuptools
+build/
+dist/
+*.egg-info/
