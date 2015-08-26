@@ -10,7 +10,7 @@ class SysLogConfig(ToolConfig):
         *host - address of remote syslog address
         port - port that remote syslog server is listening on(defaults to 514)
         *protocol - protocol you want to communicate with(tcp/udp)
-        *messageHead - Define what you want to have at the begining of every message for
+        *messageHead - Define what you want to have at the begining of every message sent to syslog
         *messageFields - specify what fields you want extracted from the alerts and included in the messages
             note: Selected fields will be appended to end of message as so:
             ex: *messageHead* indicatorType="IPV4" indicator="192.168.1.1"
