@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-if __name__ == '__main__':
+def main():
     import sys
-    
+
     #need to put this check early so any imports farther down don't trigger an exception
     req_version=(3,2)
     cur_version = sys.version_info
@@ -14,7 +14,7 @@ if __name__ == '__main__':
     from lqm.controller import LQMToolController
     import argparse
     from lqm.logging import LQMLogging
-    
+
     parser = argparse.ArgumentParser()
     parser.add_argument('user_config_file',help='The user configuration file')
     args=parser.parse_args()
@@ -38,3 +38,6 @@ if __name__ == '__main__':
             logger.exception("An error occurred during processing:")
         logger.error(str(e))
     logging.getLogger("LQMT").info("LQMTool done")
+
+if __name__ == '__main__':
+    main()

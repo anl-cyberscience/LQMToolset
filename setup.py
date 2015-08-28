@@ -48,6 +48,11 @@ setup(
         'toml'
     ],
     scripts=['LQMTool.py'],
+    entry_points={
+        'console_scripts': [
+            'lqmt = LQMTool:main'
+        ]
+    },
     package_data={
         'doc': ['LQMToolset_Getting_Started.pdf'],
     },
