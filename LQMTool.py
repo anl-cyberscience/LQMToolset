@@ -11,9 +11,9 @@ def main():
         sys.exit(1)
 
     import logging
-    from lqm.controller import LQMToolController
+    from lqmt.lqm.controller import LQMToolController
     import argparse
-    from lqm.logging import LQMLogging
+    from lqmt.lqm.logging import LQMLogging
 
     parser = argparse.ArgumentParser()
     parser.add_argument('user_config_file',help='The user configuration file')

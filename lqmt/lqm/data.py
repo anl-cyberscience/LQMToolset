@@ -1,15 +1,15 @@
-from whitelist.master import IndicatorTypes
+from lqmt.whitelist.master import IndicatorTypes
 
 class AlertAction(object):
     """Enum of all possible actions"""
     enums = ["All", "Block", "Notify", "Watch", "SendReport", "Revoke", "OtherAction"]
-    
+
     @staticmethod
     def get(action):
         if(action in AlertAction.enums):
             return action
         raise Exception("Invalid action specified: {0}".format(action))
-    
+
 class AlertFields(object):
     """Class to aid in properly formatting fields as strings and checking for existence of alert fields"""
     def __init__(self):
@@ -50,7 +50,7 @@ class Alert(object):
     @staticmethod
     def isValidField(field):
         return Alert._alertFields.isValid(field)
-        
+
     def __init__(self):
         self._dataItemID = None
         self._fileID = None
@@ -86,7 +86,7 @@ class Alert(object):
         self._relationType = None
         self._comment = None
         self._fileHasMore = None
-        
+
     #setters
 
     def setFromDict(self, d):
@@ -174,7 +174,7 @@ class Alert(object):
             if wl.isWhitelisted(self._getIndicatorType(self._secondaryIndicatorType),self._secondaryIndicator):
                 return True
         return False
-    
+
     def _getIndicatorType(self, indType):
         """Return the enumerated indicator type of the indType"""
         if(indType == "IPv4Address"):
@@ -187,7 +187,7 @@ class Alert(object):
             return IndicatorTypes.host
         elif (indType == "URL"):
             return IndicatorTypes.url
-        
+
     def setDataItemID(self, dataItemID):
         self._dataItemID=dataItemID
 
@@ -204,28 +204,28 @@ class Alert(object):
         self._processedTime=processedTime
 
     def setIndicator (self, indicator ):
-        self._indicator =indicator 
+        self._indicator =indicator
 
     def setIndicatorType (self, indicatorType ):
-        self._indicatorType =indicatorType 
+        self._indicatorType =indicatorType
 
     def setIndicatorDirection(self, indicatorDirection):
         self._indicatorDirection=indicatorDirection
 
     def setSecondaryIndicator (self, secondaryIndicator ):
-        self._secondaryIndicator =secondaryIndicator 
+        self._secondaryIndicator =secondaryIndicator
 
     def setSecondaryIndicatorType (self, secondaryIndicatorType ):
-        self._secondaryIndicatorType =secondaryIndicatorType 
+        self._secondaryIndicatorType =secondaryIndicatorType
 
     def setSecondaryIndicatorDirection(self, secondaryIndicatorDirection):
         self._secondaryIndicatorDirection=secondaryIndicatorDirection
 
     def setDirectSource (self, directSource ):
-        self._directSource =directSource 
+        self._directSource =directSource
 
     def setSecondarySource (self, secondarySource ):
-        self._secondarySource =secondarySource 
+        self._secondarySource =secondarySource
 
     def setAction1(self, action1):
         self._action1=action1
@@ -302,7 +302,7 @@ class Alert(object):
 
     def getDuration1(self):
         return self._duration1
-    
+
     def getIPToBlock(self):
         if(self.getAction()==AlertAction.get('Block') and self._indicatorType == "IPv4Address"):
             return self._indicator
@@ -315,7 +315,7 @@ class Alert(object):
         else:
             return None
 
-    
+
     def getSourceIP(self):
         if(self._indicatorDirection==None or self._indicatorDirection=="destination"):
             return None
@@ -324,7 +324,7 @@ class Alert(object):
         if(self._indicatorType != "IPv4Address"):
             return None
         return self._indicator
-    
+
     def getDestIP(self):
         if(self._indicatorDirection==None or self._indicatorDirection=="source"):
             return None

@@ -1,17 +1,17 @@
 import importlib
-from lqm.tool import ToolChain
+from lqmt.lqm.tool import ToolChain
 import sys
 from dateutil.parser import parserinfo
 from whitelist.master import MasterWhitelist
 from lqm.logging import LQMLogging
 import logging
-from lqm.sourcedir import DirectorySource
-from lqm.exceptions import ConfigurationError
-from lqm import unprocessed
+from lqmt.lqm.sourcedir import DirectorySource
+from lqmt.lqm.exceptions import ConfigurationError
+from lqmt.lqm import unprocessed
 
 sys.path.append('tpl/toml')
 import toml
-    
+
 class ToolInfo():
     """Holds info for future instantiation and instantiates tool instances
     """
@@ -19,7 +19,7 @@ class ToolInfo():
         """Hold tool class object and config class object"""
         self._toolClass=toolClass
         self._configClass=configClass
-    
+
     def create(self,configData,csvToolInfo,unhandledCSV):
         """Create a new config instance from the parameters passed in
         and then create a new tool instace using that configuration"""
@@ -53,7 +53,7 @@ class LQMToolConfig():
         cfg=open("config.toml")
         self._config=toml.loads(cfg.read())
         cfg.close()
-        
+
     def _processSystemConfig(self):
         self._initParserConfig(self._config)
         toolClasses=self._initToolConfig(self._config)
@@ -104,7 +104,7 @@ class LQMToolConfig():
                 # add any additional paths needed by the tool
                 add_path = toolinfo['additional_paths']
                 sys.path.extend(add_path)
-            # import the tool & config modules 
+            # import the tool & config modules
             mod=importlib.import_module(toolinfo['module']+".tool")
             toolClass=getattr(mod, toolinfo['tool_class'])
             mod=importlib.import_module(toolinfo['module']+".config")
@@ -120,14 +120,14 @@ class LQMToolConfig():
         cfg.close()
         self._userConfig = {}
         self._userConfig.update(topLevelConfig)
-        
+
     def _initializeLogging(self):
         if 'Logging' in self._userConfig:
             self._loggingCfg=LQMLogging(self._userConfig['Logging'])
-        
+
     def _processUserConfig(self,toolClasses):
         """Process the user-level configuration"""
-        
+
         #Add any sources specified
         self._addSourcesConfig(self._userConfig)
 
@@ -137,7 +137,7 @@ class LQMToolConfig():
         # create any tools and tool chains in the top-level user config file
         globalTools=self._createTools(self._userConfig,toolClasses)
         self._createToolChains(self._userConfig,globalTools)
-        
+
         # process any includes
         if 'includes' in self._userConfig:
             for incl in self._userConfig['includes']:
@@ -149,7 +149,7 @@ class LQMToolConfig():
                 #and create all tools/tool chains specified
                 localTools=self._createTools(config,toolClasses)
                 self._createToolChains(config, localTools, globalTools)
-        
+
     def _createTools(self,config, toolClasses):
         if 'Tools' not in config:
             return
@@ -170,7 +170,7 @@ class LQMToolConfig():
         for chainCfg in chains:
             if 'active' in chainCfg and chainCfg['active'] == True:
                 self._toolChains.append(self._createToolChain(chainCfg, localTools, globalTools))
-    
+
     def _createToolChain(self, chainCfg, localTools, globalTools):
         chain=[]
         allEnabled=True
@@ -196,14 +196,14 @@ class LQMToolConfig():
         if('Source' not in config):
             return
         srcCfgs=config["Source"]
-                     
+
         for key in srcCfgs:
             for cfg in srcCfgs[key]:
                 if(key == "Directory"):
                     self._sources.append(DirectorySource(cfg))
     def getSources(self):
         return self._sources
-    
+
     def getParser(self,fmt):
         if(fmt not in self._parsers):
             return None
