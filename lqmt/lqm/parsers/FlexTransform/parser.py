@@ -3,7 +3,7 @@ Created on Jan 12, 2015
 
 @author: taxon
 '''
-from FlexTransform import FlexTransform
+from lqmt.ft.FlexTransform import FlexTransform
 from lqmt.lqm.data import Alert
 import os
 import inspect
@@ -30,12 +30,12 @@ class FlexTransformParser(object):
         except Exception as e:
             data=[]
             self._logger.error("CFM: Error parsing file file='{0}' exception='{1}'".format(datafile,e) )
-            
+
         for d in data:
             alert=Alert()
             alert.setFromDict(d)
             alerts.append(alert)
         return alerts
-    
-    
-            
+
+
+
