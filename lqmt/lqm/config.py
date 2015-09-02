@@ -1,13 +1,13 @@
 import importlib
-from lqm.tool import ToolChain
+from lqmt.lqm.tool import ToolChain
 import sys
 from dateutil.parser import parserinfo
-from whitelist.master import MasterWhitelist
-from lqm.logging import LQMLogging
+from lqmt.whitelist.master import MasterWhitelist
+from lqmt.lqm.logging import LQMLogging
 import logging
-from lqm.sourcedir import DirectorySource
-from lqm.exceptions import ConfigurationError
-from lqm import unprocessed
+from lqmt.lqm.sourcedir import DirectorySource
+from lqmt.lqm.exceptions import ConfigurationError
+from lqmt.lqm import unprocessed
 
 sys.path.append('tpl/toml')
 import toml
@@ -30,7 +30,7 @@ class ToolInfo():
 class LQMToolConfig():
     """Holds the Configuration data for the LQMTool"""
     def __init__(self,configfile):
-        self._logger = logging.getLogger("Config")
+        self._logger = logging.getLogger("LQMT.Config")
         self._sources=[]
         self._parsers={}
         self._toolChains=[]

@@ -1,4 +1,4 @@
-from whitelist.master import IndicatorTypes
+from lqmt.whitelist.master import IndicatorTypes
 
 class AlertAction(object):
     """Enum of all possible actions"""

@@ -1,7 +1,7 @@
 from . import processed
 import os
 from .sources import Source
-from lqm.exceptions import ConfigurationError
+from lqmt.lqm.exceptions import ConfigurationError
 import logging
 
 class FilesToProcess(object):
@@ -86,7 +86,7 @@ class DirectorySource(Source):
     in its configuration)."""
     
     def __init__(self, config):
-        self._logger = logging.getLogger("Source.Directory")
+        self._logger = logging.getLogger("LQMT.Source.Directory")
         if('dirs' not in config):
             raise ConfigurationError("Missing required key: 'dirs' in section: 'Source.Directory'")
         self._dirs = config["dirs"]

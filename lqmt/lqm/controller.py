@@ -3,7 +3,7 @@ import os
 import ast
 from .config import LQMToolConfig
 import logging
-from lqm.logging import LQMLogging
+from lqmt.lqm.logging import LQMLogging
 
 # based on filename, place file either in the metafiles dict or the datafiles list
 # NOTE: Assumes metafiles begin with . and datafiles do not. 
@@ -12,7 +12,7 @@ class LQMToolController():
 
     def __init__(self, configfile):
         self._config=LQMToolConfig(configfile)
-        self._logger = logging.getLogger("Controller")
+        self._logger = logging.getLogger("LQMT.Controller")
         logging.getLogger("LQMT").info("Starting LQMTool")
 
     def _parsemeta(self, metafile):
