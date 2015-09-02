@@ -1,9 +1,9 @@
 
 import re
 import logging
-from lqmt.lqm.data import AlertAction
-from lqmt.lqm.unprocessed import UnprocessedAlertHandler
-from lqmt.lqm.exceptions import ConfigurationError
+from lqm.data import AlertAction
+from lqm.unprocessed import UnprocessedAlertHandler
+from lqm.exceptions import ConfigurationError
 
 class ToolConfig():
     """Base class for all tool configs"""
@@ -167,7 +167,7 @@ class ToolChain():
         self._tools=tools
         self._name=name
         self._enabled=enabled
-        self._logger=logging.getLogger("LQMT.Tools")
+        self._logger=logging.getLogger("Tools")
         self._actionsToProcess=None
         for tool in self._tools:
             if(self._actionsToProcess==None):

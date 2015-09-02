@@ -3,8 +3,8 @@ Created on Jan 12, 2015
 
 @author: taxon
 '''
-from lqmt.ft.FlexTransform import FlexTransform
-from lqmt.lqm.data import Alert
+from ft.FlexTransform import FlexTransform
+from lqm.data import Alert
 import os
 import inspect
 import logging
@@ -12,7 +12,7 @@ import logging
 class FlexTransformParser(object):
 
     def __init__(self,config):
-        self._logger = logging.getLogger("LQMT.Parsers")
+        self._logger = logging.getLogger("Parsers")
         # get the FlexTransform directory
         currentdir,name = os.path.split(inspect.getfile(FlexTransform))
         self._transform=FlexTransform.FlexTransform()
