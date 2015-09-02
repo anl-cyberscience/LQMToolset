@@ -1,6 +1,6 @@
-from lqmt.lqm.tool import Tool
+from lqm.tool import Tool
 import logging
-from lqmt.lqm.data import AlertAction
+from lqm.data import AlertAction
 
 class Block():
     def __init__(self,ip,timeout):
@@ -12,7 +12,7 @@ class ToCheckpoint(Tool):
     
     def __init__(self, config):
         Tool.__init__(self,config,[AlertAction.get('Block'),AlertAction.get('Revoke')])
-        self._logger = logging.getLogger("LQMT.Checkpoint.{0}".format(self.getName()))
+        self._logger = logging.getLogger("Checkpoint.{0}".format(self.getName()))
         self._rules={}         # CFM-created rules from config device
         self._blocks=set()     # Blocks to block that aren't already blocked
         self._blockIPs=set()
