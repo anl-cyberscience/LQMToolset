@@ -52,6 +52,7 @@ setup(
             'lqmt = lqmt.main:main'
         ]
     },
+    include_package_data=True,
     package_data={
         'doc': ['LQMToolset_Getting_Started.pdf'],
         'lqmt': ['config.toml']
