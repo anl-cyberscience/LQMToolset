@@ -54,5 +54,6 @@ setup(
     },
     package_data={
         'doc': ['LQMToolset_Getting_Started.pdf'],
+        'lqmt': ['config.toml']
     },
 )
