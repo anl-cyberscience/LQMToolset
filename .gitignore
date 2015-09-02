@@ -19,3 +19,9 @@ pip-selfcheck.json
 build/
 dist/
 *.egg-info/
+
+# IDE files
+*.idea
+
+# DB files
+*.db

@@ -1,6 +1,6 @@
-import lqmt.whitelist.master as master
+import whitelist.master as master
 import sys
-from lqmt.whitelist.master import IndicatorTypes
+from whitelist.master import IndicatorTypes
 
 def test(wl,indtype,indicator,expectedVal):
     try:

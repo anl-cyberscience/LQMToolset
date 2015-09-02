@@ -1,6 +1,6 @@
-from lqmt.lqm.tool import ToolConfig
-from lqmt.lqm.exceptions import ConfigurationError
-from lqmt.lqm.data import Alert
+from lqm.tool import ToolConfig
+from lqm.exceptions import ConfigurationError
+from lqm.data import Alert
 import logging
 import os
 import datetime
@@ -10,7 +10,7 @@ class CSVConfig(ToolConfig):
 
     def __init__(self, configData,csvToolInfo,unhandledCSV):
         ToolConfig.__init__(self, configData,csvToolInfo,unhandledCSV)
-        self._logger = logging.getLogger("LQMT.CSV.{0}".format(self.getName()))
+        self._logger = logging.getLogger("CSV.{0}".format(self.getName()))
 
         hasError=False
         self._file=None

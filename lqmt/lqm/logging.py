@@ -1,7 +1,7 @@
 from logging import FileHandler, Formatter
 import logging
 import os.path
-from lqmt.lqm.exceptions import ConfigurationError
+from lqm.exceptions import ConfigurationError
 
 class LQMLogging(object):
     """LOgging helper class"""

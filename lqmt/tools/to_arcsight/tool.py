@@ -4,17 +4,17 @@ Created on Oct 23, 2014
 @author: taxon
 '''
 import socket
-from lqmt.lqm.tool import Tool
+from lqm.tool import Tool
 import logging
-from lqmt.lqm.data import AlertAction
-from lqmt.lqm.logging import LQMLogging
+from lqm.data import AlertAction
+from lqm.logging import LQMLogging
 
 class ToArcSight(Tool):
     """ToArcSight communicates with the ArcSight logger via udp or tcp based on the configuration settings"""
 
     def __init__(self, config):
         Tool.__init__(self, config,[AlertAction.get('All')])
-        self._logger = logging.getLogger("LQMT.ArcSight.{0}".format(self.getName()))
+        self._logger = logging.getLogger("ArcSight.{0}".format(self.getName()))
         self._totalSent=0
         if(self.isEnabled()):
             # Open the appropriate type of socket

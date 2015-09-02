@@ -1,5 +1,5 @@
-from lqmt.lqm.tool import ToolConfig
-from lqmt.lqm.config import ConfigurationError
+from lqm.tool import ToolConfig
+from lqm.config import ConfigurationError
 import logging
 import pan.xapi
 import os.path
@@ -14,7 +14,7 @@ class PaloAltoConfig(ToolConfig):
     def __init__(self, config,csvToolInfo,unhandledCSV):
         hasError=False
         ToolConfig.__init__(self, config,csvToolInfo,unhandledCSV)
-        self._logger = logging.getLogger("LQMT.PaloAlto.{0}".format(self.getName()))
+        self._logger = logging.getLogger("PaloAlto.{0}".format(self.getName()))
         if('api_key' in config):
             self._apiKey=config['api_key']
         else:
