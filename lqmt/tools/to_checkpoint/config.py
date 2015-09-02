@@ -6,17 +6,17 @@ from . import rc
 from datetime import datetime
 import re
 from subprocess import Popen,PIPE, STDOUT
-from lqm.tool import ToolConfig
+from lqmt.lqm.tool import ToolConfig
 from logging import Logger
 import sys
 import logging
-from lqm.config import ConfigurationError
+from lqmt.lqm.config import ConfigurationError
 
 class CheckpointConfig(ToolConfig):
     
     def __init__(self, configData,csvToolInfo,unhandledCSV):
         ToolConfig.__init__(self,configData,csvToolInfo,unhandledCSV)
-        self._logger = logging.getLogger("Checkpoint.{0}".format(self.getName()))
+        self._logger = logging.getLogger("LQMT.Checkpoint.{0}".format(self.getName()))
         hasError=False
         if('hostname' in configData):
             self._hostname=configData['hostname']

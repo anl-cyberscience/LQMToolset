@@ -1,9 +1,9 @@
-from lqm.tool import Tool
+from lqmt.lqm.tool import Tool
 import logging
 import pan.xapi
 import time
 import datetime
-from lqm.data import AlertAction
+from lqmt.lqm.data import AlertAction
 
 class Block:
     """Class to hold information on blocks/revokes"""
@@ -43,7 +43,7 @@ class ToPaloAlto(Tool):
         self._totalUpdated=0
         self._totalPruned=0
         self._totalExpired=0
-        self._logger = logging.getLogger("PaloAlto.{0}".format(self.getName()))
+        self._logger = logging.getLogger("LQMT.PaloAlto.{0}".format(self.getName()))
         self._blocks=dict()
         self._revokes=dict()
         # max per query controls the number of ips per query that are handled.  This is done to ensure that sqlite

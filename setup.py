@@ -49,7 +49,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'lqmt = main:main'
+            'lqmt = lqmt.main:main'
         ]
     },
     package_data={

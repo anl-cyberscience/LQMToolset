@@ -35,7 +35,7 @@ class MasterWhitelist(object):
     """
 
     def __init__(self, configData=None, configFile=None):
-        self._logger = logging.getLogger("Whitelist")
+        self._logger = logging.getLogger("LQMT.Whitelist")
         if(configData != None):
             self._loadConfig(configData)
         elif(configFile != None):

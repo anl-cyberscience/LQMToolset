@@ -1,9 +1,9 @@
 import socket
-from lqm.tool import Tool
+from lqmt.lqm.tool import Tool
 from datetime import datetime
 import re
 import logging
-from lqm.data import AlertAction
+from lqmt.lqm.data import AlertAction
 
 class Header():
     """CEF Header object - contains the fields needed to create the CEF header"""
@@ -115,7 +115,7 @@ class ToCEF(Tool):
 
     def __init__(self, config):
         Tool.__init__(self, config,[AlertAction.get('All')])
-        self._logger = logging.getLogger("CEF.{0}".format(self.getName()))
+        self._logger = logging.getLogger("LQMT.CEF.{0}".format(self.getName()))
     
     def initialize(self):
         super().initialize()

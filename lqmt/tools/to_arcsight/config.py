@@ -1,5 +1,5 @@
-from lqm.tool import ToolConfig
-from lqm.exceptions import ConfigurationError
+from lqmt.lqm.tool import ToolConfig
+from lqmt.lqm.exceptions import ConfigurationError
 
 class ArcSightConfig(ToolConfig):
 

@@ -1,6 +1,6 @@
-from lqm.tool import Tool
+from lqmt.lqm.tool import Tool
 import logging
-from lqm.data import AlertAction
+from lqmt.lqm.data import AlertAction
 import os
 
 class ToCSV(Tool):
@@ -8,7 +8,7 @@ class ToCSV(Tool):
 
     def __init__(self, config):
         Tool.__init__(self, config,[AlertAction.get('All')])
-        self._logger = logging.getLogger("CSV.{0}".format(self.getName()))
+        self._logger = logging.getLogger("LQMT.CSV.{0}".format(self.getName()))
         self._fp=None
 
     def initialize(self):
