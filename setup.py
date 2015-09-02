@@ -47,10 +47,9 @@ setup(
         'pan-python',
         'toml'
     ],
-    scripts=['LQMTool.py'],
     entry_points={
         'console_scripts': [
-            'lqmt = LQMTool:main'
+            'lqmt = lqmt.main:main'
         ]
     },
     package_data={

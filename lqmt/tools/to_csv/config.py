@@ -1,6 +1,6 @@
-from lqm.tool import ToolConfig
-from lqm.exceptions import ConfigurationError
-from lqm.data import Alert
+from lqmt.lqm.tool import ToolConfig
+from lqmt.lqm.exceptions import ConfigurationError
+from lqmt.lqm.data import Alert
 import logging
 import os
 import datetime

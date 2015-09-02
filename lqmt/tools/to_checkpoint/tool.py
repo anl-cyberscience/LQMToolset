@@ -1,6 +1,6 @@
-from lqm.tool import Tool
+from lqmt.lqm.tool import Tool
 import logging
-from lqm.data import AlertAction
+from lqmt.lqm.data import AlertAction
 
 class Block():
     def __init__(self,ip,timeout):

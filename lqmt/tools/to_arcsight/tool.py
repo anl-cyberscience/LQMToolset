@@ -4,10 +4,10 @@ Created on Oct 23, 2014
 @author: taxon
 '''
 import socket
-from lqm.tool import Tool
+from lqmt.lqm.tool import Tool
 import logging
-from lqm.data import AlertAction
-from lqm.logging import LQMLogging
+from lqmt.lqm.data import AlertAction
+from lqmt.lqm.logging import LQMLogging
 
 class ToArcSight(Tool):
     """ToArcSight communicates with the ArcSight logger via udp or tcp based on the configuration settings"""

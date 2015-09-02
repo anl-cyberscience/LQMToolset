@@ -1,9 +1,9 @@
-from lqm.tool import Tool
+from lqmt.lqm.tool import Tool
 import logging
 import pan.xapi
 import time
 import datetime
-from lqm.data import AlertAction
+from lqmt.lqm.data import AlertAction
 
 class Block:
     """Class to hold information on blocks/revokes"""

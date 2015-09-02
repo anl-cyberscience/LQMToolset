@@ -1,7 +1,7 @@
 from . import processed
 import os
 from .sources import Source
-from lqm.exceptions import ConfigurationError
+from lqmt.lqm.exceptions import ConfigurationError
 import logging
 
 class FilesToProcess(object):

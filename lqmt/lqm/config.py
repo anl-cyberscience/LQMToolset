@@ -2,8 +2,8 @@ import importlib
 from lqmt.lqm.tool import ToolChain
 import sys
 from dateutil.parser import parserinfo
-from whitelist.master import MasterWhitelist
-from lqm.logging import LQMLogging
+from lqmt.whitelist.master import MasterWhitelist
+from lqmt.lqm.logging import LQMLogging
 import logging
 from lqmt.lqm.sourcedir import DirectorySource
 from lqmt.lqm.exceptions import ConfigurationError

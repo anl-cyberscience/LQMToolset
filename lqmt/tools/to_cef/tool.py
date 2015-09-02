@@ -1,9 +1,9 @@
 import socket
-from lqm.tool import Tool
+from lqmt.lqm.tool import Tool
 from datetime import datetime
 import re
 import logging
-from lqm.data import AlertAction
+from lqmt.lqm.data import AlertAction
 
 class Header():
     """CEF Header object - contains the fields needed to create the CEF header"""

@@ -1,5 +1,5 @@
-from lqm.tool import ToolConfig
-from lqm.config import ConfigurationError
+from lqmt.lqm.tool import ToolConfig
+from lqmt.lqm.config import ConfigurationError
 import logging
 import pan.xapi
 import os.path

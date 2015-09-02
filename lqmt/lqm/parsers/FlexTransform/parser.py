@@ -4,7 +4,7 @@ Created on Jan 12, 2015
 @author: taxon
 '''
 from FlexTransform import FlexTransform
-from lqm.data import Alert
+from lqmt.lqm.data import Alert
 import os
 import inspect
 import logging
