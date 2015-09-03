@@ -1,22 +1,20 @@
-# Configure
-
 The LQMToolset configuration file contains the local configuration options, including data source definitions, tool instances, and tool chains.
 
-### Data Source
+# Data Source
 
-### Tool Chains
+# Tool Chains
 
-### Tools
+# Tools
 
-#### Palo Alto
+## Palo Alto
 
-#### Checkpoint
+## Checkpoint
 
-#### ArcSight
+## ArcSight
 
-#### CEF
+## CEF
 
-### Logging
+# Logging
 
     [Logging]
         LogFileBase = "/var/log/lqmt"
@@ -29,7 +27,7 @@ The LQMToolset configuration file contains the local configuration options, incl
 
 `Debug`: Enable debug-level logging, which will create and write to the **.debug.log** file. `Debug` is optional, and it accepts either (case-sensitive) `true` or `false`.
 
-### Whitelists
+# Whitelists
 
 LQMToolset allows indicators to be whitelisted. When you define a path to a text file containing the whitelisted indicators, LQMToolset will check the file for modifications and then update the internal database.
 
@@ -43,7 +41,7 @@ In the LQMToolset configuration file, be sure to configure your whitelist settin
 
 `dbfile`: The location of the SQLite database that holds the whitelist information.
 
-#### Whitelist Format
+## Whitelist Format
 
 The following sections specify the format of the whitelist file mentioned above.
 

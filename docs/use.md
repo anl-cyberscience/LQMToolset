@@ -1,5 +1,3 @@
-# Use
-
 It's very simple to run LQMT; just pass it a configuration file:
 
     lqmt my.conf
