@@ -7,7 +7,7 @@ This setting specifies root source directories and what to do with the files onc
         dirs = ["/tmp", "/var/spool"]
         post_process = "delete"
 
-    Setting    | Explanation
+Setting        | Explanation
 :------------: | :----------
     `dirs`     | A list of directory paths, whose contents will be scanned for input files to process.
 `post_process` | An action for LQMToolset to perform after processing a file. Allowed values include "delete", "move", and "track". While "delete" is self-explanatory, "move" will mark the input files to be moved after processing to another directory. "track" will mark the input files to be tracked in another text file.
@@ -30,7 +30,7 @@ This setting specifies root source directories and what to do with the files onc
         LogFileBase = "/var/log/lqmt"
         Debug = true
 
-   Setting    | Explanation
+Setting       | Explanation
 :-----------: | :----------
 `LogFileBase` |The path and filename prefix to the LQMToolset log file. Multiple log files will be created based on the filename prefix specified in this setting. For example, if `LogFileBase` is "/var/log/lqmt", "/var/log/lqmt.err.log" and "/var/log/lqmt.info.log" will be created.
 `Debug`       | Enable debug-level logging, which will create an additional log file, *.debug.log*. `Debug` is optional, and it accepts either `true` or `false`.
