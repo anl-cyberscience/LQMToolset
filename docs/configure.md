@@ -36,6 +36,14 @@ Setting | Explanation
 ### ArcSight
 
 ### CEF
+The CEF tool converts data from the intermediate format to the CEF format.
+
+    [[Tools.CEF]]
+        name = "cef-mapping"
+
+Setting | Explanation
+:-----: | :----------
+`name`  | A unique name identifying this device.
 
 # Logging
 
