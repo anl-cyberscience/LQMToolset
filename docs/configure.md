@@ -95,7 +95,7 @@ Setting | Explanation
 `name`  | A unique name identifying this device.
 
 ### Syslog
-The ArcSight tool is used to log information to remote or local syslog servers. 
+The Syslog tool is used to log information to remote Syslog servers. 
    
     [[Tools.SysLog]]
         name = "syslog-1"
