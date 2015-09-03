@@ -13,6 +13,19 @@ Setting        | Explanation
 `post_process` | An action for LQMToolset to perform after processing a file. Allowed values include "delete", "move", and "track". While "delete" is self-explanatory, "move" will mark the input files to be moved after processing to another directory. "track" will mark the input files to be tracked in another text file.
 
 # Tool Chains
+Tool Chains are built from tool instances, which are created from the available tools in LQMToolset. Chaining these tool instances together creates Tool Chains. To configure a new device, an entry must be added in the configuration file.
+
+    [[ToolChains]]
+        name = "arcsight-1"
+        chain = [ "cef-mapping", "arcsight-1" ]
+
+Setting | Explanation
+:-----: | :----------
+`name`  | A unique name identifying the Tool Chain.
+`chain` | A list of tools to chain together to perform processing on each record.
+`active`| Enables this Tool Chain if set to `true`. Otherwise, it will disable this Tool Chain if set to `false`. `active` is optional, and will default to `true` if not specified.
+
+**NOTE**: There can be many tools of a specific type--one for each physical device--but they must have distinct names.
 
 # Tools
 
