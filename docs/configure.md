@@ -1,6 +1,16 @@
 The LQMToolset configuration file contains the local configuration options, including data source definitions, tool instances, and tool chains.
 
 # Data Source
+This setting specifies root source directories and what to do with the files once they've been processed.
+
+    [[Source.Directory]]
+        dirs = ["/tmp", "/var/spool"]
+        post_process = "delete"
+
+    Setting    | Explanation
+:------------: | :----------
+    `dirs`     | A list of directory paths, whose contents will be scanned for input files to process.
+`post_process` | An action for LQMToolset to perform after processing a file. Allowed values include "delete", "move", and "track". While "delete" is self-explanatory, "move" will mark the input files to be moved after processing to another directory. "track" will mark the input files to be tracked in another text file.
 
 # Tool Chains
 
