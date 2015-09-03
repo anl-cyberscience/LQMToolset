@@ -28,18 +28,17 @@ The LQMToolset configuration file contains the local configuration options, incl
 `Debug`: Enable debug-level logging, which will create and write to the **.debug.log** file. `Debug` is optional, and it accepts either (case-sensitive) `true` or `false`.
 
 # Whitelists
-
 LQMToolset allows indicators to be whitelisted. When you define a path to a text file containing the whitelisted indicators, LQMToolset will check the file for modifications and then update the internal database.
-
-In the LQMToolset configuration file, be sure to configure your whitelist settings like so:
 
     [Whitelist]
         whitelist = "/path/to/whitelist/file.txt"
         dbfile = "/path/to/whitelist/database.db"
 
-`whitelist`: The full path to the text file containing whitelisted indicators, adhering to the whitelist format below.
+###### `whitelist`
+The full path to the text file containing whitelisted indicators, adhering to the whitelist format below.
 
-`dbfile`: The location of the SQLite database that holds the whitelist information.
+###### `dbfile`
+The location of the SQLite database that holds the whitelist information.
 
 ## Whitelist Format
 
