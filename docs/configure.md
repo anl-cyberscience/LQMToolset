@@ -34,6 +34,24 @@ Setting | Explanation
 ### Checkpoint
 
 ### ArcSight
+The ArcSight tool places or removes blocks on Checkpoint devices.
+
+    [[Tools.ArcSight]]
+        name = "arcsight-1"
+        host = "arcsight1.yourdomain.com"
+        port = 598
+        protocol = "tcp"
+        actions_to_process = [ "All" ]
+
+Setting              | Explanation
+:------------------: | :----------
+`name`               | A unique name identifying this device.
+`host`               | The hostname or IP address of the ArcSight device.
+`port`               | The port number on which the ArcSight device is listening.
+`protocol`           | The IP protocol to use: "tcp" or "udp".
+`actions_to_process` | A list of actions for this tool to process: "Block", "Revoke", "Notify", "Watch", "SendReport", "OtherAction", "All"
+
+To configure the ArcSight logger to receive data from LQMToolset, a new Receiver needs to be configured. To do so, login through the web interface of the ArcSight device,  and navigate to *Configuration* > *Receivers*. Click the *Add* button, enter a name for the Receiver, select *CEF TCP Receiver*, and click *next*. At this time, modify any necessary parameters. Do _not_ change the source type. Note the port number! (You'll need that port number for the LQMToolset configuration file). By default, new Receivers aren't enabled. Enable the new Receiver by clicking the box on the far right of the Receiver list for the new Receiver that was just added.
 
 ### CEF
 The CEF tool converts data from the intermediate format to the CEF format.
