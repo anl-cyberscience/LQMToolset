@@ -30,6 +30,37 @@ Setting | Explanation
 # Tools
 
 ### Palo Alto
+The Palo Alto tool places or removes blocks on Palo Alto Networks firewall devices.
+
+    [[Tools.PaloAlto]]
+        name = "my-pa200"
+        api_key = "API KEY OBTAINED FROM DEVICE"
+        api_username = "username"
+        api_password = "password"
+        hostname = "palo-alto.yourdomain.com"
+        badIPFiles = [ "BlockedIPs-01.txt", "BlockedIPs-02.txt" ]
+        block_lists = [ "CFM_EBL-01", "CFM_EBL-02" ]
+        db_location = "paloalto"
+        cafile = "pa-ames/pa.crt"
+        prune_method = "Expiration"
+        default_duration = "259200"
+        unprocessed_file = "unprocessed/pa-ames.csv"
+
+Setting              | Explanation
+:------------------: | :----------
+`name`               | A unique name identifying this device.
+`api_key`            | The API key retrieved from the Palo Alto device for remote access.
+`api_username`       | A username with with API access/privileges to the Palo Alto device.
+`api_password`       | The corresponding password to the username listed above.
+`hostname`           | The hostname or IP address of the Palo Alto device.
+`badIPFiles`         | A list of dynamic block-lists files to use. Each file can hold 300 less than the maximum number of IP addresses that the Palo Alto device supports.
+`block_lists`        | The named block lists configured on the Palo Alto device.
+`db_location`        | The path to the directory that will hold the local database of blocked IP addresses.
+`cafile`             | The path to your CA certificate file for the Palo Alto device.
+`prune_method`       | The method used to prune IP addresses from the database if there are more IP addresses than the Palo Alto device supports. IP addresses are pruned after removing all expired IP blocks. `prune_method` accepts "Expiration", for removing blocks with the earliest expiration time; "Added", for removing blocks with the earlist added time; and "Detected", for removing blocks with the earliest detection time.
+`default_duration`   | The default time limit that a block should be held if the duration is not specified in the alert.
+`unprocessed_file`   | The path to the CSV file that will hold all unprocessed blocks. The contents will consist of filenames, whose names have been altered by adding a timestamp (YYMMDD-HHMMSS) between the name and the extension. (If the file lacks an extension, the timestamp will be appended to the filename.)
+`actions_to_process` | A list of actions for this tool to process: "Block", "Revoke", "Notify", "Watch", "SendReport", "OtherAction", "All"
 
 ### Checkpoint
 
