@@ -6,13 +6,13 @@ The LQMToolset configuration file contains the local configuration options, incl
 
 # Tools
 
-## Palo Alto
+### Palo Alto
 
-## Checkpoint
+### Checkpoint
 
-## ArcSight
+### ArcSight
 
-## CEF
+### CEF
 
 # Logging
 
