@@ -65,7 +65,7 @@ Setting              | Explanation
 ### Checkpoint
 
 ### ArcSight
-The ArcSight tool places or removes blocks on Checkpoint devices.
+The ArcSight tool places or removes blocks on ArcSight devices.
 
     [[Tools.ArcSight]]
         name = "arcsight-1"
@@ -93,6 +93,32 @@ The CEF tool converts data from the intermediate format to the CEF format.
 Setting | Explanation
 :-----: | :----------
 `name`  | A unique name identifying this device.
+
+### Syslog
+The ArcSight tool is used to log information to remote or local syslog servers. 
+   
+    [[Tools.SysLog]]
+        name = "syslog-1"
+        host = "syslog1.yourdomain.com"
+        port = 514
+        protocol = "tcp"
+        messageHead = "WY rsyslogd: Message from LQMT - "
+        messageFields = ["indicatorType", "indicator", "action1"]
+
+Example output in syslog: 
+    
+    Aug 26 14:23:01 WY rsyslogd: Message from LQMT - indicatorType="IPv4Address" indicator="192.168.1.1" action1="Block"
+    Aug 26 14:23:01 WY rsyslogd: Message from LQMT - indicatorType="IPv4Address" indicator="192.168.1.2" action1="Block"
+    Aug 26 14:24:05 WY rsyslogd: Message from LQMT - indicatorType="IPv4Address" indicator="192.168.1.5" action1="Block"
+
+Setting         | Explanation
+:-------------: | :-----------
+`name`          | A Unique name identifying this device.
+`host`          | The hostname or IP address of the remote syslog server
+`port`          | The port number the Syslog server is listening on. Note: Syslog defaults to 514, so if left blank LQMT will also default to 514 for   communication. 
+`protocol`      | The IP protocol to use: "tcp" or "udp"
+`messageHead`   | Used at the beginning of every message sent to Syslog. 
+`messageFields` | Used to specify what fields you want extracted from the alerts and sent in the message to Syslog. 
 
 # Logging
 
