@@ -36,7 +36,7 @@ class SystemConfig:
                 'path': 'lqm',
                 'additional_paths': ['ft'],
                 'cfm20': {
-                    'module': 'parsers.FlexTransform',
+                    'module': 'lqmt.lqm.parsers.FlexTransform',
                     'parser_class': 'FlexTransformParser',
                     'configs': {
                         'LQMTools': 'resources/sampleConfigurations/lqmtools.cfg',
@@ -45,7 +45,7 @@ class SystemConfig:
                     'format': 'Cfm20Alert'
                 },
                 'cfm13': {
-                    'module': 'parsers.FlexTransform',
+                    'module': 'lqmt.lqm.parsers.FlexTransform',
                     'parser_class': 'FlexTransformParser',
                     'configs': {
                         'Cfm13Alert': 'resources/sampleConfigurations/cfm13.cfg',
