@@ -63,6 +63,32 @@ Setting              | Explanation
 `actions_to_process` | A list of actions for this tool to process: "Block", "Revoke", "Notify", "Watch", "SendReport", "OtherAction", "All"
 
 ### Checkpoint
+Place or remove blocks on Checkpoint devices. The connection to Checkpoint devices is done through a shared SSL key which needs to be generated on the machine LQMTools is installed on and copied to the Checkpoint device
+
+Setting                 | Explanation
+:---------------------: | :----------
+`name`                  | A unique name identifying this device. 
+`hostname`              | The Checkpoint device's hostname or IP address 
+`port`                  | The port to connect to via ssh
+`username`              | The username to use to log into the Checkpoint device
+`originator`            | The originator that will be stored with the blocks put into the Checkpoint device
+`default_duration`      | The default time a block should be in place for if the duration is not specified in the alert
+`unprocessed_file`      | A file that will hold all unprocessed blocks. This file will be a CSV file and will have the creation timestamp (YYMMDD-HHMMSS) embedded in the filename before the extension, or at the end if no extension is specified. For example, if the filename is dir/file.txt, the file created, if nessecary, would be dir/file.20150401-113524.txt.
+`actions_to_process`    | Specify the list of actions this cool can/will process. Valid values: `Block`, `Revoke`, `Notify`, `Watch`, `SentReport`, `OtherAction`, `All` 
+
+#### Device Setup & Configuration
+The LQMTool module for checkpoint devices uses the checkpoint firewall's Suspicious Activities Monitoring Protocol (samp) to block IP addresses via the command line interface and ssh from the LQMT machine. The following outlines the steps necessary to congiure the device for use with LQMT. The following assumes the computer that is running the LQMT software is named lqmt.domain.com, the checkpoint computer is named cp.domain.com
+
+- Use the web UI to create a new user with an adminRole, set the shell to /bin/bash, and ensure that command line access is granted. For purposes of this document, the username cfm will be used. 
+- Set up password-less ssh access for the cfm user just created. The exact steps will depend on the machine running LQMT, but the basics: 
+    - Create an RSA key pair if not already done. This can be done by running the command: `ssh-keygen -t rsa` on lqmt.domain.com and accepting all the defaults. For these purposes, itis best to not have a passphrase for this key pair. 
+    - Copy the public key to the admin user's account on the checkpoint device. Depending on the open-ssl version on the LQMT computer, you could use the command: `ssh -copy-id cfm@cp.domain.com`. If that command isn't available, you can run the following on lqmt.domain.com as the user that will be running LQMT:  `cat ~/.ssh/id_rsa.pub | ssh user@123.45.56.78 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys`
+    - Verify password-less access by trying to ssh to the checkpoint machine: 
+        - `ssh cfm@cp.domain.com`
+    - In addition, the checkpoint device needs to be configured as a firewall in order for the LQMT to be effective. 
+
+#### Limitations
+The Checkpoint module currently only blocks IP addresses and network ranges(CIDR). Any other blocks that are not supported will be output to the file specified in the unhandled_blocks configuration parameter. 
 
 ### ArcSight
 The ArcSight tool places or removes blocks on ArcSight devices.
