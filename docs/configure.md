@@ -34,11 +34,10 @@ LQMToolset allows indicators to be whitelisted. When you define a path to a text
         whitelist = "/path/to/whitelist/file.txt"
         dbfile = "/path/to/whitelist/database.db"
 
-###### whitelist
-The full path to the text file containing whitelisted indicators, adhering to the whitelist format below.
-
-###### dbfile
-The location of the SQLite database that holds the whitelist information.
+Setting     | Explanation
+:---------: | :----------
+`whitelist` | The full path to the text file containing whitelisted indicators, adhering to the whitelist format below.
+`dbfile`    | The location of the SQLite database that holds the whitelist information.
 
 ## Whitelist Format
 
