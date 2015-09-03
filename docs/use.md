@@ -1,4 +1,4 @@
-It's very simple to run LQMT; just pass it a configuration file:
+It's very simple to run LQMToolset; just pass `lqmt` a configuration file:
 
     lqmt my.conf
 
