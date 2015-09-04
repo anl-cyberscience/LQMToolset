@@ -153,10 +153,10 @@ Example output in syslog:
 
 Setting         | Explanation
 :-------------: | :-----------
-`name`          | A Unique name identifying this device.
-`host`          | The hostname or IP address of the remote syslog server
+`name`          | A unique name identifying this device.
+`host`          | The hostname or IP address of the remote syslog server.
 `port`          | The port number the Syslog server is listening on. Note: Syslog defaults to 514, so if left blank LQMT will also default to 514 for   communication. 
-`protocol`      | The IP protocol to use: "tcp" or "udp"
+`protocol`      | The IP protocol to use: `tcp` or `udp`.
 `messageHead`   | Used at the beginning of every message sent to Syslog. 
 `messageFields` | Used to specify what fields you want extracted from the alerts and sent in the message to Syslog. 
 
