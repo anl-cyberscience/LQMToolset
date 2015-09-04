@@ -10,7 +10,7 @@ This setting specifies root source directories and what to do with the files onc
 Setting        | Explanation
 :------------: | :----------
     `dirs`     | A list of directory paths, whose contents will be scanned for input files to process.
-`post_process` | An action for LQMToolset to perform after processing a file. Allowed values include "delete", "move", and "track". While "delete" is self-explanatory, "move" will mark the input files to be moved after processing to another directory. "track" will mark the input files to be tracked in another text file.
+`post_process` | An action for LQMToolset to perform after processing a file. Allowed values include `delete`, `move`, and `track`. While `delete` is self-explanatory, `move` will mark the input files to be moved after processing to another directory. `track` will mark the input files to be tracked in another text file.
 
 # Tool Chains
 Tool Chains are built from tool instances, which are created from the available tools in LQMToolset. Chaining these tool instances together creates Tool Chains. To configure a new device, an entry must be added in the configuration file.
@@ -43,7 +43,7 @@ The Palo Alto tool places or removes blocks on Palo Alto Networks firewall devic
         db_location = "paloalto"
         cafile = "pa-ames/pa.crt"
         prune_method = "Expiration"
-        default_duration = "259200"
+        default_duration = 259200
         unprocessed_file = "unprocessed/pa-ames.csv"
 
 Setting              | Explanation
@@ -57,24 +57,37 @@ Setting              | Explanation
 `block_lists`        | The named block lists configured on the Palo Alto device.
 `db_location`        | The path to the directory that will hold the local database of blocked IP addresses.
 `cafile`             | The path to your CA certificate file for the Palo Alto device.
-`prune_method`       | The method used to prune IP addresses from the database if there are more IP addresses than the Palo Alto device supports. IP addresses are pruned after removing all expired IP blocks. `prune_method` accepts "Expiration", for removing blocks with the earliest expiration time; "Added", for removing blocks with the earlist added time; and "Detected", for removing blocks with the earliest detection time.
+`prune_method`       | The method used to prune IP addresses from the database if there are more IP addresses than the Palo Alto device supports. IP addresses are pruned after removing all expired IP blocks. `prune_method` accepts `Expiration`, for removing blocks with the earliest expiration time; `Added`, for removing blocks with the earlist added time; and `Detected`, for removing blocks with the earliest detection time.
 `default_duration`   | The default time limit that a block should be held if the duration is not specified in the alert.
 `unprocessed_file`   | The path to the CSV file that will hold all unprocessed blocks. The contents will consist of filenames, whose names have been altered by adding a timestamp (YYMMDD-HHMMSS) between the name and the extension. (If the file lacks an extension, the timestamp will be appended to the filename.)
-`actions_to_process` | A list of actions for this tool to process: "Block", "Revoke", "Notify", "Watch", "SendReport", "OtherAction", "All"
+`actions_to_process` | A list of actions for this tool to process: `Block`, `Revoke`, `Notify`, `Watch`, `SendReport`, `OtherAction`, `All`.
+
+#### Device Setup & Configuration
 
 ### Checkpoint
-Place or remove blocks on Checkpoint devices. The connection to Checkpoint devices is done through a shared SSL key which needs to be generated on the machine LQMTools is installed on and copied to the Checkpoint device
+Place or remove blocks on Checkpoint devices. The connection to Checkpoint devices is done through a shared SSL key which needs to be generated on the machine LQMTools is installed on and copied to the Checkpoint device.
+
+    [[Tools.Checkpoint]]
+        name = "checkpoint"
+        hostname = "checkpoint.yourdomain.com"
+        port = 22
+        username = "foo"
+        originator = "bar"
+        default_duration = 259200
+        unprocessed_file = "unprocessed.txt"
+        actions_to_process = "All"
+        
 
 Setting                 | Explanation
 :---------------------: | :----------
 `name`                  | A unique name identifying this device. 
-`hostname`              | The Checkpoint device's hostname or IP address 
-`port`                  | The port to connect to via ssh
-`username`              | The username to use to log into the Checkpoint device
-`originator`            | The originator that will be stored with the blocks put into the Checkpoint device
-`default_duration`      | The default time a block should be in place for if the duration is not specified in the alert
-`unprocessed_file`      | A file that will hold all unprocessed blocks. This file will be a CSV file and will have the creation timestamp (YYMMDD-HHMMSS) embedded in the filename before the extension, or at the end if no extension is specified. For example, if the filename is dir/file.txt, the file created, if nessecary, would be dir/file.20150401-113524.txt.
-`actions_to_process`    | Specify the list of actions this cool can/will process. Valid values: `Block`, `Revoke`, `Notify`, `Watch`, `SentReport`, `OtherAction`, `All` 
+`hostname`              | The Checkpoint device's hostname or IP address.
+`port`                  | The port number through which to connect via SSH.
+`username`              | The username with which to login to the Checkpoint device.
+`originator`            | The originator that will be stored with the blocks put into the Checkpoint device.
+`default_duration`      | The default time a block should be in place for if the duration is not specified in the alert.
+`unprocessed_file`      | A file that will hold all unprocessed blocks. This file will be a CSV file and will have the creation timestamp (YYMMDD-HHMMSS) embedded in the filename before the extension, or at the end if no extension is specified. For example, if the filename is *dir/file.txt*, the file created, if nessecary, would be *dir/file.20150401-113524.txt*.
+`actions_to_process`    | Specify the list of actions this cool can/will process. Valid values: `Block`, `Revoke`, `Notify`, `Watch`, `SentReport`, `OtherAction`, `All`.
 
 #### Device Setup & Configuration
 The LQMTool module for checkpoint devices uses the checkpoint firewall's Suspicious Activities Monitoring Protocol (samp) to block IP addresses via the command line interface and ssh from the LQMT machine. The following outlines the steps necessary to congiure the device for use with LQMT. The following assumes the computer that is running the LQMT software is named lqmt.domain.com, the checkpoint computer is named cp.domain.com
@@ -105,9 +118,10 @@ Setting              | Explanation
 `name`               | A unique name identifying this device.
 `host`               | The hostname or IP address of the ArcSight device.
 `port`               | The port number on which the ArcSight device is listening.
-`protocol`           | The IP protocol to use: "tcp" or "udp".
-`actions_to_process` | A list of actions for this tool to process: "Block", "Revoke", "Notify", "Watch", "SendReport", "OtherAction", "All"
+`protocol`           | The IP protocol to use: `tcp` or `udp`.
+`actions_to_process` | A list of actions for this tool to process: `Block`, `Revoke`, `Notify`, `Watch`, `SendReport`, `OtherAction`, `All`.
 
+#### Device Setup & Configuration
 To configure the ArcSight logger to receive data from LQMToolset, a new Receiver needs to be configured. To do so, login through the web interface of the ArcSight device,  and navigate to *Configuration* > *Receivers*. Click the *Add* button, enter a name for the Receiver, select *CEF TCP Receiver*, and click *next*. At this time, modify any necessary parameters. Do _not_ change the source type. Note the port number! (You'll need that port number for the LQMToolset configuration file). By default, new Receivers aren't enabled. Enable the new Receiver by clicking the box on the far right of the Receiver list for the new Receiver that was just added.
 
 ### CEF
