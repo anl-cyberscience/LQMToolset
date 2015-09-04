@@ -183,7 +183,7 @@ Setting     | Explanation
 `whitelist` | The full path to the text file containing whitelisted indicators, adhering to the whitelist format below.
 `dbfile`    | The location of the SQLite database that holds the whitelist information.
 
-## Whitelist Format
+#### Whitelist Format
 
 The following sections specify the format of the whitelist file mentioned above.
 
