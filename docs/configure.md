@@ -63,8 +63,6 @@ Setting              | Explanation
 `actions_to_process` | A list of actions for this tool to process: `Block`, `Revoke`, `Notify`, `Watch`, `SendReport`, `OtherAction`, `All`.
 
 #### Device Setup & Configuration
-
-#### Device Setup & Configuration
 LQMT uses Palo Alto's Dynamic Block Lists (also called External Block Lists or EBLs) to block IPs. There is a limit to the number of IP addresses that can be blocked by a Palo Alto device. See your devices documentation for these limits. Each Palo Alto device can have up to 10 block lists and each block list is limited to 300 less than the device's limit. The Palo Alto accesses the EBLs via http request to a web server. Configuring one is beyond the scope of this document. 
 
 Requirements: 
