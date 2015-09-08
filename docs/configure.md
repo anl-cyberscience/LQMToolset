@@ -66,6 +66,7 @@ Setting              | Explanation
 LQMT uses Palo Alto's Dynamic Block Lists (also called External Block Lists or EBLs) to block IPs. There is a limit to the number of IP addresses that can be blocked by a Palo Alto device. See your devices documentation for these limits. Each Palo Alto device can have up to 10 block lists and each block list is limited to 300 less than the device's limit. The Palo Alto accesses the EBLs via http request to a web server. Configuring one is beyond the scope of this document. 
 
 Requirements: 
+
 - Web server to host the Dynamic Block List files
     - Only needs to be accessible from the machine LQMT is installed on
     - The LQMT machine also needs to have write access to the location it reads the EBLs from as it will write the files to that location
