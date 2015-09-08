@@ -3,7 +3,7 @@ Created on Jan 12, 2015
 
 @author: taxon
 '''
-from lqmt.ft.FlexTransform import FlexTransform
+from FlexTransform import FlexTransform
 from lqmt.lqm.data import Alert
 import os
 import inspect
