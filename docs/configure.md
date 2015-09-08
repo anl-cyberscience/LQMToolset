@@ -64,6 +64,56 @@ Setting              | Explanation
 
 #### Device Setup & Configuration
 
+#### Device Setup & Configuration
+LQMT uses Palo Alto's Dynamic Block Lists (also called External Block Lists or EBLs) to block IPs. There is a limit to the number of IP addresses that can be blocked by a Palo Alto device. See your devices documentation for these limits. Each Palo Alto device can have up to 10 block lists and each block list is limited to 300 less than the device's limit. The Palo Alto accesses the EBLs via http request to a web server. Configuring one is beyond the scope of this document. 
+
+Requirements: 
+- Web server to host the Dynamic Block List files
+    - Only needs to be accessible from the machine LQMT is installed on
+    - The LQMT machine also needs to have write access to the location it reads the EBLs from as it will write the files to that location
+- The LQMT machine needs to trust the root CA for the Palo Alto web server
+    - One will need to be created if one hasn't already been imported
+        - The default certificate created by the device will not work. 
+    - To create one,
+        - Log in to the web UI as an administrator
+        - Select the Device tab
+        - Select Certificates under the Certificated management menu
+        - Click on Generate at the bottom of the window
+        - Fill in the fields as appropriate
+            - Common name sould be the machine name
+            - Ensure Certificate Authority is check
+            - Add any Certificate Attributes you may want
+            - Click Generate
+    - The click on the newly generated certificate and check the following:
+            - Forward Trust Certificate
+            - Forward Untrust Certificate
+            - Certificate for Secure Web GUI
+    - After creating the certificate, you will need to export it
+        - Click the export button at the bottom of the window and accept the defaults
+        - Store it in a location accessible to LQMT
+        - Specifify the location in the cafile configuration parameter for the specific Palo Alto device
+- Create the block list objects
+    - Log into the Web GUI as an administrator
+    - Select the Objects tab
+    - Select the Dynamic Block Lists item from the menu
+        - Click the Add button at the bottom of the window
+        - Enter a name
+            - This name will be in the block_lists configuration parameter
+        - Optionally enter a description
+        - Enter the source location of the file backing this block list
+            - The physical location of the file will be added to the badIPFiles configuration parameter
+        - Set the repeat to Monthly at 00:00
+            - This is sufficient because LQMT will perform a refresh as necessary and doesn't need to rely on a regularly scheduled refresh
+- Create the policies that use the block lists to restrict network traffic
+    - Due to the unique nature of each installation, this is beyond the scope of this document
+    - Some useful links related to using EBLs
+        - <https://live.paloaltonetworks.com/docs/DOC-­‐4724>
+        - <https://live.paloaltonetworks.com/docs/DOC-­‐5850>
+
+#### Limitations
+The Palo Alto module currently only blocks IP addresses and network ranges (CIDR). Any other block that are not supported will be output to the fiel specified in the unhandled_blocks configuration parameter. 
+
+
 ### Checkpoint
 Place or remove blocks on Checkpoint devices. The connection to Checkpoint devices is done through a shared SSL key which needs to be generated on the machine LQMTools is installed on and copied to the Checkpoint device.
 
