@@ -42,7 +42,8 @@ setup(
         'lxml',
         'netaddr',
         'pan-python',
-        'toml'
+        'toml',
+	'FlexTransform',
     ],
     entry_points={
         'console_scripts': [
