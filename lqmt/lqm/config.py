@@ -107,9 +107,9 @@ class LQMToolConfig():
                 add_path = toolinfo['additional_paths']
                 sys.path.extend(add_path)
             # import the tool & config modules 
-            mod = importlib.import_module(toolinfo['module'] + ".tool")
+            mod = importlib.import_module("lqmt.tools." + toolinfo['module'] + ".tool")
             toolClass = getattr(mod, toolinfo['tool_class'])
-            mod = importlib.import_module(toolinfo['module'] + ".config")
+            mod = importlib.import_module("lqmt.tools." + toolinfo['module'] + ".config")
             # get the class "object" for later creation
             cfgClass = getattr(mod, toolinfo['config_class'])
             toolClasses[key] = ToolInfo(toolClass, cfgClass)

@@ -18,9 +18,6 @@ class SystemConfig:
                 },
                 'ArcSight': {
                     'module': 'to_arcsight', 'config_class': 'ArcSightConfig', 'tool_class': 'ToArcSight'
-                },
-                'SysLog': {
-                    'module': 'to_syslog', 'config_class': 'SysLogConfig', 'tool_class': 'ToSysLog'
                 }
             },
             'UnprocessedCSV': {
