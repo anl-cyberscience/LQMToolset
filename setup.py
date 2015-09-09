@@ -40,9 +40,6 @@ setup(
     install_requires=[
         'python-dateutil',
         'lxml',
-        'pytz',
-        'dumper',
-        'rdflib',
         'netaddr',
         'pan-python',
         'toml'
