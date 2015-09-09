@@ -48,9 +48,5 @@ setup(
         'console_scripts': [
             'lqmt = lqmt.main:main'
         ]
-    },
-    include_package_data=True,
-    package_data={
-        'lqmt': ['config.toml']
-    },
+    }
 )
