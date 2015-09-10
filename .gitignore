@@ -5,5 +5,23 @@
 *.err.log
 *.ft.log
 *.info.log
-.idea
+
+# virtualenv stuff
+bin/
+include/
+lib/
+pip-selfcheck.json
+
+# vim stuff
+*.swp
+
+# setuptools
+build/
+dist/
+*.egg-info/
+
+#IDE files
+*.idea
+
+#DB files
 *.db
