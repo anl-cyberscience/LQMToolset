@@ -1,6 +1,6 @@
 # Dependencies
 
-    sudo apt-get install python3 python3-pip
+    sudo apt-get install python3 python3-pip build-essential
     sudo apt-get build-dep python3-lxml
 
 # Virtualenv (optional)
