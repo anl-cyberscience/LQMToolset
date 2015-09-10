@@ -11,6 +11,12 @@
     sudo yum install https://dl.iuscommunity.org/pub/ius/stable/CentOS/6/x86_64/ius-release-1.0-14.ius.centos6.noarch.rpm
     sudo yum install python34u python34u-pip libxml2-devel libxslt-devel python34u-devel
 
+##### RedHat/CentOS 7
+
+    sudo yum groupinstall "Development Tools"
+    sudo yum install https://dl.iuscommunity.org/pub/ius/stable/Redhat/7/x86_64/ius-release-1.0-14.ius.el7.noarch.rpm
+    sudo yum install python34u python34u-pip libxml2-devel libxslt-devel python34u-devel
+
 # Virtualenv (optional)
 
 Use a Python virtual environment if you have other Python projects, whose dependencies might conflict with LQMToolset (or vice-versa). `virtualenv` ensures that Python projects are isolated.
