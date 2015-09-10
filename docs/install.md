@@ -1,7 +1,15 @@
 # Dependencies
 
+##### Debian/Ubuntu
+
     sudo apt-get install python3 python3-pip build-essential
     sudo apt-get build-dep python3-lxml
+
+##### RedHat/CentOS 6
+
+    sudo yum groupinstall "Development Tools"
+    sudo yum install https://dl.iuscommunity.org/pub/ius/stable/CentOS/6/x86_64/ius-release-1.0-14.ius.centos6.noarch.rpm
+    sudo yum install python34u python34u-pip libxml2-devel libxslt-devel python34u-devel
 
 # Virtualenv (optional)
 
