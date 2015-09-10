@@ -1,0 +1,83 @@
+﻿Merge branch 'setuptools'
+
+Conflicts:
+	.gitignore
+	config.toml
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch is up-to-date with 'origin/master'.
+#
+# All conflicts fixed but you are still merging.
+#
+# Changes to be committed:
+#	modified:   .gitignore
+#	modified:   .gitmodules
+#	modified:   README.md
+#	deleted:    config.toml
+#	deleted:    ft
+#	renamed:    lqm/__init__.py -> lqmt/__init__.py
+#	renamed:    lqm/parsers/FlexTransform/__init__.py -> lqmt/lqm/__init__.py
+#	renamed:    lqm/config.py -> lqmt/lqm/config.py
+#	renamed:    lqm/controller.py -> lqmt/lqm/controller.py
+#	renamed:    lqm/data.py -> lqmt/lqm/data.py
+#	renamed:    lqm/exceptions.py -> lqmt/lqm/exceptions.py
+#	renamed:    lqm/logging.py -> lqmt/lqm/logging.py
+#	renamed:    lqm/parsers/__init__.py -> lqmt/lqm/parsers/FlexTransform/__init__.py
+#	renamed:    lqm/parsers/FlexTransform/parser.py -> lqmt/lqm/parsers/FlexTransform/parser.py
+#	renamed:    tools/to_arcsight/__init__.py -> lqmt/lqm/parsers/__init__.py
+#	renamed:    lqm/processed.py -> lqmt/lqm/processed.py
+#	renamed:    lqm/sourcedir.py -> lqmt/lqm/sourcedir.py
+#	renamed:    lqm/sources.py -> lqmt/lqm/sources.py
+#	new file:   lqmt/lqm/systemconfig.py
+#	renamed:    lqm/tool.py -> lqmt/lqm/tool.py
+#	renamed:    lqm/unprocessed.py -> lqmt/lqm/unprocessed.py
+#	renamed:    LQMTool.py -> lqmt/main.py
+#	renamed:    tools/to_cef/__init__.py -> lqmt/tools/__init__.py
+#	renamed:    tools/to_checkpoint/__init__.py -> lqmt/tools/to_arcsight/__init__.py
+#	renamed:    tools/to_arcsight/config.py -> lqmt/tools/to_arcsight/config.py
+#	renamed:    tools/to_arcsight/tool.py -> lqmt/tools/to_arcsight/tool.py
+#	renamed:    tools/to_csv/__init__.py -> lqmt/tools/to_cef/__init__.py
+#	renamed:    tools/to_cef/config.py -> lqmt/tools/to_cef/config.py
+#	renamed:    tools/to_cef/tool.py -> lqmt/tools/to_cef/tool.py
+#	renamed:    tools/to_paloalto/__init__.py -> lqmt/tools/to_checkpoint/__init__.py
+#	renamed:    tools/to_checkpoint/config.py -> lqmt/tools/to_checkpoint/config.py
+#	renamed:    tools/to_checkpoint/rc.py -> lqmt/tools/to_checkpoint/rc.py
+#	renamed:    tools/to_checkpoint/tool.py -> lqmt/tools/to_checkpoint/tool.py
+#	renamed:    tools/to_syslog/__init__.py -> lqmt/tools/to_csv/__init__.py
+#	renamed:    tools/to_csv/config.py -> lqmt/tools/to_csv/config.py
+#	renamed:    tools/to_csv/tool.py -> lqmt/tools/to_csv/tool.py
+#	renamed:    whitelist/__init__.py -> lqmt/tools/to_paloalto/__init__.py
+#	renamed:    tools/to_paloalto/config.py -> lqmt/tools/to_paloalto/config.py
+#	renamed:    tools/to_paloalto/tool.py -> lqmt/tools/to_paloalto/tool.py
+#	new file:   lqmt/tools/to_syslog/__init__.py
+#	renamed:    tools/to_syslog/config.py -> lqmt/tools/to_syslog/config.py
+#	renamed:    tools/to_syslog/tool.py -> lqmt/tools/to_syslog/tool.py
+#	new file:   lqmt/whitelist/__init__.py
+#	renamed:    whitelist/domainwl.py -> lqmt/whitelist/domainwl.py
+#	renamed:    whitelist/hostwl.py -> lqmt/whitelist/hostwl.py
+#	renamed:    whitelist/ipv4snwl.py -> lqmt/whitelist/ipv4snwl.py
+#	renamed:    whitelist/ipv4wl.py -> lqmt/whitelist/ipv4wl.py
+#	renamed:    whitelist/ipv6snwl.py -> lqmt/whitelist/ipv6snwl.py
+#	renamed:    whitelist/ipv6wl.py -> lqmt/whitelist/ipv6wl.py
+#	renamed:    whitelist/master.py -> lqmt/whitelist/master.py
+#	renamed:    whitelist/test.py -> lqmt/whitelist/test.py
+#	renamed:    whitelist/testdata/config.toml -> lqmt/whitelist/testdata/config.toml
+#	renamed:    whitelist/testdata/whitelist.txt -> lqmt/whitelist/testdata/whitelist.txt
+#	renamed:    whitelist/urlwl.py -> lqmt/whitelist/urlwl.py
+#	renamed:    whitelist/whitelist.py -> lqmt/whitelist/whitelist.py
+#	new file:   setup.py
+#
+# Changes not staged for commit:
+#	modified:   README.md
+#	modified:   lqmt/lqm/systemconfig.py
+#	modified:   setup.py
+#
+
