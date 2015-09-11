@@ -7,7 +7,7 @@
 
 ##### RedHat/CentOS 6
 
-    sudo yum install https://dl.iuscommunity.org/pub/ius/stable/CentOS/6/x86_64/ius-release-1.0-14.ius.centos6.noarch.rpm
+    sudo yum install https://dl.iuscommunity.org/pub/ius/stable/Redhat/6/x86_64/ius-release-1.0-14.ius.el6.noarch.rpm
     sudo yum install python34u python34u-pip libxml2-devel libxslt-devel python34u-devel gcc
 
 ##### RedHat/CentOS 7
