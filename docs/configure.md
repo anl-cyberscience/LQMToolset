@@ -273,3 +273,43 @@ The following sections specify the format of the whitelist file mentioned above.
 
     [URL]
     http://www.somesite.com/blah
+
+# Intermediate Data Format
+The intermediate data format is a subset/simplificatino of the complete thread data that can be directly used by a cariety of systems. 
+
+Field Name                      | Description
+:-----------------------------: | :-----------
+`dataItemID`                    | UUID for data item
+`fieldID`                       | UUID for file
+`detectedTime`                  | UTC epoch of time in the alert itself (if present, filled with reportedTime)
+`reportedTime`                  | UTC epoch of time reported to CFM (or other system)
+`processedTime`                 | UTC epoch of time processed locally on client (i.e. when this parsed record was created)
+`indicator`                     | The value to be acted up (e.g. ip, domain name, URL)
+`indicatorType`                 | A type name that informs how to interpret the indicator (e.g. ipv4, emailAddress) (enum)
+`indicatorDirection`            | enum {source, destination}
+`secondaryIndicator`            | A secondary indicator that restricts (logical AND) the indicator (e.g. a port number) (when appropriate)
+`secondaryIndicatorType`        | A type name that informs how to interpret the secondaryIndicator (e.g. tcpport, udport) (enum)
+`secondaryIndicatorDirection`   | enum {source, destination}
+`directSource`                  | The CFM site abbr (or other applicable indentifier) that uploaded the data
+`secondarySource`               | String representing where the CFM site got it from (when appropriate)
+`action1`                       | An action to be performed when the indicator is seen (semi-enum)
+`duration1`                     | How long the action is to be performed
+`action2`                       | An action to be performed when the indicator is seen (semi-enum)
+`duration2`                     | How long the action is to be performed
+`reason1`                       | First reason for this alert
+`reference1`                    | Reference for info for reason
+`reason2`                       | Additional reason for this alert
+`reference2`                    | Reference for info for reason
+`majorTags`                     | A string containing a comma separated list of tags. These are high-level concepts that rend to remain "tag worthy" over time (e.g. Ransomware)
+`minorTags`                     | A string containing a comma separated list of tags. These are highly detailed and/or only important for a short time (e.g. Cryptolocker)
+`restriction`                   | TLP level
+`sensitivity`                   | OUO marking
+`reconAllowed`                  | Boolean: true (default) = recon
+`priors`                        | Number of previous (known) reports
+`confidence`                    | Confidence in accuracy: 0 = none 100 = full
+`severity`                      | How significant is the impact (assuming relevant): 0 = no impact, 100 = catastrophic
+`relevancy`                     | How relevant is this alert: 0 = not applicable, 100 = perfectly targeted
+`relatedID`                     | UUID of a related indicator
+`relationType`                  | enum (supersedes, extends, superseded by, extended by)
+`comment`                       | A string that represents a comment that was included with the alert.
+`fileHasMore`                   | Boolean: false (default) = data has been translated, true = More details on the data item are present in file. 
