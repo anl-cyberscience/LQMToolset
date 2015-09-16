@@ -1,24 +1,24 @@
-
 import re
 import logging
 from lqmt.lqm.data import AlertAction
 from lqmt.lqm.unprocessed import UnprocessedAlertHandler
 from lqmt.lqm.exceptions import ConfigurationError
 
+
 class ToolConfig():
     """Base class for all tool configs"""
 
-    def __init__(self,configData,csvToolInfo,unhandledCSV):
-        self._name=configData['name']  # the tool's name
-        self._enabled=self._name!=None # whether or not the tool is enabled
-        self._unprocessedHandler=None  # The handler to use if there is an unprocessed alert
-        if('unprocessed_file' in configData):
-            if(csvToolInfo == None or unhandledCSV == None):
+    def __init__(self, configData, csvToolInfo, unhandledCSV):
+        self._name = configData['name']  # the tool's name
+        self._enabled = self._name != None  # whether or not the tool is enabled
+        self._unprocessedHandler = None  # The handler to use if there is an unprocessed alert
+        if ('unprocessed_file' in configData):
+            if (csvToolInfo == None or unhandledCSV == None):
                 raise ConfigurationError()
-            cfg={}
-            cfg['file']=configData['unprocessed_file']
+            cfg = {}
+            cfg['file'] = configData['unprocessed_file']
             cfg.update(unhandledCSV)
-            self._unprocessedHandler=UnprocessedAlertHandler(csvToolInfo.create(cfg,None,None))
+            self._unprocessedHandler = UnprocessedAlertHandler(csvToolInfo.create(cfg, None, None))
 
     def getName(self):
         return self._name
@@ -27,19 +27,21 @@ class ToolConfig():
         return self._enabled
 
     def disable(self):
-        self._enabled=False
+        self._enabled = False
 
     def getActionsToProcess(self):
         return self._actionsToProcess
+
     def getUnprocessedHandler(self):
         return self._unprocessedHandler
+
 
 class Tool():
     """The base class for all tools."""
 
-    def __init__(self, config,alertActions):
-        self._config=config #the configuration object
-        self._alertActions=set(alertActions) #The alert actions this tool handles
+    def __init__(self, config, alertActions):
+        self._config = config  # the configuration object
+        self._alertActions = set(alertActions)  # The alert actions this tool handles
 
     def getConfig(self):
         return self._config
@@ -52,24 +54,24 @@ class Tool():
         self._config.disable()
 
     def getName(self):
-        nm=self._config.getName()
-        if(nm):
+        nm = self._config.getName()
+        if (nm):
             return nm
         else:
             return "UNKNOWN-{0}".format(type(self).__name__)
 
     def unprocessed(self, alert):
         """The specified alert has not been processed when it should have been>  This gives the opportunity to log this info or report it to the user."""
-        uph=self._config.getUnprocessedHandler()
-        if(uph != None):
+        uph = self._config.getUnprocessedHandler()
+        if (uph != None):
             uph.unprocessed(alert)
 
     def getActionsToProcess(self):
         return self._alertActions
 
     def initialize(self):
-        uph=self._config.getUnprocessedHandler()
-        if(uph != None):
+        uph = self._config.getUnprocessedHandler()
+        if (uph != None):
             uph.initialize()
 
     def fileBegin(self):
@@ -78,7 +80,7 @@ class Tool():
     def fileDone(self):
         NotImplementedError
 
-    #Will only be called for alerts this tool can process
+    # Will only be called for alerts this tool can process
     def process(self, alert):
         """Process the alert."""
         NotImplementedError
@@ -91,7 +93,7 @@ class Tool():
         """called after commit to perform any cleanup necessary."""
         NotImplementedError
 
-    def is_valid_ipv6(self,ip):
+    def is_valid_ipv6(self, ip):
         """Validates IPv6 addresses."""
         pattern = re.compile(r"""
             ^
@@ -121,7 +123,7 @@ class Tool():
         """, re.VERBOSE | re.IGNORECASE | re.DOTALL)
         return pattern.match(ip) is not None
 
-    def is_valid_ipv4(self,ip):
+    def is_valid_ipv4(self, ip):
         """Validates IPv4 addresses.
         """
         pattern = re.compile(r"""
@@ -160,29 +162,30 @@ class Tool():
         """, re.VERBOSE | re.IGNORECASE)
         return pattern.match(ip) is not None
 
+
 class ToolChain():
     """A ToolChain is a list of tools that pass data from one to the next"""
 
     def __init__(self, tools, name, enabled):
-        self._tools=tools
-        self._name=name
-        self._enabled=enabled
-        self._logger=logging.getLogger("LQMT.Tools")
-        self._actionsToProcess=None
+        self._tools = tools
+        self._name = name
+        self._enabled = enabled
+        self._logger = logging.getLogger("LQMT.Tools")
+        self._actionsToProcess = None
         for tool in self._tools:
-            if(self._actionsToProcess==None):
-                self._actionsToProcess=tool.getActionsToProcess()
+            if (self._actionsToProcess == None):
+                self._actionsToProcess = tool.getActionsToProcess()
             else:
                 self._actionsToProcess &= tool.getActionsToProcess()
-        self._alertsProcessed=0
-        self._alertsNotProcessed=0
+        self._alertsProcessed = 0
+        self._alertsNotProcessed = 0
 
     def isEnabled(self):
         return self._enabled
 
     def initialize(self):
         """called by the controller at the beginning of processing to allow the tool chain to initialize itself."""
-        #tell all the tools to initialize
+        # tell all the tools to initialize
         for tool in self._tools:
             tool.initialize()
 
@@ -191,22 +194,26 @@ class ToolChain():
         for tool in self._tools:
             tool.fileBegin()
 
-    def fileDone(self,):
+    def fileDone(self):
         """All alerts from the current file have been processed."""
         for tool in self._tools:
             tool.fileDone()
 
     def process(self, data, isWhitelisted):
         """Process the alert"""
-        d=data
-        #if the alert can be processed by this toolchain, then process it
-        if(data.getAction() in self._actionsToProcess or AlertAction.get('All') in self._actionsToProcess):
-            self._alertsProcessed+=1
-            for tool in self._tools:
-                d=tool.process(d)
+        d = data
+        # if the alert can be processed by this toolchain, then process it
+        if data.getAction() in self._actionsToProcess or AlertAction.get('All') in self._actionsToProcess:
+            # if indicator isn't whitelisted, proceed with processing. Otherwise ignore processing and log the whitelist block.
+            if isWhitelisted is False:
+                self._alertsProcessed += 1
+                for tool in self._tools:
+                    d = tool.process(d)
+            else:
+                self._logger.info(
+                    "Alert not processed. IP Indicator is whitelisted. Whitelisted IP:{0}".format(data._indicator))
         else:
-            self._alertsNotProcessed+=1
-
+            self._alertsNotProcessed += 1
 
     def commit(self):
         """Called at the end of processing to allow the tool chain to perform any finalization"""
@@ -215,28 +222,29 @@ class ToolChain():
 
     def cleanup(self):
         """Called after commit to perform any cleanup"""
-        self._logger.info("Alerts processed:={0} AlertsNotProcessed={1}".format(self._alertsProcessed,self._alertsNotProcessed))
+        self._logger.info(
+            "Alerts processed:={0} AlertsNotProcessed={1}".format(self._alertsProcessed, self._alertsNotProcessed))
         for tool in self._tools:
             tool.cleanup()
 
     def updateEnabled(self):
         """Update the enabled state of this tool chain by checking all of its tools.  If any are disabled, disable the chain, too."""
-        en=self.isEnabled()
-        if(not en):
+        en = self.isEnabled()
+        if (not en):
             return
         for tool in self._tools:
-            if(not tool.isEnabled()):
-                en=False
-        self._enabled=en
+            if (not tool.isEnabled()):
+                en = False
+        self._enabled = en
 
     def getName(self):
         return self._name
 
     def printTools(self):
-        toolStr=""
-        comma=" "
+        toolStr = ""
+        comma = " "
         for tool in self._tools:
-            toolStr+=comma
-            toolStr+=tool.getName()
-            comma=", "
+            toolStr += comma
+            toolStr += tool.getName()
+            comma = ", "
         self._logger.debug(toolStr)
