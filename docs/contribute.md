@@ -25,7 +25,7 @@ A good example in the current code base would be the [to_syslog](https://github.
 
 Since all tools are unique, you can use the config.py file to do other things that might not be covered here. 
 
-####Example of a user configuration for using to_syslog
+#### Example of a user configuration for using to_syslog
 ```toml
 [[Tools.SysLog]]
   name = "syslog-tool"
@@ -35,9 +35,10 @@ Since all tools are unique, you can use the config.py file to do other things th
   messageHead = "wu.server.com LQMTool: Message from LQMT - "
   messageFields = ["indicatorType", "indicator", "action1", "directSource", "reason1", "duration1"]
 ```
-####Code snipit used in /lqmt/tools/to_syslog/config.py
+#### Code snipit used in /lqmt/tools/to_syslog/config.py
 ```python
- def __init__(self, configData, csvToolInfo, unhandledCSV):
+class SysLogConfig(ToolConfig):
+    def __init__(self, configData, csvToolInfo, unhandledCSV):
         ToolConfig.__init__(self, configData, csvToolInfo, unhandledCSV)
         self._logger = logging.getLogger("LQMT.SysLog.{0}".format(self.getName()))
         hasError = False
@@ -53,10 +54,22 @@ Since all tools are unique, you can use the config.py file to do other things th
 ### Tool.py
 *Located under [LQMToolset/lqmt/tools/](https://github.com/anl-cyberscience/LQMToolset/blob/master/lqmt/tools/)*
 
+```python
+class ToSysLog(Tool):
+    def __init__(self, config):
+        Tool.__init__(self, config, [AlertAction.get('All')])
+        self._logger = logging.getLogger("LQMT.SysLog.{0}".format(self.getName()))
+        self._totalSent = 0
+        self._messageHead = config.getMessageHead()
+        self._messageFields = config.getMessageFields()
+```
+
+The tool.py file is where you will 
+
 ### Systemconfig.py
 *Located under [LQMToolset/lqmt/lqm/](https://github.com/anl-cyberscience/LQMToolset/blob/master/lqmt/lqm/)*
 
-Systemconfig.py is used to various elements used in LQMT, including tools. After you finish writing your tool, you have to append a section defining your tool under `tools` in systemconfig.py. Below is a code template you can use, where you replace all values surrounded by asterisks(*) with values from your tool. There is a code sample below the template to give an example of what this section looks like for the `to_syslog` tool.
+Systemconfig.py is used for defining and accessing various elements in LQMT. After you finish writing your tool, you need to define it in the system_config dictionary under the "tools" key found in Systemconfig.py. Below is a code template you can use, where you replace all values surrounded by asterisks(*) with values from your tool. There is a code sample below the template to give an example of what this section looks like for the `to_syslog` tool.
 
 #### Template:
 ```python
