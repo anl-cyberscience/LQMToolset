@@ -1,8 +1,8 @@
 import logging
 import socket
-from lqm.data import AlertAction
-from lqm.logging import LQMLogging
-from lqm.tool import Tool
+from lqmt.lqm.data import AlertAction
+from lqmt.lqm.logging import LQMLogging
+from lqmt.lqm.tool import Tool
 
 
 class ToSysLog(Tool):

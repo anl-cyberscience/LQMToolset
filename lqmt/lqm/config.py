@@ -172,6 +172,9 @@ class LQMToolConfig():
         for chainCfg in chains:
             if 'active' in chainCfg and chainCfg['active'] == True:
                 self._toolChains.append(self._createToolChain(chainCfg, localTools, globalTools))
+            else:
+                self._logger.info("Toolchain {0} is currently set as inactive in the user configuration. "
+                                  "Tools in this toolchain will not run.".format(chainCfg['name']))
 
     def _createToolChain(self, chainCfg, localTools, globalTools):
         chain = []
