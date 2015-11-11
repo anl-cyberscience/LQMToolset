@@ -6,3 +6,6 @@ The Last Quarter Mile Toolset is flexible framework that allows automation to pr
 
 ### Documentation
 See [https://lqmtoolset.readthedocs.org/](https://lqmtoolset.readthedocs.org/).
+
+### Contact
+Any questions about the Last Quarter Mile Toolset can be directed to the CFM team at cfmteam@anl.gov. 
