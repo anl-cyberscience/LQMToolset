@@ -9,17 +9,17 @@ After [forking](https://guides.github.com/activities/forking/) the LQMToolset, y
 ## Tools
 It is expected that most contributions will be adding support of a specific kind of endpoint device, in the majority of cases this will involve the writing of a new tool. Tools, which are found under `LQMToolset/lqmt/tools`, are the modular pieces of LQMT that take the processed CTI data and deliver it to an endpoint device. Since the way endpoint devices receive data differs, tools can vary in design and complexity. For the most part though, all tools follow a basic structure that requires a `config.py` and `tool.py` file. A directory for a tool typically looks like this:
 
-- to_toolname
+- `to_toolname`
     - `__init__.py`
     - `config.py`
     - `tool.py`
 
-For clarify sake all tool names follow a convention of "'direction of data flow'_'name of tool'". So in the case of our tool used for pushing data *to syslog*, we name it `to_syslog`. 
+For clarity sake, all tool names follow a convention of "'direction-of-data-flow_name-of-tool'". So in the case of our tool used for pushing data *to syslog*, we name it `to_syslog`. 
 
 ### Config.py
 *Located under [LQMToolset/lqmt/tools](https://github.com/anl-cyberscience/LQMToolset/blob/master/lqmt/tools/)*
 
-The config.py file is used to define the configurtion of a tool. Here you will define values that will be used and parsed out of the user configuration file. Typically in the config.py file you will define static variables, some functions, and also do some light data parsing. This is also where you should validate values coming in from the user configuration file that relates to your specific tool. 
+The config.py file is used to define the configuration of a tool. Here you will define values that will be used and parsed out of the user configuration file. Typically in the config.py file you will define static variables, some functions, and also do some light data parsing. This is also where you should validate values coming in from the user configuration file that relates to your specific tool. 
 
 A good example to look in relation to config.py in the current code base would be the [to_syslog](https://github.com/anl-cyberscience/LQMToolset/blob/master/lqmt/tools/to_syslog/config.py) tool. In a snippit below, you can see default values, such as a defult port, defined under the tools `__init__` definition. Here we can also see the validation values from the userconfig file, specifically we are checking to make use the 'host' is specified in the config. Compare the code snippit below with the user configuration example below it to see how the two influence and integrate with each other. 
 
