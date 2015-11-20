@@ -14,7 +14,7 @@ It is expected that most contributions will be adding support of a specific kind
     - `config.py`
     - `tool.py`
 
-For clarity sake, all tool names follow a convention of "'direction-of-data-flow_name-of-tool'". So in the case of our tool used for pushing data *to syslog*, we name it `to_syslog`. 
+For clarity sake, all tool names follow a convention of "'direction-of-data-flow_name-of-tool'". So in the case of our tool used for pushing data *to syslog*, we name it `to_syslog`. This is, of course, not a requirement. The name of the tool is at the discretion of the developer; we have just found this convention to work well for us. 
 
 ### Config.py
 *Located under [LQMToolset/lqmt/tools](https://github.com/anl-cyberscience/LQMToolset/blob/master/lqmt/tools/)*
