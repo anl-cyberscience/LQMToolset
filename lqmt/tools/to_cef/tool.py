@@ -13,7 +13,7 @@ class Header():
         self._version=0
         self._deviceVendor="DOECFM"
         self._deviceProduct="ToCEF"
-        self._deviceVersion="0.9"
+        self._deviceVersion="1.0.1"
         self._signatureID=alert.getReason()
         self._name=alert.getReason()
         self._severity=5

@@ -1,99 +1,98 @@
 import logging
-from lqm.exceptions import ConfigurationError
-from lqm.tool import ToolConfig
+import datetime
+from lqmt.lqm.exceptions import ConfigurationError
+from lqmt.lqm.tool import ToolConfig
+import os
 
 
 class FlexTextConfig(ToolConfig):
+    """
+    Configuration Class for FlexText
+    """
+
     def __init__(self, configData, csvToolInfo, unhandledCSV):
+        """
+        Constructor
+        """
+
         ToolConfig.__init__(self, configData, csvToolInfo, unhandledCSV)
-        self._logger = logging.getLogger("LQMT.FlexText.{0}".format(self.getName()))
+
+        self.logger = logging.getLogger("LQMT.FlexText.{0}".format(self.getName()))
         hasError = False
-        self._headerLine = False
-        self._headerLine = False
+
+        self.headerLine = False
+        self.incrementFile = False
+        self.cfm13Config = 'resources\\sampleConfigurations\\cfm13.cfg'
+        self.flexTConfig = 'resources\\sampleConfigurations\\toblock_csv.cfg'
 
         if 'fileParser' in configData:
-            self._fileParser = configData['fileParser']
+            self.fileParser = configData['fileParser']
         else:
             self.logger.error("The parameter 'fileParser' must be specified in the configuration")
             hasError = True
 
         if 'fields' in configData:
-            self._fields = configData['fields']
+            self.fields = configData['fields']
         else:
             self.logger.error("The parameter 'fields' must be specified in the configuration")
             hasError = True
 
         if 'delimiter' in configData:
-            self._delimiter = configData['delimiter']
+            self.delimiter = configData['delimiter']
         else:
             self.logger.error("The parameter 'delimiter' must be specified in the configuration")
             hasError = True
 
         if 'quoteChar' in configData:
-            self._quoteChar = configData['quoteChar']
+            self.quoteChar = configData['quoteChar']
         else:
             self.logger.error("The parameter 'quoteChar' must be specified in the configuration")
 
         if 'escapeChar' in configData:
-            self._escapeChar = configData['escapeChar']
+            self.escapeChar = configData['escapeChar']
         else:
             self.logger.error("The parameter 'escapeChar' must be specified in the configuration")
             hasError = True
 
         if 'headerLine' in configData:
-            self._headerLine = configData['headerLine']
+            self.headerLine = configData['headerLine']
 
         if 'doubleQuote' in configData:
-            self._doubleQuote = configData['doubleQuote']
+            self.doubleQuote = configData['doubleQuote']
 
         if 'quoteStyle' in configData:
-            self._quoteStyle = configData['quoteStyle']
+            self.quoteStyle = configData['quoteStyle']
         else:
             self.logger.error("The parameter 'quoteStyle' must be specified in the configuration")
             hasError = True
 
         if 'primarySchemaConfig' in configData:
-            self._primarySchemaConfig = configData['primarySchemaConfig']
+            self.primarySchemaConfig = configData['primarySchemaConfig']
         else:
             self.logger.error("The parameter 'primarySchemaConfig' must be specified in the configuration")
             hasError = True
 
         if 'siteSchemaConfig' in configData:
-            self._siteSchemaConfig = configData['siteSchemaConfig']
+            self.siteSchemaConfig = configData['siteSchemaConfig']
         else:
             self.logger.error("The parameter 'siteSchemaConfig' must be specified in configuration")
             hasError = True
 
+        if 'incrementFile' in configData:
+            self.incrementFile = configData['incrementFile']
+
+        if 'fileDestination' in configData:
+            increment = ""
+            file = configData['fileDestination']
+            filebase, fext = os.path.splitext(file)
+            if self.incrementFile:
+                increment = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+
+            self.fileDestination = filebase + "." + increment + fext
+        else:
+            hasError = True
+            self.logger.error("'file' must be specified for FlexText tool")
+
         if hasError:
             self.disable()
             raise ConfigurationError()
-
-    def getFileParser(self):
-        return self._fileParser
-
-    def getFields(self):
-        return self._fields
-
-    def getDelimiter(self):
-        return self._delimiter
-
-    def getQuoteChar(self):
-        return self._quoteChar
-
-    def getEscapeChar(self):
-        return self._escapeChar
-
-    def getHeaderLine(self):
-        return self._headerLine
-
-    def getDoubleQuote(self):
-        return self._doubleQuote
-
-    def getQuoteStyle(self):
-        return self._quoteStyle
-
-    def getprimarySchemaConfig(self):
-        return self._primarySchemeConfig
-
-    def getSiteSchemaConfig(self):
-        return self._siteSchemaConfig
