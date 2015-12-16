@@ -43,6 +43,7 @@ class Tool():
     """The base class for all tools."""
 
     def __init__(self, config, alertActions):
+
         self._config = config  # the configuration object
         self._alertActions = set(alertActions)  # The alert actions this tool handles
         self.toolName = ""  # The name of the tool defined by the tools class
@@ -206,9 +207,15 @@ class ToolChain():
                 tool.fileDone()
 
     def process(self, data, isWhitelisted, datafile):
-        """Process the alert"""
+        """
+        Process the alert data using each tool in the toolchain
+
+        :param data: the processed alert data in the intermediate format
+        :param isWhitelisted: indicates if the alert data is whitelisted or not
+        :param datafile: the directory location of the processed alert datafile. Currently only used with FlexText
+         because the alert has to be reprocessed for FlexText
+        """
         if self.isEnabled():
-            d = data
             # if the alert can be processed by this toolchain, then process it
             if data.getAction() in self._actionsToProcess or AlertAction.get('All') in self._actionsToProcess:
                 # if indicator isn't whitelisted, proceed with processing. Otherwise ignore processing
@@ -218,9 +225,9 @@ class ToolChain():
                     for tool in self._tools:
                         # FlexText requires the datafile instead of the processed data.
                         if tool.toolName == "FlexText":
-                            d = tool.process(datafile)
+                            tool.process(datafile)
                         else:
-                            d = tool.process(d)
+                            tool.process(data)
                 else:
                     self._logger.info(
                         "Alert not processed. IP Indicator is whitelisted. Whitelisted IP:{0}".format(

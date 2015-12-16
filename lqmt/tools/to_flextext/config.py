@@ -1,8 +1,8 @@
+import os
 import logging
 import datetime
 from lqmt.lqm.exceptions import ConfigurationError
 from lqmt.lqm.tool import ToolConfig
-import os
 
 
 class FlexTextConfig(ToolConfig):
@@ -14,8 +14,7 @@ class FlexTextConfig(ToolConfig):
         """
         Constructor
         """
-
-        ToolConfig.__init__(self, configData, csvToolInfo, unhandledCSV)
+        super().__init__(configData, csvToolInfo, unhandledCSV)
 
         self.logger = logging.getLogger("LQMT.FlexText.{0}".format(self.getName()))
         hasError = False
@@ -95,4 +94,4 @@ class FlexTextConfig(ToolConfig):
 
         if hasError:
             self.disable()
-            raise ConfigurationError()
+            raise ConfigurationError("Missing a required value in the user configuration for the to_flextext tool")
