@@ -20,20 +20,21 @@ class Block:
 
     def getDetectedTime(self):
         return self._detected
-    
+
     def setDetectedTime(self, dt):
         self._detected=dt
-    
+
     def getDuration(self):
         return self._duration
-    
+
 class ToPaloAlto(Tool):
     '''
     '''
 
     def __init__(self, config):
-        Tool.__init__(self,config,[AlertAction.get('Block'),AlertAction.get('Revoke')])
-        self._config=config
+        super().__init__(config, [AlertAction.get('Block'), AlertAction.get('Revoke')])
+
+        # self._config=config
         self._conn = self._config.getDBConn()
         self._cur = self._conn.cursor()
         self._xapi=self._config.getXapi()
@@ -48,8 +49,8 @@ class ToPaloAlto(Tool):
         self._revokes=dict()
         # max per query controls the number of ips per query that are handled.  This is done to ensure that sqlite
         # and python don't have issues if there a significant number of ips to process at once 
-        self._maxPerQuery=100  
-        
+        self._maxPerQuery=100
+
     def initialize(self):
         super().initialize()
 
@@ -133,7 +134,7 @@ class ToPaloAlto(Tool):
                 blocks=blocks+self._cur.rowcount
                 self._conn.commit()
         self._totalBlocked=blocks-self._totalUpdated
-        
+
         # now remove any that have expired
         self._cur.execute("delete from blocks where end_time < ?",(ctime,))
         self._conn.commit()
@@ -157,7 +158,7 @@ class ToPaloAlto(Tool):
             tp=self._totalPruned
             self._pruneByTimeAdded(toPrune-self._totalPruned,ctime)
             self._totalPruned=self._totalPruned+tp
-                
+
     def _deleteIPsFromDB(self,todel):
         """Delete the ips specified in todel from the database."""
         cnt=0
@@ -169,7 +170,7 @@ class ToPaloAlto(Tool):
             self._conn.commit()
             cnt=cnt+self._cur.rowcount
         return cnt
-    
+
     def _pruneByExpiration(self,toPrune,ctime):
             # delete blocks starting from the soonest to expire until we have reached the limit
             todel=[]

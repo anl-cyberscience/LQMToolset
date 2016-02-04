@@ -9,20 +9,21 @@ class ToSysLog(Tool):
     """ToSysLog communicates with the SysLog logger via udp or tcp based on the user config settings."""
 
     def __init__(self, config):
-        Tool.__init__(self, config, [AlertAction.get('All')])
+        super().__init__(config, [AlertAction.get('All')])
         self._logger = logging.getLogger("LQMT.SysLog.{0}".format(self.getName()))
         self._totalSent = 0
-        self._messageHead = config.getMessageHead()
-        self._messageFields = config.getMessageFields()
+        self._messageHead = self._config.messageHead
+        self._messageFields = self._config.messageFields
 
         if self.isEnabled():
-            if self.getConfig().getProtocol() == 'tcp':
+            if self._config.protocol == 'tcp':
                 self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 try:
-                    self._socket.connect((config.getHost(), config.getPort()))
+                    self._socket.connect((self._config.host, self._config.port))
                 except Exception as e:
                     self._logger.error(
-                        "Unable to connect to remote Syslog server: {0}:{1}".format(config.getHost(), config.getPort()))
+                            "Unable to connect to remote Syslog server: {0}:{1}".format(self._config.host,
+                                                                                        self._config.port))
                     self._logger.error(str(e))
                     self._socket = None
                     self.disable()
@@ -33,7 +34,11 @@ class ToSysLog(Tool):
         super().initialize()
 
     def process(self, data):
-        """Process alerts to SysLog server. Message format defined in user config file"""
+        """
+        Process alerts to SysLog server. Message format defined in user config file
+
+        :param data: alert data
+        """
 
         if not self.isEnabled():
             return
@@ -42,10 +47,10 @@ class ToSysLog(Tool):
             # format data being sent to syslog
             msg = self.format_syslog_msg(data.getFields(self._messageFields))
             syslog_msg = bytes("{0}\n".format(msg), 'UTF-8')
-            if self.getConfig().getProtocol() == "TCP":
+            if self._config.protocol == "TCP":
                 self._socket.send(syslog_msg)
             else:
-                self._socket.sendto(syslog_msg, (self.getConfig().getHost(), self.getConfig().getPort()))
+                self._socket.sendto(syslog_msg, (self._config.host, self._config.port))
             self._totalSent += 1
         except Exception as e:
             msg = "Error while sending data to remote Syslog server"
