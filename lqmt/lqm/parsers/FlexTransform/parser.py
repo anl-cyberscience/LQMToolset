@@ -8,6 +8,7 @@ from lqmt.lqm.data import Alert
 import os
 import inspect
 import logging
+import io
 
 
 class FlexTransformParser(object):
@@ -15,15 +16,16 @@ class FlexTransformParser(object):
         self._logger = logging.getLogger("LQMT.Parsers")
 
         # get the FlexTransform directory
-        currentdir, name = os.path.split(inspect.getfile(FlexTransform.FlexTransform))
+        current_dir, name = os.path.split(inspect.getfile(FlexTransform.FlexTransform))
         self._transform = FlexTransform.FlexTransform.FlexTransform()
 
         # configItems contains a list of key,value pairs key=Parser/Format name, value=FX config file
         for p, c in config.items():
-            f = open(os.path.join(currentdir, c), 'r')
+            f = open(os.path.join(current_dir, c), 'r')
 
             # add the parser info to the FX instance
-            self._transform.AddParser(p, f)
+            if f not in self._transform.Parsers:
+                self._transform.AddParser(p, f)
 
     def parse(self, datafile, meta):
         """
@@ -49,23 +51,32 @@ class FlexTransformParser(object):
 
         return alerts
 
-    def parseflextext(self, datafile, destination):
+    def parseflextext(self, datafile, destination, config_str):
         """
         Flextext parser. Transforms intermediate data into a user defined structure.
 
         :param datafile: dir path to the alert datafile that will be transformed
         :param destination: dir path to where the transformed data should be placed. The destination var is turned into
         file object before being passed to FlexT.
+        :param config_str: Parser configuration in the form of a string. Is wrapped in an IO wrapped and then passed
+        to FlexT to configure FlexText parser
         :return: Returns none. Data is outputted to file specified by destination variable.
         """
 
+        # Add FlexText parser using config_str wrapped in StringIO object
+        if 'FlexText' not in self._transform.Parsers:
+            config_str_io = io.StringIO(config_str)
+            config_str_txt = io.StringIO(config_str_io.read())
+            self._transform.AddParser("FlexText", config_str_txt)
+
+        # Run FlexText parser
         try:
             with open(destination, "w") as destination_file_obj:
                 self._transform.TransformFile(
                     sourceFileName=datafile,
                     targetFileName=destination_file_obj,
                     sourceParserName='Cfm13Alert',
-                    targetParserName="CSV"
+                    targetParserName="FlexText"
                 )
 
         except Exception as e:
