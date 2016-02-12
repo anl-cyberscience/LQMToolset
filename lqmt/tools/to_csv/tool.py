@@ -6,7 +6,7 @@ import os
 
 class ToCSV(Tool):
     def __init__(self, config):
-        Tool.__init__(self, config, [AlertAction.get('All')])
+        super().__init__(config, [AlertAction.get('All')])
         self._logger = logging.getLogger("LQMT.CSV.{0}".format(self.getName()))
         self._fp = None
 
@@ -26,7 +26,7 @@ class ToCSV(Tool):
             self.disable()
         if self.isEnabled():
             # write the alert to the file
-            self._fp.write(",".join(alert.getFields(self.getConfig().getFields())) + "\n")
+            self._fp.write(",".join(alert.getFields(self._config.fields)) + "\n")
             self._fp.flush()
         return alert
 
@@ -34,16 +34,17 @@ class ToCSV(Tool):
         pass
 
     def cleanup(self):
-        self._fp.close()
+        if self._fp is not None:
+            self._fp.close()
 
     def _openFile(self):
         try:
-            file = self.getConfig().getFile()
+            file = self._config.getFile()
             fileDirectory = os.path.dirname(file)
             if not os.path.exists(fileDirectory):
                 os.makedirs(fileDirectory, 0o755, True)
             self._fp = open(file, 'a')
-            self._fp.write(",".join(self.getConfig().getFields()) + "\n")
+            self._fp.write(",".join(self._config.fields) + "\n")
             return True
         except Exception as e:
             self._logger.error("Unable to open csv file: {0}".format(file))
