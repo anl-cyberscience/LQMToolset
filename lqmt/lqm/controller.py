@@ -60,7 +60,7 @@ class LQMToolController():
                                 isWL = alert.isWhitelisted(self._config.getWhitelist())
                                 for chain in toolChains:
                                     if chain.isEnabled():
-                                        chain.process(alert, isWL, datafile)
+                                        chain.process(alert, isWL, datafile, meta)
                             # notify each chain the file is done
                             for chain in toolChains:
                                 if (chain.isEnabled()):

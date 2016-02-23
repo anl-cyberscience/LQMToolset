@@ -21,14 +21,14 @@ class ToFlexText(Tool):
     def initialize(self):
         super().initialize()
 
-    def process(self, datafile):
+    def process(self, datafile, meta):
         """
         Process function. Handles the processing of data for the tool. Does so by calling the FlexText parser
 
         :param datafile: String that contains the path to the alert being processed.
         """
 
-        self._parser.parseflextext(datafile, self._config.file_destination, self._config.config_to_str())
+        self._parser.parseflextext(datafile, meta, self._config.file_destination, self._config.config_to_str())
 
     def commit(self):
         pass

@@ -206,7 +206,7 @@ class ToolChain():
             for tool in self._tools:
                 tool.fileDone()
 
-    def process(self, data, isWhitelisted, datafile):
+    def process(self, data, isWhitelisted, datafile, meta):
         """
         Process the alert data using each tool in the toolchain
 
@@ -225,7 +225,7 @@ class ToolChain():
                     for tool in self._tools:
                         # FlexText requires the datafile instead of the processed data.
                         if tool.toolName == "FlexText":
-                            tool.process(datafile)
+                            tool.process(datafile, meta)
                         else:
                             tool.process(data)
                 else:

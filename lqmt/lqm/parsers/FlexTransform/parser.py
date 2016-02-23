@@ -51,10 +51,12 @@ class FlexTransformParser(object):
 
         return alerts
 
-    def parseflextext(self, datafile, destination, config_str):
+    def parseflextext(self, datafile, meta, destination, config_str):
         """
         Flextext parser. Transforms intermediate data into a user defined structure.
 
+        :param meta: Contains meta data about the datafile. Examples includes PayloadFormat, FileName, PayloadType, and
+        more.
         :param datafile: dir path to the alert datafile that will be transformed
         :param destination: dir path to where the transformed data should be placed. The destination var is turned into
         file object before being passed to FlexT.
@@ -75,8 +77,9 @@ class FlexTransformParser(object):
                 self._transform.TransformFile(
                     sourceFileName=datafile,
                     targetFileName=destination_file_obj,
-                    sourceParserName='Cfm13Alert',
-                    targetParserName="FlexText"
+                    sourceParserName=meta['PayloadFormat'],
+                    targetParserName="FlexText",
+                    sourceMetaData=meta
                 )
 
         except Exception as e:
