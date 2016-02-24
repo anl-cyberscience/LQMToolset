@@ -48,7 +48,7 @@ The Palo Alto tool places or removes blocks on Palo Alto Networks firewall devic
 
 Setting              | Explanation
 :------------------: | :----------
-`name`               | A unique name identifying this device.
+`name`               | A unique name identifying this tool instance.
 `api_key`            | The API key retrieved from the Palo Alto device for remote access.
 `api_username`       | A username with with API access/privileges to the Palo Alto device.
 `api_password`       | The corresponding password to the username listed above.
@@ -129,7 +129,7 @@ Place or remove blocks on Checkpoint devices. The connection to Checkpoint devic
 
 Setting                 | Explanation
 :---------------------: | :----------
-`name`                  | A unique name identifying this device. 
+`name`                  | A unique name identifying this tool instance. 
 `hostname`              | The Checkpoint device's hostname or IP address.
 `port`                  | The port number through which to connect via SSH.
 `username`              | The username with which to login to the Checkpoint device.
@@ -164,7 +164,7 @@ The ArcSight tool places or removes blocks on ArcSight devices.
 
 Setting              | Explanation
 :------------------: | :----------
-`name`               | A unique name identifying this device.
+`name`               | A unique name identifying this tool instance.
 `host`               | The hostname or IP address of the ArcSight device.
 `port`               | The port number on which the ArcSight device is listening.
 `protocol`           | The IP protocol to use: `tcp` or `udp`.
@@ -181,7 +181,7 @@ The CEF tool converts data from the intermediate format to the CEF format.
 
 Setting | Explanation
 :-----: | :----------
-`name`  | A unique name identifying this device.
+`name`  | A unique name identifying this tool instance.
 
 ### Syslog
 The Syslog tool is used to log information to remote Syslog servers. 
@@ -202,12 +202,45 @@ Example output in syslog:
 
 Setting         | Explanation
 :-------------: | :-----------
-`name`          | A unique name identifying this device.
+`name`          | A unique name identifying this tool instance.
 `host`          | The hostname or IP address of the remote syslog server.
 `port`          | The port number the Syslog server is listening on. Note: Syslog defaults to 514, so if left blank LQMT will also default to 514 for   communication. 
 `protocol`      | The IP protocol to use: `tcp` or `udp`.
 `messageHead`   | Used at the beginning of every message sent to Syslog. 
 `messageFields` | Used to specify what fields you want extracted from the alerts and sent in the message to Syslog. 
+
+### FlexText
+
+    [[Tools.FlexText]]
+        name                = "flextext-tool"
+        fileParser          = "CSV"
+        fields              = 'action1,indicator,reportedTime'
+        delimiter           = ","
+        quoteChar           = '"'
+        escapeChar          = '\\'
+        headerLine          = true
+        doubleQuote         = false
+        quoteStyle          = "Minimal"
+        primarySchemaConfig = "resources/schemaDefinitions/lqmtools.json"
+        siteSchemaConfig    = "resources/schemaDefinitions/cfm-toblock.json"
+        fileDestination     = "/home/output/test.csv"
+        incrementFile       = true
+
+Setting               | Explanation
+:-------------------: | :-----------
+`name`                | A unique name identifying this tool instance.
+`fileParser`          | 
+`fields`              | Fields, identified from the intermediate format, to be extracted. The order of the fields here determines the order of the output.
+`delimiter`           | A single character delimter used to seperate fields. Default value is ','.
+`quoteChar`           | Character used to quote respective values.
+`escapeChar`          | Character used to escape other characters
+`headerLine`          | Boolean value used to set if a header line detailing the extacted values should be included in the output.
+`doubleQuote`         | Determines how the quoteChar itself is quoted. If `True` then the character is doubled. If `False`, the character is prefixed to the quoteChar.
+`quoteStyle`          | Sets the style of the quoting. Can be one of four values. Minimal: only quotes fields that contain special characters. NonNumeric: only quotes non-numeric fields. All: quotes all fields.
+`primarySchemaConfig` |
+`siteSchemaConfig`    |
+`fileDestination`     | 
+`incrementFile`       |
 
 # Logging
 

@@ -26,8 +26,10 @@ class ToFlexText(Tool):
         Process function. Handles the processing of data for the tool. Does so by calling the FlexText parser
 
         :param datafile: String that contains the path to the alert being processed.
+        :param meta: meta data of the datafile. Used to assign correct parser
         """
 
+        # Use flextext parser to parse datafile.
         self._parser.parseflextext(datafile, meta, self._config.file_destination, self._config.config_to_str())
 
     def commit(self):
