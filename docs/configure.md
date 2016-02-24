@@ -79,7 +79,7 @@ Requirements:
         - Select Certificates under the Certificated management menu
         - Click on Generate at the bottom of the window
         - Fill in the fields as appropriate
-            - Common name sould be the machine name
+            - Common name should be the machine name
             - Ensure Certificate Authority is check
             - Add any Certificate Attributes you may want
             - Click Generate
@@ -90,7 +90,7 @@ Requirements:
     - After creating the certificate, you will need to export it
         - Click the export button at the bottom of the window and accept the defaults
         - Store it in a location accessible to LQMT
-        - Specifify the location in the cafile configuration parameter for the specific Palo Alto device
+        - Specify the location in the cafile configuration parameter for the specific Palo Alto device
 - Create the block list objects
     - Log into the Web GUI as an administrator
     - Select the Objects tab
@@ -210,6 +210,7 @@ Setting         | Explanation
 `messageFields` | Used to specify what fields you want extracted from the alerts and sent in the message to Syslog. 
 
 ### FlexText
+FlexText is a tool used to output parsed alert data in a user-defined, character deliminated, format. 
 
     [[Tools.FlexText]]
         name                = "flextext-tool"
@@ -229,18 +230,18 @@ Setting         | Explanation
 Setting               | Explanation
 :-------------------: | :-----------
 `name`                | A unique name identifying this tool instance.
-`fileParser`          | 
+`fileParser`          | Select parser type. Currently only supports and defaults to `CSV`
 `fields`              | Fields, identified from the intermediate format, to be extracted. The order of the fields here determines the order of the output.
-`delimiter`           | A single character delimter used to seperate fields. Default value is ','.
+`delimiter`           | A single character delimiter used to separate fields. Default value is `,`.
 `quoteChar`           | Character used to quote respective values.
 `escapeChar`          | Character used to escape other characters
-`headerLine`          | Boolean value used to set if a header line detailing the extacted values should be included in the output.
+`headerLine`          | Boolean value used to set if a header line detailing the exacted values should be included in the output. Defaults to `False`.
 `doubleQuote`         | Determines how the quoteChar itself is quoted. If `True` then the character is doubled. If `False`, the character is prefixed to the quoteChar.
-`quoteStyle`          | Sets the style of the quoting. Can be one of four values. Minimal: only quotes fields that contain special characters. NonNumeric: only quotes non-numeric fields. All: quotes all fields.
-`primarySchemaConfig` |
-`siteSchemaConfig`    |
-`fileDestination`     | 
-`incrementFile`       |
+`quoteStyle`          | Sets the style of the quoting. Can be one of four values. `Minimal`: only quotes fields that contain special characters. `NonNumeric`: only quotes non-numeric fields. `All`: quotes all fields.
+`primarySchemaConfig` | Defines the path to the primary schema configuration. Most users won't need to change the default setting; if you do, then some understanding of FlexTransform is suggested.
+`siteSchemaConfig`    | Defines the path to the site schema configuration. Most users won't need to change the default setting; if you do, then some understanding of FlexTransform is suggested.
+`fileDestination`     | Sets the destination of the output file. 
+`incrementFile`       | Used to increment the output file. When set to `True`, the output file name will be incremented with a timestamp. When set to `False` the output file will be overrune everytime the the tool is run. Defaults to `False`
 
 # Logging
 
