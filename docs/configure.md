@@ -230,14 +230,14 @@ FlexText is a tool used to output parsed alert data in a user-defined, character
 Setting               | Explanation
 :-------------------: | :-----------
 `name`                | A unique name identifying this tool instance.
-`fileParser`          | Select parser type. Currently only supports and defaults to `CSV`
+`fileParser`          | Select parser type. Currently only supports and defaults to `CSV`.
 `fields`              | Fields, identified from the intermediate format, to be extracted. The order of the fields here determines the order of the output.
 `delimiter`           | A single character delimiter used to separate fields. Default value is `,`.
 `quoteChar`           | Character used to quote respective values.
-`escapeChar`          | Character used to escape other characters
-`headerLine`          | Boolean value used to set if a header line detailing the exacted values should be included in the output. Defaults to `False`.
+`escapeChar`          | Character used to escape other characters.
+`headerLine`          | Boolean value used to set if a header line detailing the extracted values should be included in the output. Defaults to `False`.
 `doubleQuote`         | Determines how the quoteChar itself is quoted. If `True` then the character is doubled. If `False`, the character is prefixed to the quoteChar.
-`quoteStyle`          | Sets the style of the quoting. Can be one of four values. `Minimal`: only quotes fields that contain special characters. `NonNumeric`: only quotes non-numeric fields. `All`: quotes all fields.
+`quoteStyle`          | Sets the style of the quoting. Can be one of four values. `Minimal`: only quotes fields that contain special characters. `NonNumeric`: only quotes non-numeric fields. `All`: quotes all fields. `None`: No fields are quoted
 `primarySchemaConfig` | Defines the path to the primary schema configuration. Most users won't need to change the default setting; if you do, then some understanding of FlexTransform is suggested.
 `siteSchemaConfig`    | Defines the path to the site schema configuration. Most users won't need to change the default setting; if you do, then some understanding of FlexTransform is suggested.
 `fileDestination`     | Sets the destination of the output file. 
