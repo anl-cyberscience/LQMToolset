@@ -5,6 +5,13 @@ LQMToolset
 
 The Last Quarter Mile Toolset is flexible framework that allows automation to process cyber threat information (CTI) and update endpoint defense tools.
 
+### Install
+`Python3` and [pip](https://pypi.python.org/pypi/pip) are required for easy installation. If those requirements are met, then input the following command in the terminal:
+```
+pip3 install lqmt
+```
+For more detailed installation instructions and for handling certain edge cases, see [the installation documentation](https://lqmtoolset.readthedocs.org/en/latest/install/)
+
 ### Documentation
 See [https://lqmtoolset.readthedocs.org/](https://lqmtoolset.readthedocs.org/).
 
