@@ -138,6 +138,7 @@ class FlexTextConfig(ToolConfig):
         self.config_str += "\nEscapeChar=" + self.escape_char
         self.config_str += "\nHeaderLine=" + str(self.header_line)
         self.config_str += "\nDoubleQuote=" + str(self.double_quote)
+        self.config_str += "\nQuoteStyle=" + str(self.quote_style)
         self.config_str += "\n[SCHEMA]"
         self.config_str += "\nPrimarySchemaConfiguration=" + self.primary_schema_config
         self.config_str += "\nSiteSchemaConfiguration=" + self.site_schema_config
