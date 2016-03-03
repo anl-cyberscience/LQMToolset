@@ -110,7 +110,7 @@ Requirements:
         - <https://live.paloaltonetworks.com/docs/DOC-­‐5850>
 
 #### Limitations
-The Palo Alto module currently only blocks IP addresses and network ranges (CIDR). Any other block that are not supported will be output to the fiel specified in the unhandled_blocks configuration parameter. 
+The Palo Alto module currently only blocks IP addresses and network ranges (CIDR). Any other block that are not supported will be output to the file specified in the unhandled_blocks configuration parameter. 
 
 
 ### Checkpoint
@@ -204,13 +204,13 @@ Setting         | Explanation
 :-------------: | :-----------
 `name`          | A unique name identifying this tool instance.
 `host`          | The hostname or IP address of the remote syslog server.
-`port`          | The port number the Syslog server is listening on. Note: Syslog defaults to 514, so if left blank LQMT will also default to 514 for   communication. 
+`port`          | The port number the Syslog server is listening on. Note: Syslog defaults to 514, so if left blank LQMT will also default to 514 for communication. 
 `protocol`      | The IP protocol to use: `tcp` or `udp`.
 `messageHead`   | Used at the beginning of every message sent to Syslog. 
 `messageFields` | Used to specify what fields you want extracted from the alerts and sent in the message to Syslog. 
 
 ### FlexText
-FlexText is a tool used to output parsed alert data in a user-defined, character deliminated, format. 
+FlexText is a tool used to output parsed alert data in a user-defined, character delimited, format. 
 
     [[Tools.FlexText]]
         name                = "flextext-tool"
@@ -309,7 +309,7 @@ The following sections specify the format of the whitelist file mentioned above.
     http://www.somesite.com/blah
 
 # Intermediate Data Format
-The intermediate data format is a subset/simplificatino of the complete thread data that can be directly used by a cariety of systems. 
+The intermediate data format is a subset/simplification of the complete thread data that can be directly used by a cariety of systems. 
 
 Field Name                      | Description
 :-----------------------------: | :-----------
