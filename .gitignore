@@ -20,8 +20,10 @@ build/
 dist/
 *.egg-info/
 
+
 #IDE files
 *.idea
+*.vscode
 
 #DB files
 *.db

@@ -55,14 +55,13 @@ class FlexTransformParser(object):
         """
         Flextext parser. Transforms intermediate data into a user defined structure.
 
-        :param destination_file_obj: File object used to write contents to file.
+        :param datafile: dir path to the alert datafile that will be transformed
         :param meta: Contains meta data about the datafile. Examples includes PayloadFormat, FileName, PayloadType, and
         more.
-        :param datafile: dir path to the alert datafile that will be transformed
-        file object before being passed to FlexT.
+        :param destination_file_obj: File object used to write contents to file.
         :param config_str: Parser configuration in the form of a string. Is wrapped in an IO wrapped and then passed
         to FlexT to configure FlexText parser
-        :return: Returns none. Data is outputted to file specified by destination variable.
+        :return: Returns none. Data is outputted to file specified by destination_file_obj
         """
 
         # Add FlexText parser using config_str wrapped in StringIO object
