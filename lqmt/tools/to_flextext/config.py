@@ -87,9 +87,10 @@ class FlexTextConfig(ToolConfig):
             file = config_data['fileDestination']
             filebase, text = os.path.splitext(file)
             if self.increment_file:
-                increment = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+                increment = "."
+                increment += datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 
-            self.file_destination = filebase + "." + increment + text
+            self.file_destination = filebase + increment + text
         else:
             hasError = True
             self.logger.error("'file' must be specified for FlexText tool")
