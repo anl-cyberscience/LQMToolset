@@ -21,7 +21,10 @@ class SystemConfig:
                 },
                 'SysLog': {
                     'module': 'to_syslog', 'config_class': 'SysLogConfig', 'tool_class': 'ToSysLog'
-                 }
+                },
+                'FlexText': {
+                    'module': 'to_flextext', 'config_class': 'FlexTextConfig', 'tool_class': 'ToFlexText'
+                }
             },
             'UnprocessedCSV': {
                 'name': 'for-unprocessed',

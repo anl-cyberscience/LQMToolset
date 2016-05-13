@@ -30,6 +30,7 @@ class LQMToolController():
         # initialize tool chains
         toolChains = self._config.getToolChains()
         numAlerts = 0
+
         for chain in toolChains:
             if (chain.isEnabled()):
                 chain.initialize()
@@ -42,7 +43,8 @@ class LQMToolController():
                 # for each datafile/metfafile set
                 meta = self._parsemeta(metafile)
                 if (meta):
-                    # get the parser for the payload format of this file 
+                    # get the parser for the payload format of this file.
+                    # Note that parser is defined by the payload format of the given file.
                     parser = self._config.getParser(meta["PayloadFormat"])
                     try:
                         if (parser != None):
@@ -58,7 +60,7 @@ class LQMToolController():
                                 isWL = alert.isWhitelisted(self._config.getWhitelist())
                                 for chain in toolChains:
                                     if chain.isEnabled():
-                                        chain.process(alert, isWL)
+                                        chain.process(alert, isWL, datafile, meta)
                             # notify each chain the file is done
                             for chain in toolChains:
                                 if (chain.isEnabled()):

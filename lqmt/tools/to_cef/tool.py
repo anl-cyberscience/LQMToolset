@@ -21,6 +21,7 @@ class Header():
         self._severity = 5
         self._timestamp = alert.getProcessedTime()
 
+
     def toCEFString(self):
         """Outout the header as a properly formatted CEF header."""
         ts = datetime.fromtimestamp(int(self._timestamp))

@@ -39,6 +39,7 @@ class LQMToolConfig():
         self._toolChains = []
         self._whitelist = None
         self._loggingCfg = None
+        self._toolsList = []
 
         # load config files
         self._loadSystemConfig()
@@ -156,18 +157,22 @@ class LQMToolConfig():
         if 'Tools' not in config:
             return
         tools = config['Tools']
+
         theseTools = {}
         for key in tools:
             if key in toolClasses:
                 toolInfo = toolClasses[key]
+                self._toolsList.append(key)
                 for cfgData in tools[key]:
                     tool = toolInfo.create(cfgData, toolClasses['CSV'], self._config['UnprocessedCSV'])
+                    tool.toolName = key
                     theseTools[tool.getName()] = tool
         return theseTools
 
     def _createToolChains(self, config, localTools, globalTools=None):
         if 'ToolChains' not in config:
             return
+
         chains = config['ToolChains']
         for chainCfg in chains:
             if 'active' in chainCfg and chainCfg['active'] == True:
@@ -221,3 +226,9 @@ class LQMToolConfig():
 
     def getWhitelist(self):
         return self._whitelist
+
+    def getToolsList(self):
+        """
+        :return: Returns a list of tools that are currently active in the toolchain.
+        """
+        return self._toolsList

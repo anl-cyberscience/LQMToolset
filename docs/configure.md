@@ -48,7 +48,7 @@ The Palo Alto tool places or removes blocks on Palo Alto Networks firewall devic
 
 Setting              | Explanation
 :------------------: | :----------
-`name`               | A unique name identifying this device.
+`name`               | A unique name identifying this tool instance.
 `api_key`            | The API key retrieved from the Palo Alto device for remote access.
 `api_username`       | A username with with API access/privileges to the Palo Alto device.
 `api_password`       | The corresponding password to the username listed above.
@@ -79,7 +79,7 @@ Requirements:
         - Select Certificates under the Certificated management menu
         - Click on Generate at the bottom of the window
         - Fill in the fields as appropriate
-            - Common name sould be the machine name
+            - Common name should be the machine name
             - Ensure Certificate Authority is check
             - Add any Certificate Attributes you may want
             - Click Generate
@@ -90,7 +90,7 @@ Requirements:
     - After creating the certificate, you will need to export it
         - Click the export button at the bottom of the window and accept the defaults
         - Store it in a location accessible to LQMT
-        - Specifify the location in the cafile configuration parameter for the specific Palo Alto device
+        - Specify the location in the cafile configuration parameter for the specific Palo Alto device
 - Create the block list objects
     - Log into the Web GUI as an administrator
     - Select the Objects tab
@@ -110,7 +110,7 @@ Requirements:
         - <https://live.paloaltonetworks.com/docs/DOC-­‐5850>
 
 #### Limitations
-The Palo Alto module currently only blocks IP addresses and network ranges (CIDR). Any other block that are not supported will be output to the fiel specified in the unhandled_blocks configuration parameter. 
+The Palo Alto module currently only blocks IP addresses and network ranges (CIDR). Any other block that are not supported will be output to the file specified in the unhandled_blocks configuration parameter. 
 
 
 ### Checkpoint
@@ -129,7 +129,7 @@ Place or remove blocks on Checkpoint devices. The connection to Checkpoint devic
 
 Setting                 | Explanation
 :---------------------: | :----------
-`name`                  | A unique name identifying this device. 
+`name`                  | A unique name identifying this tool instance. 
 `hostname`              | The Checkpoint device's hostname or IP address.
 `port`                  | The port number through which to connect via SSH.
 `username`              | The username with which to login to the Checkpoint device.
@@ -164,7 +164,7 @@ The ArcSight tool places or removes blocks on ArcSight devices.
 
 Setting              | Explanation
 :------------------: | :----------
-`name`               | A unique name identifying this device.
+`name`               | A unique name identifying this tool instance.
 `host`               | The hostname or IP address of the ArcSight device.
 `port`               | The port number on which the ArcSight device is listening.
 `protocol`           | The IP protocol to use: `tcp` or `udp`.
@@ -181,7 +181,7 @@ The CEF tool converts data from the intermediate format to the CEF format.
 
 Setting | Explanation
 :-----: | :----------
-`name`  | A unique name identifying this device.
+`name`  | A unique name identifying this tool instance.
 
 ### Syslog
 The Syslog tool is used to log information to remote Syslog servers. 
@@ -202,12 +202,46 @@ Example output in syslog:
 
 Setting         | Explanation
 :-------------: | :-----------
-`name`          | A unique name identifying this device.
+`name`          | A unique name identifying this tool instance.
 `host`          | The hostname or IP address of the remote syslog server.
-`port`          | The port number the Syslog server is listening on. Note: Syslog defaults to 514, so if left blank LQMT will also default to 514 for   communication. 
+`port`          | The port number the Syslog server is listening on. Note: Syslog defaults to 514, so if left blank LQMT will also default to 514 for communication. 
 `protocol`      | The IP protocol to use: `tcp` or `udp`.
 `messageHead`   | Used at the beginning of every message sent to Syslog. 
 `messageFields` | Used to specify what fields you want extracted from the alerts and sent in the message to Syslog. 
+
+### FlexText
+FlexText is a tool used to output parsed alert data in a user-defined, character delimited, format. 
+
+    [[Tools.FlexText]]
+        name                = "flextext-tool"
+        fileParser          = "CSV"
+        fields              = 'action1,indicator,reportedTime'
+        delimiter           = ","
+        quoteChar           = '"'
+        escapeChar          = '\\'
+        headerLine          = true
+        doubleQuote         = false
+        quoteStyle          = "Minimal"
+        primarySchemaConfig = "resources/schemaDefinitions/lqmtools.json"
+        siteSchemaConfig    = "resources/schemaDefinitions/cfm-toblock.json"
+        fileDestination     = "/home/output/test.csv"
+        incrementFile       = true
+
+Setting               | Explanation
+:-------------------: | :-----------
+`name`                | A unique name identifying this tool instance.
+`fileParser`          | Select parser type. Currently only supports and defaults to `CSV`.
+`fields`              | Fields, identified from the intermediate format, to be extracted. The order of the fields here determines the order of the output.
+`delimiter`           | A single character delimiter used to separate fields. Default value is `,`.
+`quoteChar`           | Character used to quote respective values.
+`escapeChar`          | Character used to escape other characters.
+`headerLine`          | Boolean value used to set if a header line detailing the extracted values should be included in the output. Defaults to `False`.
+`doubleQuote`         | Determines how the quoteChar itself is quoted. If `True` then the character is doubled. If `False`, the character is prefixed to the quoteChar.
+`quoteStyle`          | Sets the style of the quoting. Can be one of four values. `Minimal`: only quotes fields that contain special characters. `NonNumeric`: only quotes non-numeric fields. `All`: quotes all fields. `None`: No fields are quoted
+`primarySchemaConfig` | Defines the path to the primary schema configuration. Most users won't need to change the default setting; if you do, then some understanding of FlexTransform is suggested.
+`siteSchemaConfig`    | Defines the path to the site schema configuration. Most users won't need to change the default setting; if you do, then some understanding of FlexTransform is suggested.
+`fileDestination`     | Sets the destination of the output file. 
+`incrementFile`       | Used to increment the output file. When set to `True`, the output file name will be incremented with a timestamp. When set to `False` the output file will be overrune everytime the the tool is run. Defaults to `False`
 
 # Logging
 
@@ -275,7 +309,7 @@ The following sections specify the format of the whitelist file mentioned above.
     http://www.somesite.com/blah
 
 # Intermediate Data Format
-The intermediate data format is a subset/simplificatino of the complete thread data that can be directly used by a cariety of systems. 
+The intermediate data format is a subset/simplification of the complete thread data that can be directly used by a cariety of systems. 
 
 Field Name                      | Description
 :-----------------------------: | :-----------

@@ -21,6 +21,9 @@ class ToolConfig():
             self._unprocessedHandler = UnprocessedAlertHandler(csvToolInfo.create(cfg, None, None))
 
     def getName(self):
+        """
+        :return: Returns tool named defined in the userconfig
+        """
         return self._name
 
     def isEnabled(self):
@@ -40,8 +43,10 @@ class Tool():
     """The base class for all tools."""
 
     def __init__(self, config, alertActions):
+
         self._config = config  # the configuration object
         self._alertActions = set(alertActions)  # The alert actions this tool handles
+        self.toolName = ""  # The name of the tool defined by the tools class
 
     def getConfig(self):
         return self._config
@@ -191,41 +196,58 @@ class ToolChain():
 
     def fileBegin(self):
         """A new file is about to be processed."""
-        for tool in self._tools:
-            tool.fileBegin()
+        if self.isEnabled():
+            for tool in self._tools:
+                tool.fileBegin()
 
     def fileDone(self):
         """All alerts from the current file have been processed."""
-        for tool in self._tools:
-            tool.fileDone()
+        if self.isEnabled():
+            for tool in self._tools:
+                tool.fileDone()
 
-    def process(self, data, isWhitelisted):
-        """Process the alert"""
-        d = data
-        # if the alert can be processed by this toolchain, then process it
-        if data.getAction() in self._actionsToProcess or AlertAction.get('All') in self._actionsToProcess:
-            # if indicator isn't whitelisted, proceed with processing. Otherwise ignore processing and log the whitelist block.
-            if isWhitelisted is False:
-                self._alertsProcessed += 1
-                for tool in self._tools:
-                    d = tool.process(d)
+    def process(self, data, isWhitelisted, datafile, meta):
+        """
+        Process the alert data using each tool in the toolchain
+
+        :param data: the processed alert data in the intermediate format
+        :param isWhitelisted: indicates if the alert data is whitelisted or not
+        :param datafile: the directory location of the processed alert datafile. Currently only used with FlexText
+         because the alert has to be reprocessed for FlexText
+        """
+        if self.isEnabled():
+            # if the alert can be processed by this toolchain, then process it
+            if data.getAction() in self._actionsToProcess or AlertAction.get('All') in self._actionsToProcess:
+                # if indicator isn't whitelisted, proceed with processing. Otherwise ignore processing
+                # and log the whitelist block.
+                if isWhitelisted is False:
+                    self._alertsProcessed += 1
+                    for tool in self._tools:
+                        # FlexText requires the datafile instead of the processed data.
+                        if tool.toolName == "FlexText":
+                            tool.process(datafile, meta)
+                        else:
+                            tool.process(data)
+                else:
+                    self._logger.info(
+                        "Alert not processed. IP Indicator is whitelisted. Whitelisted IP:{0}".format(
+                            data.getIPToBlock()))
             else:
-                self._logger.info(
-                    "Alert not processed. IP Indicator is whitelisted. Whitelisted IP:{0}".format(data._indicator))
-        else:
-            self._alertsNotProcessed += 1
+                self._alertsNotProcessed += 1
 
     def commit(self):
         """Called at the end of processing to allow the tool chain to perform any finalization"""
-        for tool in self._tools:
-            tool.commit()
+        if self.isEnabled():
+            for tool in self._tools:
+                tool.commit()
 
     def cleanup(self):
         """Called after commit to perform any cleanup"""
-        self._logger.info(
-            "Alerts processed:={0} AlertsNotProcessed={1}".format(self._alertsProcessed, self._alertsNotProcessed))
-        for tool in self._tools:
-            tool.cleanup()
+        if self.isEnabled():
+            self._logger.info(
+                "Alerts processed:={0} AlertsNotProcessed={1}".format(self._alertsProcessed, self._alertsNotProcessed))
+            for tool in self._tools:
+                tool.cleanup()
 
     def updateEnabled(self):
         """Update the enabled state of this tool chain by checking all of its tools.  If any are disabled, disable the chain, too."""
