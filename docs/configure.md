@@ -223,7 +223,6 @@ FlexText is a tool used to output parsed alert data in a user-defined, character
         doubleQuote         = false
         quoteStyle          = "Minimal"
         primarySchemaConfig = "resources/schemaDefinitions/lqmtools.json"
-        siteSchemaConfig    = "resources/schemaDefinitions/cfm-toblock.json"
         fileDestination     = "/home/output/test.csv"
         incrementFile       = true
 
@@ -239,7 +238,6 @@ Setting               | Explanation
 `doubleQuote`         | Determines how the quoteChar itself is quoted. If `True` then the character is doubled. If `False`, the character is prefixed to the quoteChar.
 `quoteStyle`          | Sets the style of the quoting. Can be one of four values. `Minimal`: only quotes fields that contain special characters. `NonNumeric`: only quotes non-numeric fields. `All`: quotes all fields. `None`: No fields are quoted
 `primarySchemaConfig` | Defines the path to the primary schema configuration. Most users won't need to change the default setting; if you do, then some understanding of FlexTransform is suggested.
-`siteSchemaConfig`    | Defines the path to the site schema configuration. Most users won't need to change the default setting; if you do, then some understanding of FlexTransform is suggested.
 `fileDestination`     | Sets the destination of the output file. 
 `incrementFile`       | Used to increment the output file. When set to `True`, the output file name will be incremented with a timestamp. When set to `False` the output file will be overrune everytime the the tool is run. Defaults to `False`
 

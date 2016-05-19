@@ -73,12 +73,6 @@ class FlexTextConfig(ToolConfig):
             self.logger.error("The parameter 'primarySchemaConfig' must be specified in the configuration")
             hasError = True
 
-        if 'siteSchemaConfig' in config_data:
-            self.site_schema_config = config_data['siteSchemaConfig']
-        else:
-            self.logger.error("The parameter 'siteSchemaConfig' must be specified in configuration")
-            hasError = True
-
         if 'incrementFile' in config_data:
             self.increment_file = config_data['incrementFile']
 
@@ -118,8 +112,7 @@ class FlexTextConfig(ToolConfig):
                 'QuoteStyle': self.quote_style
             },
             'SCHEMA': {
-                'PrimarySchemaConfiguration': self.primary_schema_config,
-                'SiteSchemaConfiguration': self.site_schema_config
+                'PrimarySchemaConfiguration': self.primary_schema_config
             }
         }
 
@@ -142,6 +135,5 @@ class FlexTextConfig(ToolConfig):
         self.config_str += "\nQuoteStyle=" + str(self.quote_style)
         self.config_str += "\n[SCHEMA]"
         self.config_str += "\nPrimarySchemaConfiguration=" + self.primary_schema_config
-        self.config_str += "\nSiteSchemaConfiguration=" + self.site_schema_config
 
         return self.config_str
