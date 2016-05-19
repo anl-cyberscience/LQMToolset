@@ -28,7 +28,7 @@ class SysLogConfig(ToolConfig):
             hasError = True
 
         if 'port' in configData:
-            self.port = configData['port']
+            self.port = int(configData['port'])
         else:
             self._logger.error("Port not specified. Defaulting to port 514. ")
 

@@ -1,3 +1,4 @@
+# General files to ignore
 *.pyc
 .DS_Store
 *.panrc
