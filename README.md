@@ -13,7 +13,7 @@ pip3 install lqmt
 For more detailed installation instructions and for handling certain edge cases, see [the installation documentation](https://lqmtoolset.readthedocs.org/en/latest/install/)
 
 ### Documentation
-See [https://lqmtoolset.readthedocs.org/](https://lqmtoolset.readthedocs.org/).
+See [https://lqmtoolset.readthedocs.io/](https://lqmtoolset.readthedocs.io/).
 
 ### Contact
 Any questions about the Last Quarter Mile Toolset can be directed to the CFM team at cfmteam@anl.gov. For general information about the CFM project, visit our website at http://www.anl.gov/cfm
