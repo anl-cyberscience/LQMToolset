@@ -21,8 +21,8 @@ class FlexTextConfig(ToolConfig):
 
         self.header_line = False
         self.increment_file = False
-        self.cfm13_config = 'resources\\sampleConfigurations\\cfm13.cfg'
-        self.flext_config = 'resources\\sampleConfigurations\\flextext.cfg'
+        self.cfm13_config = 'resources/sampleConfigurations/cfm13.cfg'
+        self.flext_config = 'resources/sampleConfigurations/flextext.cfg'
         self.config_dict = {}
         self.config_str = ""
 
