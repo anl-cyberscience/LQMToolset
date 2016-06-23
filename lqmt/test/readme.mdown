@@ -9,3 +9,4 @@
     - [ ] to_paloalto
     - [ ] to_syslog
 - [ ] Whitelist Validation
+    - [ ] ipv4
