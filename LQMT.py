@@ -1,4 +1,5 @@
 import logging
+import time
 import sys
 from lqmt.lqm.controller import LQMToolController
 from lqmt.lqm.logging import LQMLogging
@@ -42,7 +43,7 @@ class LQMT(object):
             else:
                 self.logger.exception("An error occurred during processing:")
             self.logger.error(str(e))
-        logging.getLogger("LQMT").info("LQMTool done")
+        logging.getLogger("LQMT").info("LQMTool done. Process time: " + str(time.process_time()))
 
     def add_config(self, config):
         """

@@ -48,10 +48,10 @@ The Palo Alto tool places or removes blocks on Palo Alto Networks firewall devic
 
 Setting              | Explanation
 :------------------: | :----------
-`name`               | A unique name identifying this tool instance.
-`api_key`            | The API key retrieved from the Palo Alto device for remote access.
-`api_username`       | A username with with API access/privileges to the Palo Alto device.
-`api_password`       | The corresponding password to the username listed above.
+`name`               | A unique name identifying this device.
+`api_key`            | The API key retrieved from the Palo Alto device for remote access. Note: You can either use an API key, or a username/password. An API key is recommended.
+`api_username`       | A username with with API access/privileges to the Palo Alto device. Note: You can either use an API key, or a username/password. An API key is recommended.
+`api_password`       | The corresponding password to the username listed above. Note: You can either use an API key, or a username/password. An API key is recommended.
 `hostname`           | The hostname or IP address of the Palo Alto device.
 `badIPFiles`         | A list of dynamic block-lists files to use. Each file can hold 300 less than the maximum number of IP addresses that the Palo Alto device supports.
 `block_lists`        | The named block lists configured on the Palo Alto device.
@@ -106,12 +106,11 @@ Requirements:
 - Create the policies that use the block lists to restrict network traffic
     - Due to the unique nature of each installation, this is beyond the scope of this document
     - Some useful links related to using EBLs
-        - <https://live.paloaltonetworks.com/docs/DOC-­‐4724>
-        - <https://live.paloaltonetworks.com/docs/DOC-­‐5850>
+        - <https://live.paloaltonetworks.com/t5/Learning-Articles/Working-with-External-Block-List-EBL-Formats-and-Limitations/ta-p/58795>
+        - <https://www.paloaltonetworks.com/documentation/61/pan-os/pan-os/policy/use-a-dynamic-block-list-in-policy.html>
 
 #### Limitations
-The Palo Alto module currently only blocks IP addresses and network ranges (CIDR). Any other block that are not supported will be output to the file specified in the unhandled_blocks configuration parameter. 
-
+The Palo Alto module currently only blocks IP addresses and network ranges (CIDR). Any other block that are not supported will be output to the field specified in the unhandled_blocks configuration parameter. 
 
 ### Checkpoint
 Place or remove blocks on Checkpoint devices. The connection to Checkpoint devices is done through a shared SSL key which needs to be generated on the machine LQMTools is installed on and copied to the Checkpoint device.
@@ -139,11 +138,11 @@ Setting                 | Explanation
 `actions_to_process`    | Specify the list of actions this cool can/will process. Valid values: `Block`, `Revoke`, `Notify`, `Watch`, `SentReport`, `OtherAction`, `All`.
 
 #### Device Setup & Configuration
-The LQMTool module for checkpoint devices uses the checkpoint firewall's Suspicious Activities Monitoring Protocol (samp) to block IP addresses via the command line interface and ssh from the LQMT machine. The following outlines the steps necessary to congiure the device for use with LQMT. The following assumes the computer that is running the LQMT software is named lqmt.domain.com, the checkpoint computer is named cp.domain.com
+The LQMTool module for checkpoint devices uses the checkpoint firewall's Suspicious Activities Monitoring Protocol (samp) to block IP addresses via the command line interface and ssh from the LQMT machine. The following outlines the steps necessary to configure the device for use with LQMT. The following assumes the computer that is running the LQMT software is named lqmt.domain.com, the checkpoint computer is named cp.domain.com
 
 - Use the web UI to create a new user with an adminRole, set the shell to /bin/bash, and ensure that command line access is granted. For purposes of this document, the username cfm will be used. 
 - Set up password-less ssh access for the cfm user just created. The exact steps will depend on the machine running LQMT, but the basics: 
-    - Create an RSA key pair if not already done. This can be done by running the command: `ssh-keygen -t rsa` on lqmt.domain.com and accepting all the defaults. For these purposes, itis best to not have a passphrase for this key pair. 
+    - Create an RSA key pair if not already done. This can be done by running the command: `ssh-keygen -t rsa` on lqmt.domain.com and accepting all the defaults. For these purposes, it is best to not have a passphrase for this key pair. 
     - Copy the public key to the admin user's account on the checkpoint device. Depending on the open-ssl version on the LQMT computer, you could use the command: `ssh -copy-id cfm@cp.domain.com`. If that command isn't available, you can run the following on lqmt.domain.com as the user that will be running LQMT:  `cat ~/.ssh/id_rsa.pub | ssh user@123.45.56.78 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys`
     - Verify password-less access by trying to ssh to the checkpoint machine: 
         - `ssh cfm@cp.domain.com`
