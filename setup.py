@@ -38,13 +38,11 @@ setup(
     keywords='firewall endpoint last quarter mile toolset palo alto syslog checkpoint flextext',
     packages=find_packages(exclude=['contrib', 'doc', 'tests*']),
     install_requires=[
-        'python-dateutil',
         'lxml',
         'netaddr',
         'pan-python',
         'toml',
         'FlexTransform',
-        'pan'
     ],
     entry_points={
         'console_scripts': [

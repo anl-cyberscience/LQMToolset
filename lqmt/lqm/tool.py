@@ -66,7 +66,10 @@ class Tool():
             return "UNKNOWN-{0}".format(type(self).__name__)
 
     def unprocessed(self, alert):
-        """The specified alert has not been processed when it should have been>  This gives the opportunity to log this info or report it to the user."""
+        """
+        The specified alert has not been processed when it should have been.
+        This gives the opportunity to log this info or report it to the user.
+        """
         uph = self._config.getUnprocessedHandler()
         if (uph != None):
             uph.unprocessed(alert)
@@ -210,6 +213,7 @@ class ToolChain():
         """
         Process the alert data using each tool in the toolchain
 
+        :param meta: used to provide parser with information not found in the source data.
         :param data: the processed alert data in the intermediate format
         :param isWhitelisted: indicates if the alert data is whitelisted or not
         :param datafile: the directory location of the processed alert datafile. Currently only used with FlexText
@@ -250,7 +254,10 @@ class ToolChain():
                 tool.cleanup()
 
     def updateEnabled(self):
-        """Update the enabled state of this tool chain by checking all of its tools.  If any are disabled, disable the chain, too."""
+        """
+        Update the enabled state of this tool chain by checking all of its tools.
+        If any are disabled, disable the chain, too.
+        """
         en = self.isEnabled()
         if (not en):
             return
@@ -269,4 +276,4 @@ class ToolChain():
             toolStr += comma
             toolStr += tool.getName()
             comma = ", "
-        self._logger.debug(toolStr)
+        self._logger.debug("Tools in toolchain '{0}': {1}".format(self._name, toolStr))

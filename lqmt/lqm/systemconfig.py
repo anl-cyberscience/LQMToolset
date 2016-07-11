@@ -51,10 +51,20 @@ class SystemConfig:
                     'module': 'lqmt.lqm.parsers.FlexTransform',
                     'parser_class': 'FlexTransformParser',
                     'configs': {
-                        'Cfm13Alert': 'resources/sampleConfigurations/cfm13.cfg',
-                        'LQMTools': 'resources/sampleConfigurations/lqmtools.cfg'
+                        'LQMTools': 'resources/sampleConfigurations/lqmtools.cfg',
+                        'Cfm13Alert': 'resources/sampleConfigurations/cfm13.cfg'
                     },
                     'format': 'Cfm13Alert'
+                },
+                'stixtlp': {
+                    'module': 'lqmt.lqm.parsers.FlexTransform',
+                    'parser_class': 'FlexTransformParser',
+                    'configs': {
+                        'LQMTools': 'resources/sampleConfigurations/lqmtools.cfg',
+                        'stix-tlp': 'resources/sampleConfigurations/stix_tlp.cfg'
+
+                    },
+                    'format': 'stix-tlp'
                 }
             }
         }

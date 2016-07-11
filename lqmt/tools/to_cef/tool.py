@@ -21,7 +21,6 @@ class Header():
         self._severity = 5
         self._timestamp = alert.getProcessedTime()
 
-
     def toCEFString(self):
         """Outout the header as a properly formatted CEF header."""
         ts = datetime.fromtimestamp(int(self._timestamp))
@@ -38,7 +37,7 @@ class Header():
         return self._replacer(s)
 
 
-class Record():
+class Record:
     def _toDate(self, unixtime):
         if (unixtime == None):
             return None
@@ -116,6 +115,7 @@ class Record():
             if val is not None:
                 s += sep + self._escape(fld) + "=" + self._escape(val)
                 sep = " "
+        self._logger.debug("CEF String returned: '{0}'".format(s))
         return s
 
     def _escape(self, s):
@@ -132,6 +132,7 @@ class ToCEF(Tool):
 
     def process(self, data):
         try:
+            self._logger.debug("CEF processing started")
             return Record(data)
         except Exception as e:
             self._logger.error("Error occurred in creating CEF data")

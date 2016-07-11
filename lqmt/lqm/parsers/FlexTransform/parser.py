@@ -16,20 +16,29 @@ class FlexTransformParser(object):
         self._logger = logging.getLogger("LQMT.Parsers")
 
         # get the FlexTransform directory
-        current_dir, name = os.path.split(inspect.getfile(FlexTransform.FlexTransform))
+        self._current_dir, name = os.path.split(inspect.getfile(FlexTransform.FlexTransform))
         self._transform = FlexTransform.FlexTransform.FlexTransform()
 
-        # configItems contains a list of key,value pairs key=Parser/Format name, value=FX config file
+        # con
         for p, c in config.items():
-            f = open(os.path.join(current_dir, c), 'r')
+            self.addParser(p, c)
 
-            # add the parser info to the FX instance
-            if f not in self._transform.Parsers:
-                self._transform.AddParser(p, f)
+    def addParser(self, parserName, parserConfiguration):
+        """
+        Function that extends the AddParser function from FlexTransform.
+        :param parserName: Name of the parser being added
+        :param parserConfiguration: Path to the configuration file being added
+        """
+        if parserName not in self._transform.Parsers:
+            config_file = open(os.path.join(self._current_dir, parserConfiguration), 'r')
+            self._transform.AddParser(parserName, config_file)
 
     def parse(self, datafile, meta):
         """
         Parse the datafile using the metadata dictionary.
+
+        Note: Removed sourceMetaData from the parser for now due to conflicts with STIX-TLP. Currently assessing
+        if it needs to be included. Currently the meta file is just being used to identify the sourceParser.
 
         :param datafile: Contains path to the file containing the alert data.
         :param meta: Contains meta data about the datafile. Examples includes PayloadFormat, FileName, PayloadType, and
@@ -39,10 +48,10 @@ class FlexTransformParser(object):
         alerts = []
         try:
             data = self._transform.TransformFile(sourceFileName=datafile, sourceParserName=meta['PayloadFormat'],
-                                                 targetParserName='LQMTools', sourceMetaData=meta)
+                                                 targetParserName='LQMTools')
         except Exception as e:
             data = []
-            self._logger.error("CFM: Error parsing file file='{0}' exception='{1}'".format(datafile, e))
+            self._logger.error("LQMT-FlexTransform-Parser: Error parsing file file='{0}' exception='{1}'".format(datafile, e))
 
         for d in data:
             alert = Alert()
@@ -76,9 +85,8 @@ class FlexTransformParser(object):
                 sourceFileName=datafile,
                 targetFileName=destination_file_obj,
                 sourceParserName=meta['PayloadFormat'],
-                targetParserName="FlexText",
-                sourceMetaData=meta
+                targetParserName="FlexText"
             )
 
         except Exception as e:
-            self._logger.error("CFM: Error parsing file file='{0}' exception='{1}'".format(datafile, e))
+            self._logger.error("LQMT-FlexText-Parser: Error parsing file file='{0}' exception='{1}'".format(datafile, e))
