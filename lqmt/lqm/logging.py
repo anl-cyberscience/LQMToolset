@@ -15,6 +15,21 @@ class LQMLogging(object):
     def isDebug():
         return LQMLogging._debug
 
+    @staticmethod
+    def lowerconfig(config):
+        """
+        Method that makes all keys in the config dict lowercase. Prevents errors where users supply old config style for
+        logging.
+        :param config: Dict containing configuration data
+        :return: Returns config dict with all of it's keys in lowercase.
+        """
+        newconf = {}
+        for key in config.keys():
+            newconf[key.lower()] = config[key]
+
+        del config
+        return newconf
+
     def __init__(self, config):
         """Initialize the logging system from the configuration"""
 
@@ -22,6 +37,7 @@ class LQMLogging(object):
         formatter = Formatter(fmt='%(asctime)s %(name)s %(levelname)s:%(message)s')
         rootLogger = logging.getLogger()
         active = True
+        config = self.lowerconfig(config)
 
         if 'active' in config:
             active = bool(config['active'])
