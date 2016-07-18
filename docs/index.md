@@ -30,4 +30,4 @@ Flextext         | Data Translation
 The code for `LQMT` is open source, and [available on Github](https://github.com/anl-cyberscience/LQMToolset). New tools and features are actively being developed for `LQMT`, but user contributions are welcome via pull requests.
 
 ### Contact
-`LQMT` is developed and supported by the CFM team at Argonne National Lab. Any questions about LQMT can be directed to the CFM team at cfmteam@anl.gov. For general information about the CFM project, visit our website at http://www.anl.gov/cfm
+`LQMT` is developed and supported by the CFM team at Argonne National Lab. Any questions about LQMT can be directed to the CFM team at cfmteam@anl.gov. For general information about the CFM project, visit our [website](http://www.anl.gov/cfm).

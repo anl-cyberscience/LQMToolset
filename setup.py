@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='lqmt',
-    version='1.1.0',
+    version='1.1.1b1',
     description='Flexible framework that allows automation to process cyber threat information and update endpoint defense tools',
     long_description='The Last Quarter Mile Toolset is flexible framework that allows automation to process cyber threat information (CTI) and update endpoint defense tools.',
     url='https://github.com/anl-cyberscience/LQMToolset/',
@@ -34,17 +34,16 @@ setup(
         'Programming Language :: Python :: 3.2',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5'
     ],
     keywords='firewall endpoint last quarter mile toolset palo alto syslog checkpoint flextext',
     packages=find_packages(exclude=['contrib', 'doc', 'tests*']),
     install_requires=[
-        'python-dateutil',
         'lxml',
         'netaddr',
         'pan-python',
         'toml',
         'FlexTransform',
-        'pan'
     ],
     entry_points={
         'console_scripts': [

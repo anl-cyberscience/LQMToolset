@@ -1,9 +1,10 @@
-import os
-import logging
 import csv
+import logging
+import os
+
 from lqmt.lqm.data import AlertAction
-from lqmt.lqm.tool import Tool
 from lqmt.lqm.parsers.FlexTransform.parser import FlexTransformParser
+from lqmt.lqm.tool import Tool
 
 
 class ToFlexText(Tool):
@@ -16,9 +17,11 @@ class ToFlexText(Tool):
         super().__init__(config, [AlertAction.get('All')])
         self._logger = logging.getLogger("LQMT.FlexText.{0}".format(self.getName()))
 
-        # format parserConfig dict and then initialized parser
-        parserconfig = {'Cfm13Alert': self._config.cfm13_config, 'CSV': self._config.flext_config}
-        self._parser = FlexTransformParser(parserconfig)
+        # initialize parser with a dict created with variables from flextext configuration
+        self._parser = FlexTransformParser({'CSV': self._config.flext_config})
+        for file_type, source_config in self._config.source_configs.items():
+            self._parser.addParser(file_type, source_config)
+
         self._file_obj = None
         self._processed = []
 

@@ -40,7 +40,7 @@ def main():
         else:
             logger.exception("An error occurred during processing:")
         logger.error(str(e))
-    logging.getLogger("LQMT").info("LQMTool done. Process time: " + str(time.process_time()))
+    logger.info("LQMTool done. Process time: " + str(time.process_time()))
 
 
 if __name__ == '__main__':

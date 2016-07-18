@@ -21,10 +21,14 @@ class FlexTextConfig(ToolConfig):
 
         self.header_line = False
         self.increment_file = False
-        self.cfm13_config = 'resources/sampleConfigurations/cfm13.cfg'
         self.flext_config = 'resources/sampleConfigurations/flextext.cfg'
         self.config_dict = {}
         self.config_str = ""
+        self.source_configs = {
+            'Cfm13Alert': 'resources/sampleConfigurations/cfm13.cfg',
+            'Cfm20Alert': 'resources/sampleConfigurations/cfm20alert.cfg',
+            'stix-tlp': 'resources/sampleConfigurations/stix_tlp.cfg'
+        }
 
         if 'fileParser' in config_data:
             self.fileParser = config_data['fileParser']

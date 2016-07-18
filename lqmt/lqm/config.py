@@ -12,7 +12,8 @@ from lqmt.lqm.systemconfig import SystemConfig
 
 sys.path.append('tpl/toml')
 
-class ToolInfo():
+
+class ToolInfo:
     """Holds info for future instantiation and instantiates tool instances
     """
 
@@ -92,9 +93,16 @@ class LQMToolConfig():
             self._logger.debug("Loaded parser: %s" % parserinfo['format'])
 
     def _initToolConfig(self, config):
-        """Set up the system path for the configured tools and
-        create the configuration data for those tools so they can be created later"""
+        """
+        Set up the system path for the configured tools and create the configuration data for those tools so they can
+        be created later.
+
+        Currently all tools are created. Should be updated to only initialize tools that are a part of the configuration
+        """
         tooldefs = config['tools']
+        usertooldefs = self._userConfig['Tools'].keys()
+        usertooldefs = list(usertooldefs)
+        usertooldefs.append('CSV')
         if 'path' in tooldefs:
             path = tooldefs['path']
             # add any paths specified to the system path
@@ -102,19 +110,20 @@ class LQMToolConfig():
             del tooldefs['path']
         toolClasses = {}
         for key in list(tooldefs.keys()):
-            toolinfo = tooldefs[key]
-            if ('additional_paths' in toolinfo):
-                # add any additional paths needed by the tool
-                add_path = toolinfo['additional_paths']
-                sys.path.extend(add_path)
-            # import the tool & config modules 
-            mod = importlib.import_module("lqmt.tools." + toolinfo['module'] + ".tool")
-            toolClass = getattr(mod, toolinfo['tool_class'])
-            mod = importlib.import_module("lqmt.tools." + toolinfo['module'] + ".config")
-            # get the class "object" for later creation
-            cfgClass = getattr(mod, toolinfo['config_class'])
-            toolClasses[key] = ToolInfo(toolClass, cfgClass)
-            self._logger.debug("Loaded tool: %s" % key)
+            if key in usertooldefs:
+                toolinfo = tooldefs[key]
+                if ('additional_paths' in toolinfo):
+                    # add any additional paths needed by the tool
+                    add_path = toolinfo['additional_paths']
+                    sys.path.extend(add_path)
+                # import the tool & config modules
+                mod = importlib.import_module("lqmt.tools." + toolinfo['module'] + ".tool")
+                toolClass = getattr(mod, toolinfo['tool_class'])
+                mod = importlib.import_module("lqmt.tools." + toolinfo['module'] + ".config")
+                # get the class "object" for later creation
+                cfgClass = getattr(mod, toolinfo['config_class'])
+                toolClasses[key] = ToolInfo(toolClass, cfgClass)
+                self._logger.debug("Loaded tool: %s" % key)
         return toolClasses
 
     def _loadUserConfig(self, configFile):
