@@ -46,12 +46,20 @@ class FlexTransformParser(object):
         :return: Returns parsed alert data.
         """
         alerts = []
+
+        # TODO: Stix-tlp parser currently doesn't support meta files. Until it's support, we will only send meta file's
+        # for non-stix payloads.
         try:
-            data = self._transform.TransformFile(sourceFileName=datafile, sourceParserName=meta['PayloadFormat'],
-                                                 targetParserName='LQMTools')
+            if meta['PayloadFormat'] == 'stix-tlp':
+                data = self._transform.TransformFile(sourceFileName=datafile, sourceParserName=meta['PayloadFormat'],
+                                                     targetParserName='LQMTools')
+            else:
+                data = self._transform.TransformFile(sourceFileName=datafile, sourceParserName=meta['PayloadFormat'],
+                                                     targetParserName='LQMTools', sourceMetaData=meta)
         except Exception as e:
             data = []
-            self._logger.error("LQMT-FlexTransform-Parser: Error parsing file file='{0}' exception='{1}'".format(datafile, e))
+            self._logger.error(
+                "LQMT-FlexTransform-Parser: Error parsing file file='{0}' exception='{1}'".format(datafile, e))
 
         for d in data:
             alert = Alert()
@@ -81,12 +89,22 @@ class FlexTransformParser(object):
 
         # Run FlexText parser
         try:
-            self._transform.TransformFile(
-                sourceFileName=datafile,
-                targetFileName=destination_file_obj,
-                sourceParserName=meta['PayloadFormat'],
-                targetParserName="FlexText"
-            )
+            if meta['PayloadFormat'] == 'stix-tlp':
+                self._transform.TransformFile(
+                    sourceFileName=datafile,
+                    targetFileName=destination_file_obj,
+                    sourceParserName=meta['PayloadFormat'],
+                    targetParserName="FlexText",
+                )
+            else:
+                self._transform.TransformFile(
+                    sourceFileName=datafile,
+                    targetFileName=destination_file_obj,
+                    sourceParserName=meta['PayloadFormat'],
+                    targetParserName="FlexText",
+                    sourceMetaData=meta
+                )
 
         except Exception as e:
-            self._logger.error("LQMT-FlexText-Parser: Error parsing file file='{0}' exception='{1}'".format(datafile, e))
+            self._logger.error(
+                "LQMT-FlexText-Parser: Error parsing file file='{0}' exception='{1}'".format(datafile, e))
