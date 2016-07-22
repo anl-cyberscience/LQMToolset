@@ -1,4 +1,8 @@
 - [ ] Parser Validation
+    - [ ] parser assignment
+        - [ ] cfm13
+        - [ ] cfm20
+        - [ ] stix-tlp  
     - [ ] cfm13 to idf 
 - [ ] Configuration Validation
     - [ ] to_arcsight
@@ -9,4 +13,10 @@
     - [ ] to_paloalto
     - [ ] to_syslog
 - [ ] Whitelist Validation
-    - [ ] ipv4
+    - [ ] ipv4 address
+    - [ ] ipv4 subnets
+    - [ ] ipv6
+    - [ ] ipv6 subnets
+    - [ ] domains
+    - [ ] host
+    - [ ] url

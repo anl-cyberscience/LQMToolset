@@ -1,6 +1,5 @@
 from .whitelist import Whitelist
 from netaddr import IPNetwork,IPSet
-from .master import IndicatorTypes
 
 class IPv4SubnetWL(Whitelist):
     """IPv4 Subnet whitelist.
