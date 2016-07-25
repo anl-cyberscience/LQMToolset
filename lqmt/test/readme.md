@@ -13,10 +13,10 @@
     - [ ] to_paloalto
     - [ ] to_syslog
 - [ ] Whitelist Validation
-    - [ ] ipv4 address
-    - [ ] ipv4 subnets
+    - [X] ipv4 address
+    - [X] ipv4 subnets
     - [ ] ipv6
     - [ ] ipv6 subnets
-    - [ ] domains
-    - [ ] host
-    - [ ] url
+    - [X] domains
+    - [X] host
+    - [X] url
