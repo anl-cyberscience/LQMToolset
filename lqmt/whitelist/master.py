@@ -54,14 +54,15 @@ class MasterWhitelist(object):
 
     def _initMapping(self):
         """Create the mapping of indicator types to the types of whitelists they will be checked against"""
-        self._indicatorMapping = {}
-        self._indicatorMapping[IndicatorTypes.ipv4] = [IndicatorTypes.ipv4, IndicatorTypes.ipv4subnet]
-        self._indicatorMapping[IndicatorTypes.ipv4subnet] = [IndicatorTypes.ipv4subnet]
-        self._indicatorMapping[IndicatorTypes.ipv6] = [IndicatorTypes.ipv6, IndicatorTypes.ipv4subnet]
-        self._indicatorMapping[IndicatorTypes.ipv6subnet] = [IndicatorTypes.ipv6subnet]
-        self._indicatorMapping[IndicatorTypes.domain] = [IndicatorTypes.domain]
-        self._indicatorMapping[IndicatorTypes.host] = [IndicatorTypes.host, IndicatorTypes.domain]
-        self._indicatorMapping[IndicatorTypes.url] = [IndicatorTypes.url]
+        self._indicatorMapping = {
+            IndicatorTypes.ipv4: [IndicatorTypes.ipv4, IndicatorTypes.ipv4subnet],
+            IndicatorTypes.ipv4subnet: [IndicatorTypes.ipv4subnet],
+            IndicatorTypes.ipv6: [IndicatorTypes.ipv6, IndicatorTypes.ipv6subnet],
+            IndicatorTypes.ipv6subnet: [IndicatorTypes.ipv6subnet],
+            IndicatorTypes.domain: [IndicatorTypes.domain],
+            IndicatorTypes.host: [IndicatorTypes.host, IndicatorTypes.domain],
+            IndicatorTypes.url: [IndicatorTypes.url]
+        }
 
     def _loadConfigFromFile(self, configFile):
         cfg = open(configFile)
@@ -79,52 +80,60 @@ class MasterWhitelist(object):
         self.whitelistFile = configData['whitelist']
 
     def _updateDB(self):
-        # print(os.path.dirname(__file__))
-        # print(self.db)
-        """Update the DB"""
-        if (not os.path.exists(self.db)):
+        """
+        Updates the whitelist database if it detects a change in the whitelist.txt file.
+        """
+        if not os.path.exists(self.db):
             # Create it if not already there
             self._createDB()
         self.conn = sqlite3.connect(self.db)
-        c = self.conn.cursor()
+        connection = self.conn.cursor()
         # compute the md5 hash of the whitelist text file
-        m = hashlib.md5()
+        md5_hash = hashlib.md5()
         wlf = open(self.whitelistFile, "rb")
-        m.update(wlf.read())
-        md5 = m.hexdigest()
+        md5_hash.update(wlf.read())
+        md5 = md5_hash.hexdigest()
         # and compare it against the md5 of the last file loaded
-        c.execute("select md5 from md5")
-        rec = c.fetchone()
-        c.close()
-        if (rec == None or rec[0] != md5):
+        connection.execute("select md5 from md5")
+        rec = connection.fetchone()
+        connection.close()
+        if rec is None or rec[0] != md5:
             # if it is not the same, then reload the whitelist file
             self._reloadDB(md5)
 
     def _reloadDB(self, md5):
+        """
+        Reloads all database tables with new values from the whitelist.txt file
+        :param md5: used to update the md5 table with the newly calculated md5
+        """
         whitelist = self._loadWhitelistFile()
         DomainWL.storeDB(self.conn, whitelist['Domain'])
         HostWL.storeDB(self.conn, whitelist['Host'])
         IPv4WL.storeDB(self.conn, whitelist['IPv4Address'])
         IPv4SubnetWL.storeDB(self.conn, whitelist['IPv4Subnet'])
         IPv6WL.storeDB(self.conn, whitelist['IPv6Address'])
-        #        IPv6SubnetWL.storeDB(self.conn,whitelist['IPv6Subnet'])
+        # IPv6SubnetWL.storeDB(self.conn,whitelist['IPv6Subnet'])
         URLWL.storeDB(self.conn, whitelist['URL'])
-        c = self.conn.cursor()
-        c.execute("delete from md5")
-        c.execute("insert into md5 values (?)", (md5,))
+        connection = self.conn.cursor()
+        connection.execute("delete from md5")
+        connection.execute("insert into md5 values (?)", (md5,))
         self.conn.commit()
-        c.close()
+        connection.close()
 
     def _loadWhitelistFile(self):
+        """
+        Loads data from the whitelist file.
+        :return: returns an dict containing the values from the whitelist.txt file
+        """
         wlf = open(self.whitelistFile, "r")
         whitelist = {}
         section = None
         for line in wlf.readlines():
             line = line.strip()
-            if (len(line) > 0 and not line.startswith("#")):
-                if (line.startswith("[")):
+            if len(line) > 0 and not line.startswith("#"):
+                if line.startswith("["):
                     section = line[1:len(line) - 1]
-                    if (section not in whitelist):
+                    if section not in whitelist:
                         whitelist[section] = []
                 else:
                     whitelist[section].append(line)
@@ -133,25 +142,25 @@ class MasterWhitelist(object):
 
     def _createDB(self):
         conn = sqlite3.connect(self.db)
-        c = conn.cursor()
-        c.execute("create table md5 (md5 text)")
-        c.execute(IPv4WL.getCreateTable())
-        c.execute(IPv6WL.getCreateTable())
-        c.execute(IPv4SubnetWL.getCreateTable())
-        #        c.execute(IPv6SubnetWL.getCreateTable())
-        c.execute(DomainWL.getCreateTable())
-        c.execute(HostWL.getCreateTable())
-        c.execute(URLWL.getCreateTable())
-        c.close()
+        connection = conn.cursor()
+        connection.execute("create table md5 (md5 text)")
+        connection.execute(IPv4WL.getCreateTable())
+        connection.execute(IPv6WL.getCreateTable())
+        connection.execute(IPv4SubnetWL.getCreateTable())
+        connection.execute(IPv6SubnetWL.getCreateTable())
+        connection.execute(DomainWL.getCreateTable())
+        connection.execute(HostWL.getCreateTable())
+        connection.execute(URLWL.getCreateTable())
+        connection.close()
         conn.close()
 
     def isWhitelisted(self, indicatorType, indicator):
         """Return whether or not the specified indicator/indicatorType is whitelisted"""
         rv = False
         for wltype in self._indicatorMapping[indicatorType]:
-            if (not rv):
+            if not rv:
                 wl = self._whitelists[wltype]
-                if (wl == None):
+                if wl is None:
                     # Either throw an error or log a message
                     self._logger.error("Whitelist for type: {0} does not exist".format(wltype))
                     return False

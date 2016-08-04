@@ -30,10 +30,10 @@ class SystemConfig:
                 'name': 'for-unprocessed',
                 'fields': ['dataItemID', 'fileID', 'detectedTime', 'reportedTime', 'processedTime', 'indicator',
                            'indicatorType', 'indicatorDirection', 'secondaryIndicator', 'secondaryIndicatorType',
-                           'secondaryIndicatorDirection', 'directSource', 'secondarySource', 'action1', 'duration1', 'action2',
-                           'duration2', 'reason1', 'reference1', 'reason2', 'reference2', 'majorTags', 'minorTags',
-                           'restriction', 'sensitivity', 'reconAllowed', 'priors', 'confidence', 'severity', 'relevancy',
-                           'relatedID', 'relationType', 'comment', 'fileHasMore']
+                           'secondaryIndicatorDirection', 'directSource', 'secondarySource', 'action1', 'duration1',
+                           'action2', 'duration2', 'reason1', 'reference1', 'reason2', 'reference2', 'majorTags',
+                           'minorTags', 'restriction', 'sensitivity', 'reconAllowed', 'priors', 'confidence',
+                           'severity', 'relevancy', 'relatedID', 'relationType', 'comment', 'fileHasMore']
             },
             'parsers': {
                 'path': 'lqm',

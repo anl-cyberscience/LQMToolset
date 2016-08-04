@@ -1,3 +1,0 @@
-[Whitelist]
-    whitelist = "../test-data/whitelist/whitelist.txt"
-    dbfile = "../test-data/whitelist/whitelist.db"

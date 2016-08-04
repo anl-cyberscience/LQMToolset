@@ -49,5 +49,7 @@ setup(
         'console_scripts': [
             'lqmt = lqmt.main:main'
         ]
-    }
+    },
+    test_suite='nose.collector',
+    tests_require=['nose']
 )

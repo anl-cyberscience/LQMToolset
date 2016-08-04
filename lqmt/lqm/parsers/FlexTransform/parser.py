@@ -12,16 +12,17 @@ import io
 
 
 class FlexTransformParser(object):
-    def __init__(self, config):
+    def __init__(self, config=None):
         self._logger = logging.getLogger("LQMT.Parsers")
 
         # get the FlexTransform directory
         self._current_dir, name = os.path.split(inspect.getfile(FlexTransform.FlexTransform))
         self._transform = FlexTransform.FlexTransform.FlexTransform()
 
-        # con
-        for p, c in config.items():
-            self.addParser(p, c)
+        # config
+        if config is not None:
+            for p, c in config.items():
+                self.addParser(p, c)
 
     def addParser(self, parserName, parserConfiguration):
         """

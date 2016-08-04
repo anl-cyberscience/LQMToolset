@@ -1,7 +1,9 @@
 import importlib
+import io
 import sys
 import logging
 import toml
+import os
 
 from lqmt.lqm.tool import ToolChain
 from lqmt.whitelist.master import MasterWhitelist
@@ -30,7 +32,7 @@ class ToolInfo:
         return tool
 
 
-class LQMToolConfig():
+class LQMToolConfig(object):
     """Holds the Configuration data for the LQMTool"""
 
     def __init__(self, configfile):
@@ -84,7 +86,6 @@ class LQMToolConfig():
             parserConfig = None
             if ("configs" in parserinfo):
                 parserConfig = parserinfo['configs']
-            parser = None;
             if (parserConfig != None):
                 parser = parserClass(parserConfig)
             else:
@@ -127,9 +128,14 @@ class LQMToolConfig():
         return toolClasses
 
     def _loadUserConfig(self, configFile):
-        cfg = open(configFile)
-        topLevelConfig = toml.loads(cfg.read())
-        cfg.close()
+
+        if os.path.exists(configFile):
+            cfg = open(configFile)
+            topLevelConfig = toml.loads(cfg.read())
+            cfg.close()
+        else:
+            configFile = io.StringIO(configFile)
+            topLevelConfig = toml.load(configFile)
         self._userConfig = {}
         self._userConfig.update(topLevelConfig)
 
