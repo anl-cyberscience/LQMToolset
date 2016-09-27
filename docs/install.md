@@ -9,12 +9,12 @@ LQMT is written completely in Python3. Because of this, Python3 is required to i
 
 ##### RedHat/CentOS 6
 
-    sudo yum install https://dl.iuscommunity.org/pub/ius/stable/Redhat/6/x86_64/ius-release-1.0-14.ius.el6.noarch.rpm
+    sudo yum install https://rhel6.iuscommunity.org/ius-release.rpm
     sudo yum install python35u python35u-pip libxml2-devel libxslt-devel python35u-devel gcc
 
 ##### RedHat/CentOS 7
 
-    sudo yum install https://dl.iuscommunity.org/pub/ius/stable/Redhat/7/x86_64/ius-release-1.0-14.ius.el7.noarch.rpm
+    sudo yum install https://rhel7.iuscommunity.org/ius-release.rpm
     sudo yum install python35u python35u-pip libxml2-devel libxslt-devel python35u-devel gcc
 
 ##### FreeBSD
