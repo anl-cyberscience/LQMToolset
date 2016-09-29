@@ -1,6 +1,6 @@
 - [ ] Parser Validation
     - [ ] parser assignment
-        - [ ] cfm13
+        - [X] cfm13 
         - [ ] cfm20
         - [ ] stix-tlp  
     - [ ] cfm13 to idf 

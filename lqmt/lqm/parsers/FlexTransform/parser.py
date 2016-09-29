@@ -48,8 +48,7 @@ class FlexTransformParser(object):
         """
         alerts = []
 
-        # TODO: Stix-tlp parser currently doesn't support meta files. Until it's support, we will only send meta file's
-        # for non-stix payloads.
+        # TODO: Stix-tlp parser currently doesn't support meta files. Until it does, meta files are for the cfm format
         try:
             if meta['PayloadFormat'] == 'stix-tlp':
                 data = self._transform.TransformFile(sourceFileName=datafile, sourceParserName=meta['PayloadFormat'],

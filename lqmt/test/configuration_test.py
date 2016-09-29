@@ -1,7 +1,7 @@
-from unittest import TestCase, main
 from lqmt.lqm.systemconfig import SystemConfig
-from lqmt.lqm.config import LQMToolConfig
 from lqmt.test.sample_config import USERCONFIG
+from lqmt.lqm.config import LQMToolConfig
+from unittest import TestCase, main
 import os
 
 

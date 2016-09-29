@@ -1,4 +1,8 @@
-from setuptools import setup, find_packages
+try:
+    from setuptools import setup, find_packages
+except ImportError:
+    from distutils.core import setup
+    from setuptools import find_packages
 
 setup(
     name='lqmt',

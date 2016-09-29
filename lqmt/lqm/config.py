@@ -61,6 +61,10 @@ class LQMToolConfig(object):
         self._config = sysconf.getConfig()
 
     def _processSystemConfig(self):
+        """
+        Parses and initializes the system configuration
+        :return: toolClasses, which is a dictionary holding classes for the tools assigned in the user configuration
+        """
         self._initParserConfig(self._config)
         toolClasses = self._initToolConfig(self._config)
         return toolClasses
@@ -128,6 +132,10 @@ class LQMToolConfig(object):
         return toolClasses
 
     def _loadUserConfig(self, configFile):
+        """
+        Loads the user configuration file
+        :param configFile: String that defines the path of the user configuration file.
+        """
 
         if os.path.exists(configFile):
             cfg = open(configFile)

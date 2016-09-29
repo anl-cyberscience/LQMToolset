@@ -48,9 +48,7 @@ class TestWhitelist(TestCase):
     def test_match_by_ipv6(self):
         self.assertTrue(self.wl.isWhitelisted(self.indicatorTypes.ipv6, '6EE2:317F:0AF1:684C:AAC8:43F4:6E49:7D86'))
 
-    # failed test currently disabled due to an unexpected exception
     def test_failed_match_by_ipv6(self):
-        pass
         self.assertFalse(self.wl.isWhitelisted(self.indicatorTypes.ipv6, '6EE2:317F:0AF1:684C:AAC8:43F4:6E49:AAAA'))
 
     # Domains
