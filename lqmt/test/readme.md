@@ -1,0 +1,31 @@
+- [ ] Parser Validation
+    - [ ] parser assignment
+        - [X] cfm13 
+        - [ ] cfm20
+        - [ ] stix-tlp  
+    - [ ] cfm13 to idf 
+- [ ] Configuration Validation
+    - [ ] System Configuration
+    - [ ] User Configuration
+        - [X] general functions
+            - [X] sources
+            - [X] whitelist
+            - [X] parsers
+            - [X] toollist
+            - [X] toolchain
+        - [ ] tools
+            - [ ] to_arcsight
+            - [ ] to_cef
+            - [ ] to_checkpoint
+            - [ ] to_csv
+            - [ ] to_flextext
+            - [ ] to_paloalto
+            - [ ] to_syslog
+- [ ] Whitelist Validation
+    - [X] ipv4 address
+    - [X] ipv4 subnets
+    - [ ] ipv6
+    - [ ] ipv6 subnets
+    - [X] domains
+    - [X] host
+    - [X] url

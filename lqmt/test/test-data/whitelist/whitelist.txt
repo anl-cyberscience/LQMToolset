@@ -7,10 +7,11 @@
 192.168.3.0/24
 
 [IPv6Address]
-ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff
+57F3:98A9:F1CB:F8BC:EE66:6A9A:C485:060F
+6EE2:317F:0AF1:684C:AAC8:43F4:6E49:7D86
 
 [IPv6Subnet]
-ffff:ffff:ffff:ffff/90
+57f3:98a9:f1cb:f8bc::
 
 [Domain]
 thegoodguys.com

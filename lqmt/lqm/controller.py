@@ -57,10 +57,11 @@ class LQMToolController:
         """
         Initializes LQMT. This includes initializing toolchains and their respective tools, and then getting all alert
         files specified from sources defined in the user configuration.
-        :return: Returns alert files
+        :return: Returns filesToProcess object, which is defined in sourcedir.py. It's an object that has a custom
+        __iter__ method that is used to traverse the top level alert directories provided by the user in user config
         """
 
-        files = None
+        filesToProcess = None
 
         for chain in self.toolChains:
             if chain.isEnabled():
@@ -69,9 +70,9 @@ class LQMToolController:
 
         for src in self._config.getSources():
             self.src = src
-            files = src.getFilesToProcess()
+            filesToProcess = src.getFilesToProcess()
 
-        return files
+        return filesToProcess
 
     def _parse(self, data, metadata):
         """

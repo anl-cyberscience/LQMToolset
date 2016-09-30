@@ -12,16 +12,17 @@ import io
 
 
 class FlexTransformParser(object):
-    def __init__(self, config):
+    def __init__(self, config=None):
         self._logger = logging.getLogger("LQMT.Parsers")
 
         # get the FlexTransform directory
         self._current_dir, name = os.path.split(inspect.getfile(FlexTransform.FlexTransform))
         self._transform = FlexTransform.FlexTransform.FlexTransform()
 
-        # con
-        for p, c in config.items():
-            self.addParser(p, c)
+        # config
+        if config is not None:
+            for p, c in config.items():
+                self.addParser(p, c)
 
     def addParser(self, parserName, parserConfiguration):
         """
@@ -47,8 +48,7 @@ class FlexTransformParser(object):
         """
         alerts = []
 
-        # TODO: Stix-tlp parser currently doesn't support meta files. Until it's support, we will only send meta file's
-        # for non-stix payloads.
+        # TODO: Stix-tlp parser currently doesn't support meta files. Until it does, meta files are for the cfm format
         try:
             if meta['PayloadFormat'] == 'stix-tlp':
                 data = self._transform.TransformFile(sourceFileName=datafile, sourceParserName=meta['PayloadFormat'],

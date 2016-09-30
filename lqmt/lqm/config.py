@@ -1,7 +1,9 @@
 import importlib
+import io
 import sys
 import logging
 import toml
+import os
 
 from lqmt.lqm.tool import ToolChain
 from lqmt.whitelist.master import MasterWhitelist
@@ -30,7 +32,7 @@ class ToolInfo:
         return tool
 
 
-class LQMToolConfig():
+class LQMToolConfig(object):
     """Holds the Configuration data for the LQMTool"""
 
     def __init__(self, configfile):
@@ -50,7 +52,7 @@ class LQMToolConfig():
         # process config files
         toolClasses = self._processSystemConfig()
         self._processUserConfig(toolClasses)
-        if (not self._sources):
+        if not self._sources:
             raise ConfigurationError("No sources specified")
 
     def _loadSystemConfig(self):
@@ -59,13 +61,17 @@ class LQMToolConfig():
         self._config = sysconf.getConfig()
 
     def _processSystemConfig(self):
+        """
+        Parses and initializes the system configuration
+        :return: toolClasses, which is a dictionary holding classes for the tools assigned in the user configuration
+        """
         self._initParserConfig(self._config)
         toolClasses = self._initToolConfig(self._config)
         return toolClasses
 
     def _initParserConfig(self, config):
         parsers = config['parsers']
-        if ('additional_paths' in parsers):
+        if 'additional_paths' in parsers:
             add_path = parsers['additional_paths']
             del parsers['additional_paths']
             sys.path.extend(add_path)
@@ -76,16 +82,15 @@ class LQMToolConfig():
         # path info is loaded from the config files
         for key in list(parsers.keys()):
             parserinfo = parsers[key]
-            if (path != None):
+            if path is not None:
                 sys.path.append(path)
             importlib.import_module(parserinfo['module'])
             mod = importlib.import_module(parserinfo['module'] + ".parser")
             parserClass = getattr(mod, parserinfo['parser_class'])
             parserConfig = None
-            if ("configs" in parserinfo):
+            if "configs" in parserinfo:
                 parserConfig = parserinfo['configs']
-            parser = None;
-            if (parserConfig != None):
+            if parserConfig is not None:
                 parser = parserClass(parserConfig)
             else:
                 parser = parserClass()
@@ -112,7 +117,7 @@ class LQMToolConfig():
         for key in list(tooldefs.keys()):
             if key in usertooldefs:
                 toolinfo = tooldefs[key]
-                if ('additional_paths' in toolinfo):
+                if 'additional_paths' in toolinfo:
                     # add any additional paths needed by the tool
                     add_path = toolinfo['additional_paths']
                     sys.path.extend(add_path)
@@ -127,9 +132,18 @@ class LQMToolConfig():
         return toolClasses
 
     def _loadUserConfig(self, configFile):
-        cfg = open(configFile)
-        topLevelConfig = toml.loads(cfg.read())
-        cfg.close()
+        """
+        Loads the user configuration file
+        :param configFile: String that defines the path of the user configuration file.
+        """
+
+        if os.path.exists(configFile):
+            cfg = open(configFile)
+            topLevelConfig = toml.loads(cfg.read())
+            cfg.close()
+        else:
+            configFile = io.StringIO(configFile)
+            topLevelConfig = toml.load(configFile)
         self._userConfig = {}
         self._userConfig.update(topLevelConfig)
 
@@ -196,37 +210,37 @@ class LQMToolConfig():
         for toolName in chainCfg['chain']:
             if toolName in localTools:
                 tool = localTools[toolName]
-            elif globalTools != None and toolName in globalTools:
+            elif globalTools is not None and toolName in globalTools:
                 tool = globalTools[toolName]
             else:
                 raise ConfigurationError("Named tool not found: " + toolName)
             chain.append(tool)
             allEnabled = allEnabled and tool.isEnabled()
-            if (not tool.isEnabled()):
+            if not tool.isEnabled():
                 self._logger.error("Tool chain {0} is disabled due to tool {1} being disabled".format(chainCfg['name'],
                                                                                                       tool.getName()))
 
         chain = ToolChain(chain, chainCfg['name'], enabled=allEnabled)
-        if (allEnabled):
+        if allEnabled:
             self._logger.info("Created tool chain: {0}".format(chain.getName()))
         chain.printTools()
         return chain
 
     def _addSourcesConfig(self, config):
-        if ('Source' not in config):
+        if 'Source' not in config:
             return
         srcCfgs = config["Source"]
 
         for key in srcCfgs:
             for cfg in srcCfgs[key]:
-                if (key == "Directory"):
+                if key == "Directory":
                     self._sources.append(DirectorySource(cfg))
 
     def getSources(self):
         return self._sources
 
     def getParser(self, fmt):
-        if (fmt not in self._parsers):
+        if fmt not in self._parsers:
             return None
         return self._parsers[fmt]
 
