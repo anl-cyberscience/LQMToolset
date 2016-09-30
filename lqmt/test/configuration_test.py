@@ -17,18 +17,18 @@ class TestConfiguration(TestCase):
         Note the forward slash replacements for the user configuration. This is due to the forward slash being a
         restricted character in TOML(package used to parse configuration files in LQMT).
         """
-        # relative pathing variables
+        # relative pathing variables. Replace function calls for Windows compatibility.
         self.directory = os.path.dirname(__file__)
-        self.alerts = self.directory + "\\test-data\\test-alerts"
-        self.alerts = self.alerts.replace("\\", "\\\\")
-        self.logging = self.directory + "\\test-data\\test-logs\\lqmt"
-        self.logging = self.logging.replace("\\", "\\\\")
-        self.whitelist = self.directory + "\\test-data\\whitelist\\whitelist.txt"
-        self.whitelist = self.whitelist.replace("\\", "\\\\")
-        self.whitelist_db = self.directory + "\\test-data\\whitelist\\whitelist.db"
-        self.whitelist_db = self.whitelist_db.replace("\\", "\\\\")
+        self.alerts = self.directory + "/test-data/"
+        self.alerts = self.alerts.replace("\\", "/")
+        self.logging = self.directory + "/test-data/test-logs/lqmt"
+        self.logging = self.logging.replace("\\", "/")
+        self.whitelist = self.directory + "/test-data/whitelist/whitelist.txt"
+        self.whitelist = self.whitelist.replace("\\", "/")
+        self.whitelist_db = self.directory + "/test-data/whitelist/whitelist.db"
+        self.whitelist_db = self.whitelist_db.replace("\\", "/")
 
-        # configurations initialized.
+        # configurations initialized
         sysconf = SystemConfig()
         self.sys_config = sysconf.getConfig()
         config = USERCONFIG.format(self.alerts, self.logging, self.whitelist, self.whitelist_db)
