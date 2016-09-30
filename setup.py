@@ -6,7 +6,7 @@ except ImportError:
 
 setup(
     name='lqmt',
-    version='1.1.1b1',
+    version='1.1.2',
     description='Flexible framework that allows automation to process cyber threat information and update endpoint defense tools',
     long_description='The Last Quarter Mile Toolset is flexible framework that allows automation to process cyber threat information (CTI) and update endpoint defense tools.',
     url='https://github.com/anl-cyberscience/LQMToolset/',
