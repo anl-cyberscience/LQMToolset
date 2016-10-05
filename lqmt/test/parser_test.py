@@ -41,9 +41,10 @@ class TestParser(TestCase):
         meta = {
             "PayloadFormat": payloadFormat,
             "SendingSite": "ANL",
+            "PayloadType": "Alert",
             "UploadID": str(uuid.uuid4()).upper(),
             "FileName": "TestAlert",
-            "SentTimestamp": self.time
+            "SentTimestamp": self.time,
         }
 
         return meta
@@ -77,7 +78,29 @@ class TestParser(TestCase):
 
     # CFM20 format tests
     def test_cfm20_content_returned(self):
+        self.assertEquals(len(self.cfm20_parsed_data), 1)
+
+    def test_cfm20_indicator(self):
+        self.assertEquals(self.cfm20_parsed_data[0]._indicator, "8675:a289:5:102c::bd8:baac")
+
+    def test_cfm20_indicator_type(self):
+        self.assertEquals(self.cfm20_parsed_data[0]._indicatorType, "IPv6Address")
+
+    def test_cfm20_action(self):
+        self.assertEquals(self.cfm13_parsed_data[0]._action1, "Block")
+
+    def test_cfm20_detectedTime(self):
         pass
+
+    def test_cfm20_duration(self):
+        self.assertEquals(self.cfm20_parsed_data[0]._duration1, "86400")
+        self.assertIsNone(self.cfm20_parsed_data[0]._duration2)
+
+    def test_cfm20_sensitivity(self):
+        self.assertEquals(self.cfm20_parsed_data[0]._sensitivity, "noSensitivity")
+
+    def test_cfm20_restriction(self):
+        self.assertIsNone(self.cfm20_parsed_data[0]._restriction)
 
     # STIX TLP format tests
     def test_stix_tlp(self):

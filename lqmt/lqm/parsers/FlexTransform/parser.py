@@ -34,7 +34,7 @@ class FlexTransformParser(object):
             config_file = open(os.path.join(self._current_dir, parserConfiguration), 'r')
             self._transform.AddParser(parserName, config_file)
 
-    def parse(self, datafile, meta):
+    def parse(self, datafile, meta=None):
         """
         Parse the datafile using the metadata dictionary.
 
@@ -50,7 +50,7 @@ class FlexTransformParser(object):
 
         # TODO: Stix-tlp parser currently doesn't support meta files. Until it does, meta files are for the cfm format
         try:
-            if meta['PayloadFormat'] == 'stix-tlp':
+            if meta['PayloadFormat'] == 'stix-tlp' or meta is None:
                 data = self._transform.TransformFile(sourceFileName=datafile, sourceParserName=meta['PayloadFormat'],
                                                      targetParserName='LQMTools')
             else:
