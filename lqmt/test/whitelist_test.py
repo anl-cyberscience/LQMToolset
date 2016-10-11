@@ -10,8 +10,8 @@ class TestWhitelist(TestCase):
 
     def setUp(self):
         currentdir = os.path.dirname(__file__)
-        whitelist = currentdir + "/test-data/whitelist/whitelist.txt"
-        db = currentdir + "/test-data/whitelist/whitelist.db"
+        whitelist = currentdir + "/test_data/whitelist/whitelist.txt"
+        db = currentdir + "/test_data/whitelist/whitelist.db"
         configstr = """
         [Whitelist]
             whitelist = '{0}'

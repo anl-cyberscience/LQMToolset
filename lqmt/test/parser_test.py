@@ -1,7 +1,7 @@
 from unittest import TestCase, main
 from lqmt.lqm.parsers.FlexTransform.parser import FlexTransformParser
 from lqmt.lqm.systemconfig import SystemConfig
-from lqmt.test.sample_inputs import CFM13ALERT, CFM20ALERT
+from lqmt.test.test_data.sample_inputs import CFM13ALERT, CFM20ALERT
 import io
 import time
 import uuid

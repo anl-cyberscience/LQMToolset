@@ -1,5 +1,6 @@
 from lqmt.lqm.systemconfig import SystemConfig
-from lqmt.test.sample_config import USERCONFIG
+# from lqmt.test.sample_config import USERCONFIG
+from lqmt.test.test_data.sample_config import USERCONFIG
 from lqmt.lqm.config import LQMToolConfig
 from unittest import TestCase, main
 import os
@@ -19,13 +20,13 @@ class TestConfiguration(TestCase):
         """
         # relative pathing variables. Replace function calls for Windows compatibility.
         self.directory = os.path.dirname(__file__)
-        self.alerts = self.directory + "/test-data/"
+        self.alerts = self.directory + "/test_data/"
         self.alerts = self.alerts.replace("\\", "/")
-        self.logging = self.directory + "/test-data/test-logs/lqmt"
+        self.logging = self.directory + "/test_data/test-logs/lqmt"
         self.logging = self.logging.replace("\\", "/")
-        self.whitelist = self.directory + "/test-data/whitelist/whitelist.txt"
+        self.whitelist = self.directory + "/test_data/whitelist/whitelist.txt"
         self.whitelist = self.whitelist.replace("\\", "/")
-        self.whitelist_db = self.directory + "/test-data/whitelist/whitelist.db"
+        self.whitelist_db = self.directory + "/test_data/whitelist/whitelist.db"
         self.whitelist_db = self.whitelist_db.replace("\\", "/")
 
         # configurations initialized
