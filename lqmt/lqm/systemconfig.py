@@ -24,6 +24,9 @@ class SystemConfig:
                 },
                 'FlexText': {
                     'module': 'to_flextext', 'config_class': 'FlexTextConfig', 'tool_class': 'ToFlexText'
+                },
+                'Splunk': {
+                    'module': 'to_splunk', 'config_class': 'SplunkConfig', 'tool_class': 'ToSplunk'
                 }
             },
             'UnprocessedCSV': {

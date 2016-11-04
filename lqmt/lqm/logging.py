@@ -88,4 +88,4 @@ class LQMLogging(object):
                 logger.propagate = False
             else:
                 logger.error("logfilebase must be specified in configuration")
-                raise ConfigurationError()
+                raise ConfigurationError("Logfilebase parameter missing")

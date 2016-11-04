@@ -1,11 +1,6 @@
 import re
 
-_valid_varnames = set([
-    'hostname',
-    'port',
-    'username',
-    'originator',
-    ])
+_valid_varnames = {'hostname', 'port', 'username', 'originator'}
 
 class CheckpointRC():
     def __init__(self, rcfile):

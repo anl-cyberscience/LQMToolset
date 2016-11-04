@@ -1,3 +1,4 @@
+import argparse
 import logging
 import time
 import sys
@@ -11,9 +12,15 @@ class LQMT(object):
     the ability to run LQMT against it.
     """
 
-    def __init__(self):
+    def __init__(self, config=None):
         self.logger = logging.getLogger("LQMT")
-        self.user_config = ""
+        self.user_config = config
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        pass
 
     def run(self, config=None):
         """
@@ -43,20 +50,30 @@ class LQMT(object):
             else:
                 self.logger.exception("An error occurred during processing:")
             self.logger.error(str(e))
-        logging.getLogger("LQMT").info("LQMTool done. Process time: " + str(time.process_time()))
+        logging.getLogger("LQMT").info("Process complete. Process time: " + str(time.process_time()))
 
     def add_config(self, config):
         """
         Adds user configuration file to be used when running LQMT
         :param config: Directory path to configuration file. Configuration file must be in TOML format.
         """
-
         self.user_config = config
 
 
 def main():
-    """
-    /lqmt/main.py will be migrated here for the sake of consistency.
-    """
-    pass
+    cur_version = sys.version_info
+    if cur_version <= (3, 2):
+        print("Your python version {0}.{1}.{2}-{3} is too old.  LQMTools requires at least version 3.2".format(
+            cur_version[0], cur_version[1], cur_version[2], cur_version[3]
+        ))
+        sys.exit(1)
 
+    parser = argparse.ArgumentParser(description="Parse CTI data and make it actionable in endpoint defense tools.")
+    parser.add_argument('user_config_file', help='The path to the user configuration file. ')
+    args = parser.parse_args()
+
+    with LQMT(args.user_config_file) as lqmt:
+        lqmt.run()
+
+if __name__ == '__main__':
+    main()

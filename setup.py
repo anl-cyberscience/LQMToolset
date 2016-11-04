@@ -49,10 +49,11 @@ setup(
         'pan-python',
         'toml',
         'FlexTransform',
+        'requests'
     ],
     entry_points={
         'console_scripts': [
-            'lqmt = lqmt.main:main'
+            'lqmt = lqmt.LQMT:main'
         ]
     },
     test_suite='nose.collector',

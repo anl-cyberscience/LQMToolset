@@ -1,3 +1,4 @@
+import logging
 from lqmt.lqm.tool import ToolConfig
 from lqmt.lqm.exceptions import ConfigurationError
 
@@ -5,6 +6,7 @@ from lqmt.lqm.exceptions import ConfigurationError
 class ArcSightConfig(ToolConfig):
     def __init__(self, configData, csvToolInfo, unhandledCSV):
         super().__init__(configData, csvToolInfo, unhandledCSV)
+        self.logger = logging.getLogger("LQMT.ArcSight.{0}".format(self.getName()))
         hasError = False
 
         if 'host' in configData:
