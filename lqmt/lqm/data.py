@@ -477,6 +477,7 @@ class Alert(object):
             keys.reverse()
             for value in fields:
                 if parseEmpty:
+                    # TODO: Maybe remove this and make empty values more explicit? Empty log values > no log values?
                     if value is not "":
                         dict_fields[keys.pop()] = value
                     else:
