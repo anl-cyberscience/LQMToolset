@@ -29,7 +29,9 @@ class ToSplunk(Tool):
                 self._config.port,
                 self._config.username,
                 self._config.password,
-                cert_check=self._config.cert_check
+                cert_check=self._config.cert_check,
+                source=self._config.source,
+                sourcetype=self._config.sourcetype
         )
 
     def initialize(self):
@@ -61,4 +63,5 @@ class ToSplunk(Tool):
         pass
 
     def cleanup(self):
+        self.apicaller.__exit__()
         pass
