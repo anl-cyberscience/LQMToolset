@@ -50,6 +50,10 @@ class AlertFields(object):
             else:
                 return ""
 
+    @property
+    def fields(self):
+        return self._fields
+
 
 class Alert(object):
     """The Alert object represents the LQM intermediate format"""
@@ -463,27 +467,26 @@ class Alert(object):
             val = getattr(self, tfld)
         return val
 
-    def getAllFields(self, dictionary=False, parseEmpty=False):
+    def getAllFields(self, dictionary=False, parseEmpty=False, emptyValue=None):
         """
-        Method to get all supported fields
+        Method to get all supported fields from the intermediate data format.
         :param dictionary: Option to return the results as a dictionary. Defaults to False.
         :param parseEmpty: Option to parse out any empty values.
+        :param emptyValue: Option to fill in empty fields with a different value
         :return: Returns either a list or dictionary of all fields and their parsed value. Defaults to a list.
         """
-        keys = list(Alert._alertFields._fields.keys())
+        keys = list(Alert._alertFields.fields.keys())
         fields = self.getFields(keys)
         if dictionary:
             dict_fields = {}
             keys.reverse()
             for value in fields:
-                if parseEmpty:
-                    # TODO: Maybe remove this and make empty values more explicit? Empty log values > no log values?
-                    if value is not "":
-                        dict_fields[keys.pop()] = value
-                    else:
-                        keys.pop()
-                else:
+                if value is not "":
                     dict_fields[keys.pop()] = value
+                elif parseEmpty:
+                    keys.pop()
+                elif emptyValue:
+                    dict_fields[keys.pop()] = '"{0}"'.format(emptyValue)
             return dict_fields
         else:
             return fields

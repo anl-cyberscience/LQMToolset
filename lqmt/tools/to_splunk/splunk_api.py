@@ -29,6 +29,9 @@ class ApiCaller:
         self.auth_service = "/services/auth/login/"
         self.stream_service = "/services/receivers/stream/"
 
+        # Call authentication function when class object is created.
+        self.authenticate()
+
     def __enter__(self):
         self.authenticate()
         return self
@@ -41,9 +44,9 @@ class ApiCaller:
         """
         Method for authenticating against Splunk's REST Api. Returns a session token that will be used for future
         connections. If authentication fails, then the lqmt closes out with an error.
-        :return: Session token
+        :return: String: splunk_token. Value containing the splunk token provided by Splunk
         """
-        if not self.splunk_token['Authorization']:
+        if not self.authenticated:
             print("Authenticating")
             data = {'username': self.username, 'password': self.password}
             r = self.requests.post(self.url + self.auth_service, data=data, verify=self.cert_check)
@@ -66,9 +69,16 @@ class ApiCaller:
         """
         Method for sending messages to Splunk via REST api. If the authentication function hasn't been run yet, then
         it is called.
-        :param message:
-        :return:
+        :param source: Used to override previously set source value
+        :param sourcetype: Used to override previously set sourcetype
+        :param message: message to be sent to splunk
         """
+
+        if source is not None:
+            self.source = source
+
+        if sourcetype is not None:
+            self.sourcetype = sourcetype
 
         if not self.authenticated:
             self.authenticate()
