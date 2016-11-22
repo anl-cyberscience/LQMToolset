@@ -8,7 +8,8 @@ from lqmt.lqm.exceptions import AuthenticationError
 
 def create_message(alert):
     """
-    Creates a key-value formatted message for Splunk that contains parsed data from FlexT.
+    Creates a key-value formatted message for Splunk that contains parsed data from FlexT. Defaulting to parsing
+    empty values.
 
     :param alert: Parsed alert data from FlexT
     :return: Returns formatted string.
