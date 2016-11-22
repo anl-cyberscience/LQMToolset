@@ -243,22 +243,26 @@ Setting               | Explanation
 ### Splunk
 Ingest CTI data into your Splunk instance in a keyword value format. 
 
-LQMT supports Splunk using Splunk's [REST Api](http://dev.splunk.com/restapi). 
-
 Setting                 | Explanation
 :---------------------: | :-----------
 `name`                  | A unique name identifying this tool instance. 
-`host`                  | Host address of your Splunk instance
-`port`                  | Port used to communicate with your Splunk instances REST Api interface. Defaults to `8089`
-`username`              | Username that you want to authenticate with
-`password`              | Password that you want to authenticate with
+`host`                  | Host address of your Splunk instance.
+`port`                  | Port used to communicate with your Splunk instances REST Api interface. Defaults to `8089`.
+`username`              | Username that you want to authenticate with.
+`password`              | Password that you want to authenticate with.
 `cert_check`            | Used to disable the the certificate check. This is helpful for testing on a machine that you haven't imported your Splunk SSL cert on yet. Defaults to `false`.
-`source`                | Name of the source you want the data to be identified by.
-`sourcetype`            | The sourcetype that you want to insert the data into
+`source`                | Name of the source you want the data to be identified by. Defaults to `lqmt`. 
+`sourcetype`            | The sourcetype that you want to insert the data into. 
 
 #### Device Setup and Configuration 
-LQMT authenticates using Splunk's token-based authentication endpoint. This requires you to provide a username and password.
-It is recommended that you create a new user specifically for your LQMT instance for security and auditing purposes. 
+LQMT authenticates using Splunk's token-based authentication endpoint. This requires you to provide a username and 
+password. It is recommended that you create a new user specifically for your LQMT instance for security and auditing 
+purposes. 
+
+#### Implementation Details
+LQMT supports Splunk using Splunk's [REST Api](http://dev.splunk.com/restapi). LQMT authenticates against Splunks 
+/services/auth/login endpoint. Once authenticated, LQMT receives a token from Splunk and uses this for all future 
+interactions. 
 
 # Logging
 

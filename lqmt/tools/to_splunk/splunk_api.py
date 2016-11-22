@@ -1,8 +1,24 @@
 import logging
 import requests
+import time
 from xml.etree import ElementTree
 
 from lqmt.lqm.exceptions import AuthenticationError
+
+
+def create_message(alert):
+    """
+    Creates a key-value formatted message for Splunk that contains parsed data from FlexT.
+
+    :param alert: Parsed alert data from FlexT
+    :return: Returns formatted string.
+    """
+    data = alert.getAllFields(dictionary=True, parseEmpty=True)
+    message = "{0} LQMT: ".format(time.asctime())
+    for key, value in data.items():
+        message += "{0}={1} ".format(key, value)
+
+    return message
 
 
 class ApiCaller:
@@ -47,16 +63,16 @@ class ApiCaller:
         :return: String: splunk_token. Value containing the splunk token provided by Splunk
         """
         if not self.authenticated:
-            print("Authenticating")
             data = {'username': self.username, 'password': self.password}
             r = self.requests.post(self.url + self.auth_service, data=data, verify=self.cert_check)
-            print("Authentication: {0} {1}".format(r.status_code, r.reason))
+
             if r.ok:
                 data = ElementTree.fromstring(r.content)
                 self.splunk_token['Authorization'] = "Splunk " + data[0].text
                 self.authenticated = True
                 self._logger.debug(
-                    "Successfully authenticated with Splunk instance. Token received: {0}".format(data[0].text))
+                    "Successfully authenticated with Splunk instance. Token received: {0}".format(data[0].text)
+                )
             else:
                 raise AuthenticationError("Authentication failed with the following http status code and message - "
                                           "Code: {0} "

@@ -48,8 +48,9 @@ class SplunkConfig(ToolConfig):
         if 'source' in configData:
             self.source = configData['source']
         else:
-            self.source = None
-            self.logger.info("The 'source' parameter wasn't specified in your config. Defaulting to None")
+            self.source = "lqmt"
+            self.logger.info("The 'source' parameter wasn't specified in your config. Defaulting to 'lqmt' to indicate"
+                             "the data originated from lqmt.")
 
         if 'sourcetype' in configData:
             self.sourcetype = configData['sourcetype']
