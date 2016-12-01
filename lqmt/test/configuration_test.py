@@ -1,8 +1,9 @@
 from lqmt.lqm.systemconfig import SystemConfig
-# from lqmt.test.sample_config import USERCONFIG
 from lqmt.test.test_data.sample_config import USERCONFIG
 from lqmt.lqm.config import LQMToolConfig
 from unittest import TestCase, main
+from lqmt.lqm.tool import ToolConfig
+import toml
 import os
 
 
@@ -33,7 +34,10 @@ class TestConfiguration(TestCase):
         sysconf = SystemConfig()
         self.sys_config = sysconf.getConfig()
         config = USERCONFIG.format(self.alerts, self.logging, self.whitelist, self.whitelist_db)
+        self.toml_config = toml.loads(config)
+        self.toml_config = self.toml_config["Tools"]["FlexText"][0]  # dirty way of parsing userconfig for ToolConfig
         self.user_config = LQMToolConfig(config)
+        self.toolConfig = ToolConfig(self.toml_config, csvToolInfo={""}, unhandledCSV={""})
 
     def test_user_sources(self):
         """
@@ -63,6 +67,16 @@ class TestConfiguration(TestCase):
         toolchain = self.user_config.getToolChains().pop()
         self.assertEquals(toolchain._name, "anl-flextext-test")
         self.assertEquals(len(toolchain._tools), 1)
+
+    def test_validation(self):
+        self.assertTrue(self.toolConfig.validation('incrementFile', bool))
+        self.assertEquals(self.toolConfig.validation('fileParser', str, required=True, default="CSV"), 'CSV')
+        self.assertEquals(
+            self.toolConfig.validation('fields', str, required=True),
+            "indicator,reportedTime,detectedTime,duration1,priors,directSource,reason1,majorTags,sensitivity,"
+            "reconAllowed,restriction"
+        )
+
 
 if __name__ == '__main__':
     main()

@@ -15,7 +15,7 @@ class ToolConfig:
         self._hasError = False
         if 'unprocessed_file' in configData:
             if csvToolInfo is None or unhandledCSV is None:
-                raise ConfigurationError()
+                raise ConfigurationError("Missing csvTollInfo or unhandledCSV")
             cfg = {'file': configData['unprocessed_file']}
             cfg.update(unhandledCSV)
             self._unprocessedHandler = UnprocessedAlertHandler(csvToolInfo.create(cfg, None, None))
@@ -27,6 +27,9 @@ class ToolConfig:
         :return: Returns tool named defined in the userconfig
         """
         return self._name
+
+    def getError(self):
+        return self._hasError
 
     def isEnabled(self):
         return self._enabled
@@ -117,7 +120,7 @@ class Tool:
         This gives the opportunity to log this info or report it to the user.
         """
         uph = self._config.getUnprocessedHandler()
-        if (uph != None):
+        if uph is not None:
             uph.unprocessed(alert)
 
     def getActionsToProcess(self):
@@ -125,7 +128,7 @@ class Tool:
 
     def initialize(self):
         uph = self._config.getUnprocessedHandler()
-        if (uph != None):
+        if uph is not None:
             uph.initialize()
 
     def fileBegin(self):
@@ -227,7 +230,7 @@ class ToolChain:
         self._logger = logging.getLogger("LQMT.Tools")
         self._actionsToProcess = None
         for tool in self._tools:
-            if (self._actionsToProcess == None):
+            if self._actionsToProcess is None:
                 self._actionsToProcess = tool.getActionsToProcess()
             else:
                 self._actionsToProcess &= tool.getActionsToProcess()
@@ -305,10 +308,10 @@ class ToolChain:
         If any are disabled, disable the chain, too.
         """
         en = self.isEnabled()
-        if (not en):
+        if not en:
             return
         for tool in self._tools:
-            if (not tool.isEnabled()):
+            if not tool.isEnabled():
                 en = False
         self._enabled = en
 
