@@ -30,68 +30,27 @@ class FlexTextConfig(ToolConfig):
             'stix-tlp': 'resources/sampleConfigurations/stix_tlp.cfg'
         }
 
-        if 'fileParser' in config_data:
-            self.fileParser = config_data['fileParser']
-        else:
-            self.logger.error("The parameter 'fileParser' must be specified in the configuration")
-            hasError = True
+        self.fileParser = self.validation('fileParser', str, default="CSV")
+        self.fields = self.validation('fields', str, required=True)
+        self.delimiter = self.validation('delimiter', str, required=True)
+        self.quote_char = self.validation('quoteChar', str, required=True)
+        self.escape_char = self.validation('escapeChar', str, required=True)
+        self.header_line = self.validation('headerLine', bool, default=True)
+        self.double_quote = self.validation('doubleQuote', bool)
+        self.quote_style = self.validation('quoteStyle', str, default="none")
+        self.primary_schema_config = self.validation('primarySchemaConfig', str,
+                                                     default="resources/schemaDefinitions/lqmtools.json")
+        self.increment_file = self.validation('incrementFile', bool)
+        self.file = self.validation('fileDestination', str, required=True)
 
-        if 'fields' in config_data:
-            self.fields = config_data['fields']
-        else:
-            self.logger.error("The parameter 'fields' must be specified in the configuration")
-            hasError = True
-
-        if 'delimiter' in config_data:
-            self.delimiter = config_data['delimiter']
-        else:
-            self.logger.error("The parameter 'delimiter' must be specified in the configuration")
-            hasError = True
-
-        if 'quoteChar' in config_data:
-            self.quote_char = config_data['quoteChar']
-        else:
-            self.logger.error("The parameter 'quoteChar' must be specified in the configuration")
-
-        if 'escapeChar' in config_data:
-            self.escape_char = config_data['escapeChar']
-        else:
-            self.logger.error("The parameter 'escapeChar' must be specified in the configuration")
-            hasError = True
-
-        if 'headerLine' in config_data:
-            self.header_line = config_data['headerLine']
-
-        if 'doubleQuote' in config_data:
-            self.double_quote = config_data['doubleQuote']
-
-        if 'quoteStyle' in config_data:
-            self.quote_style = config_data['quoteStyle']
-        else:
-            self.logger.error("The parameter 'quoteStyle' must be specified in the configuration")
-            hasError = True
-
-        if 'primarySchemaConfig' in config_data:
-            self.primary_schema_config = config_data['primarySchemaConfig']
-        else:
-            self.logger.error("The parameter 'primarySchemaConfig' must be specified in the configuration")
-            hasError = True
-
-        if 'incrementFile' in config_data:
-            self.increment_file = config_data['incrementFile']
-
-        if 'fileDestination' in config_data:
+        if self.file:
             increment = ""
-            file = config_data['fileDestination']
-            filebase, text = os.path.splitext(file)
+            filebase, text = os.path.splitext(self.file)
             if self.increment_file:
                 increment = "."
                 increment += datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 
             self.file_destination = filebase + increment + text
-        else:
-            hasError = True
-            self.logger.error("'file' must be specified for FlexText tool")
 
         if hasError:
             self.disable()
@@ -131,7 +90,7 @@ class FlexTextConfig(ToolConfig):
         self.config_str += "\nFileParser=" + self.fileParser
         self.config_str += "\n[CSV]"
         self.config_str += "\nFields=" + self.fields
-        self.config_str += "\nDelimiter='" + self.delimiter+"'"
+        self.config_str += "\nDelimiter='" + self.delimiter + "'"
         self.config_str += "\nQuoteChar=" + self.quote_char
         self.config_str += "\nEscapeChar=" + self.escape_char
         self.config_str += "\nHeaderLine=" + str(self.header_line)

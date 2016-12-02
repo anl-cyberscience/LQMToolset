@@ -1,10 +1,10 @@
-from lqmt.lqm.systemconfig import SystemConfig
-from lqmt.test.test_data.sample_config import USERCONFIG
-from lqmt.lqm.config import LQMToolConfig
+import os
+import toml
 from unittest import TestCase, main
 from lqmt.lqm.tool import ToolConfig
-import toml
-import os
+from lqmt.lqm.config import LQMToolConfig
+from lqmt.lqm.systemconfig import SystemConfig
+from lqmt.test.test_data.sample_config import USERCONFIG
 
 
 class TestConfiguration(TestCase):

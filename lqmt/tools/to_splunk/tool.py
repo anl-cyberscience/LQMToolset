@@ -1,9 +1,9 @@
 import logging
 import requests
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-from lqmt.lqm.data import AlertAction
 from lqmt.lqm.tool import Tool
+from lqmt.lqm.data import AlertAction
 from lqmt.tools.to_splunk.splunk_api import ApiCaller, create_message
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 
 class ToSplunk(Tool):
@@ -17,8 +17,6 @@ class ToSplunk(Tool):
         self._logger = logging.getLogger("LQMT.FlexText.{0}".format(self.getName()))
         self._splunk_token = ""
 
-        # self.api = ApiCaller(self._config.host, self._config.port, self._config.username, self._config.password)
-        # self.api.authenticate()
         if self._config.cert_check is False:
             requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 

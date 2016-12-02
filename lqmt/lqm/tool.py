@@ -15,7 +15,7 @@ class ToolConfig:
         self._hasError = False
         if 'unprocessed_file' in configData:
             if csvToolInfo is None or unhandledCSV is None:
-                raise ConfigurationError("Missing csvTollInfo or unhandledCSV")
+                raise ConfigurationError("Missing csvToolInfo or unhandledCSV")
             cfg = {'file': configData['unprocessed_file']}
             cfg.update(unhandledCSV)
             self._unprocessedHandler = UnprocessedAlertHandler(csvToolInfo.create(cfg, None, None))
@@ -59,7 +59,7 @@ class ToolConfig:
         if value not in self.configData:
             if required:
                 raise ConfigurationError(
-                    "Missing the 'host' parameter in the Splunk tool named: {0}".format(self.getName())
+                    "Missing the required parameter '{0}', in the Splunk tool: '{1}'".format(value, self.getName())
                 )
 
             # if value is not in config, but there is a default, then return the default. Otherwise raise config error
