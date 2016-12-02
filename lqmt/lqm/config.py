@@ -95,7 +95,7 @@ class LQMToolConfig(object):
             else:
                 parser = parserClass()
             self._parsers[parserinfo['format']] = parser
-            self._logger.debug("Loaded parser: %s" % parserinfo['format'])
+        self._logger.debug("Parsers loaded: %s" % ', '.join(self._parsers.keys()))
 
     def _initToolConfig(self, config):
         """
@@ -128,7 +128,8 @@ class LQMToolConfig(object):
                 # get the class "object" for later creation
                 cfgClass = getattr(mod, toolinfo['config_class'])
                 toolClasses[key] = ToolInfo(toolClass, cfgClass)
-                self._logger.debug("Loaded tool: %s" % key)
+
+        self._logger.debug("Tools loaded: %s" % ', '.join(usertooldefs))
         return toolClasses
 
     def _loadUserConfig(self, configFile):

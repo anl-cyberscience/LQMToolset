@@ -5,26 +5,31 @@ from lqmt.lqm.unprocessed import UnprocessedAlertHandler
 from lqmt.lqm.exceptions import ConfigurationError
 
 
-class ToolConfig():
+class ToolConfig:
     """Base class for all tool configs"""
 
     def __init__(self, configData, csvToolInfo, unhandledCSV):
         self._name = configData['name']  # the tool's name
-        self._enabled = self._name != None  # whether or not the tool is enabled
+        self._enabled = self._name is not None  # whether or not the tool is enabled
         self._unprocessedHandler = None  # The handler to use if there is an unprocessed alert
-        if ('unprocessed_file' in configData):
-            if (csvToolInfo == None or unhandledCSV == None):
-                raise ConfigurationError()
-            cfg = {}
-            cfg['file'] = configData['unprocessed_file']
+        self._hasError = False
+        if 'unprocessed_file' in configData:
+            if csvToolInfo is None or unhandledCSV is None:
+                raise ConfigurationError("Missing csvToolInfo or unhandledCSV")
+            cfg = {'file': configData['unprocessed_file']}
             cfg.update(unhandledCSV)
             self._unprocessedHandler = UnprocessedAlertHandler(csvToolInfo.create(cfg, None, None))
+
+        self.configData = configData
 
     def getName(self):
         """
         :return: Returns tool named defined in the userconfig
         """
         return self._name
+
+    def getError(self):
+        return self._hasError
 
     def isEnabled(self):
         return self._enabled
@@ -38,8 +43,52 @@ class ToolConfig():
     def getUnprocessedHandler(self):
         return self._unprocessedHandler
 
+    def validation(self, value, expected_type, required=False, default=None):
+        """
+        Function to validate values from the user configuration file. Check
+        :param value: The value to extract from the configuration. This is a string used as a key in the configData dict
+        :param expected_type: The expected type of the provided value
+        :param required: True or False value indicating if this is a required value for successful configuration of the
+         tool. If required is True and the value is not provided, an Error is thrown and the application halts.
+        :param default: Value to be returned if the value is absent in the user configuration
+        :return: Returns the validated value from the user configuration value. If a default is provided, that is
+        returned in the event of the value being absent in the user config.
+        """
 
-class Tool():
+        # if value not in config
+        if value not in self.configData:
+            if required:
+                raise ConfigurationError(
+                    "Missing the required parameter '{0}', in the Splunk tool: '{1}'".format(value, self.getName())
+                )
+
+            # if value is not in config, but there is a default, then return the default. Otherwise raise config error
+            elif default is not None:
+                self.logger.info(
+                    "The '{0}' parameter wasn't specified in your config. Defaulting to value of '{1}'.".format(
+                        value, default
+                    )
+                )
+                return default
+
+        # if value is in config
+        if value in self.configData:
+            # if value is of expected type return it, otherwise raise config error
+            if isinstance(self.configData[value], expected_type):
+                return self.configData[value]
+            else:
+                raise ConfigurationError(
+                    "The '{0}' parameter was expected to be of the type {1}, but ended up being '{2}'.".format(
+                        value, expected_type, type(self.configData[value])
+                    )
+                )
+        else:
+            raise ConfigurationError(
+                "The '{0}' parameter is empty. Please provide a value for it.".format(value)
+            )
+
+
+class Tool:
     """The base class for all tools."""
 
     def __init__(self, config, alertActions):
@@ -71,7 +120,7 @@ class Tool():
         This gives the opportunity to log this info or report it to the user.
         """
         uph = self._config.getUnprocessedHandler()
-        if (uph != None):
+        if uph is not None:
             uph.unprocessed(alert)
 
     def getActionsToProcess(self):
@@ -79,7 +128,7 @@ class Tool():
 
     def initialize(self):
         uph = self._config.getUnprocessedHandler()
-        if (uph != None):
+        if uph is not None:
             uph.initialize()
 
     def fileBegin(self):
@@ -171,7 +220,7 @@ class Tool():
         return pattern.match(ip) is not None
 
 
-class ToolChain():
+class ToolChain:
     """A ToolChain is a list of tools that pass data from one to the next"""
 
     def __init__(self, tools, name, enabled):
@@ -181,7 +230,7 @@ class ToolChain():
         self._logger = logging.getLogger("LQMT.Tools")
         self._actionsToProcess = None
         for tool in self._tools:
-            if (self._actionsToProcess == None):
+            if self._actionsToProcess is None:
                 self._actionsToProcess = tool.getActionsToProcess()
             else:
                 self._actionsToProcess &= tool.getActionsToProcess()
@@ -259,10 +308,10 @@ class ToolChain():
         If any are disabled, disable the chain, too.
         """
         en = self.isEnabled()
-        if (not en):
+        if not en:
             return
         for tool in self._tools:
-            if (not tool.isEnabled()):
+            if not tool.isEnabled():
                 en = False
         self._enabled = en
 
