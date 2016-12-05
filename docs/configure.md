@@ -256,8 +256,40 @@ Setting                 | Explanation
 
 #### Device Setup and Configuration 
 LQMT authenticates using Splunk's token-based authentication endpoint. This requires you to provide a username and 
-password. It is recommended that you create a new user specifically for your LQMT instance for security and auditing 
-purposes. 
+password. It is recommended that you create a new role specifically for rest api usage as well as a new user that 
+belongs to this role. Having a specific user and role just for REST api access will make auditing your rest api usage
+much easier.
+
+##### Role Creation
+The following steps will walk you through creating a role with enough permissions to permit usage of the REST api.
+1. Log into the web interface of your Splunk instance and go to `Settings` and then `Access Controls`.
+2. From the `Access Control` screen, click the `Add New` action in the `Roles` row.
+3. Assign this role any name you see fit. We will use `splunk_rest_api` in this example.
+4. Everything will be left default with the exception of the `Capabilities` section. Go to the `Capabilities` section
+and add the `edit_tcp` capability from the `Available capabilities` section to the `Selected capabilities` section. 
+5. By default, Splunk should allow this role to access the `main` index under the `Indexes searched by default` section 
+and the `All non-internal indexes` index under the `Indexes` section. Verify with your Splunk admin that you won't need 
+access to any other indexes.
+6. Once completed, hit `Save`
+
+You should now have a custom role created for using the Splunk REST API. 
+
+##### User Creation
+The following steps will walk you through creating a new Splunk user and assigning them to a role. 
+1. Log into the web interface of your Splunk instance and go to `Settings` and then `Access Controls`.
+2. From the `Access Control` screen, click the `Add New` action in the `Users` row.
+3. Name your user. In our case, we will name our user `splunk_rest_api_user`
+4. Fill in the `Full name`, `Email address`, and `Time zone` fields as you see fit. They are not needed, but can still 
+used if you desire. 
+5. Under the `Assign to roles` section, select the role that you previously created for REST API usage. Our role was 
+named `splunk_rest_api`, so we will select that.
+6. By default, splunk will have the `user` role pre-selected in the `Selected roles` section. We recommend removing this
+role if you are only using this account for user Splunk REST api. 
+7. Set a password for your user.
+8. One completed, hit `Save`
+
+You should now have a user created specifically for using Splunk's REST API. This user can now be used in your LQMT 
+instance for pushing data to your Splunk instance. 
 
 #### Implementation Details
 LQMT supports Splunk using Splunk's [REST Api](http://dev.splunk.com/restapi). LQMT authenticates against Splunks 
