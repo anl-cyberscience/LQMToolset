@@ -262,6 +262,7 @@ much easier.
 
 ##### Role Creation
 The following steps will walk you through creating a role with enough permissions to permit usage of the REST api.
+
 1. Log into the web interface of your Splunk instance and go to `Settings` and then `Access Controls`.
 2. From the `Access Control` screen, click the `Add New` action in the `Roles` row.
 3. Assign this role any name you see fit. We will use `splunk_rest_api` in this example.
@@ -276,6 +277,7 @@ You should now have a custom role created for using the Splunk REST API.
 
 ##### User Creation
 The following steps will walk you through creating a new Splunk user and assigning them to a role. 
+
 1. Log into the web interface of your Splunk instance and go to `Settings` and then `Access Controls`.
 2. From the `Access Control` screen, click the `Add New` action in the `Users` row.
 3. Name your user. In our case, we will name our user `splunk_rest_api_user`
