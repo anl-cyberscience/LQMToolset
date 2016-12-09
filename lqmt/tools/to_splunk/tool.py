@@ -14,7 +14,7 @@ class ToSplunk(Tool):
         :param config: configuration file
         """
         super().__init__(config, [AlertAction.get('All')])
-        self._logger = logging.getLogger("LQMT.FlexText.{0}".format(self.getName()))
+        self._logger = logging.getLogger("LQMT.ToSplunk.{0}".format(self.getName()))
         self._splunk_token = ""
 
         if self._config.cert_check is False:

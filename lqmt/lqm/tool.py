@@ -45,7 +45,7 @@ class ToolConfig:
 
     def validation(self, value, expected_type, required=False, default=None):
         """
-        Function to validate values from the user configuration file. Check
+        Function to validate values from the user configuration file.
         :param value: The value to extract from the configuration. This is a string used as a key in the configData dict
         :param expected_type: The expected type of the provided value
         :param required: True or False value indicating if this is a required value for successful configuration of the
