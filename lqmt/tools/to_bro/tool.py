@@ -30,8 +30,7 @@ class ToBro(Tool):
         self.file = None
         self.writer = None
         self.header_exists = False
-        self.header_keys = list(AlertFields().fields.keys())
-        self.header_keys.sort()
+        self.header_keys = self.header_formatting()
 
     def initialize(self):
         super().initialize()
@@ -81,9 +80,19 @@ class ToBro(Tool):
         line in the file be '#fields' followed by user defined fields.
         """
         with open(self._config.file, 'r+') as f:
-            if "#fields" not in f.readline():
+            header = f.readline()
+            if "#fields" not in header:
                 writer = csv.writer(f, delimiter='\t')
                 writer.writerow(["#fields"] + self.header_keys)
+
+    def header_formatting(self):
+        if self._config.header_fields is 'all':
+            header_keys = list(AlertFields().fields.keys())
+            header_keys.sort()
+        else:
+            header_keys = self._config.header_fields
+
+        return header_keys
 
     def commit(self):
         pass
