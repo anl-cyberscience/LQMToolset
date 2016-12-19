@@ -214,7 +214,7 @@ FlexText is a tool used to output parsed alert data in a user-defined, character
     [[Tools.FlexText]]
         name                = "flextext-tool"
         fileParser          = "CSV"
-        fields              = 'action1,indicator,reportedTime'
+        fields              = ['action1', 'indicator', 'reportedTime']
         delimiter           = ","
         quoteChar           = '"'
         escapeChar          = '\\'

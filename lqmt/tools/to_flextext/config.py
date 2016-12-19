@@ -19,6 +19,7 @@ class FlexTextConfig(ToolConfig):
         self.logger = logging.getLogger("LQMT.FlexText.{0}".format(self.getName()))
         hasError = False
 
+        # FlexTransform configuration variables
         self.header_line = False
         self.increment_file = False
         self.flext_config = 'resources/sampleConfigurations/flextext.cfg'
@@ -30,8 +31,9 @@ class FlexTextConfig(ToolConfig):
             'stix-tlp': 'resources/sampleConfigurations/stix_tlp.cfg'
         }
 
+        # FlexText configuration variables
         self.fileParser = self.validation('fileParser', str, default="CSV")
-        self.fields = self.validation('fields', str, required=True)
+        self.fields = self.validation('fields', list, required=True)
         self.delimiter = self.validation('delimiter', str, required=True)
         self.quote_char = self.validation('quoteChar', str, required=True)
         self.escape_char = self.validation('escapeChar', str, required=True)
@@ -43,14 +45,10 @@ class FlexTextConfig(ToolConfig):
         self.increment_file = self.validation('incrementFile', bool)
         self.file = self.validation('fileDestination', str, required=True)
 
-        if self.file:
-            increment = ""
-            filebase, text = os.path.splitext(self.file)
-            if self.increment_file:
-                increment = "."
-                increment += datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-
-            self.file_destination = filebase + increment + text
+        if self.increment_file:
+            base, extension = os.path.splitext(self.file)
+            file_name = "." + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+            self.file_destination = base + file_name + extension
 
         if hasError:
             self.disable()
@@ -66,7 +64,7 @@ class FlexTextConfig(ToolConfig):
                 'FileParser': self.fileParser
             },
             'CSV': {
-                'Fields': self.fields,
+                'Fields': ','.join(self.fields),
                 'Delimiter': self.delimiter,
                 'QuoteChar': self.quote_char,
                 'EscapeChar': self.escape_char,
@@ -89,7 +87,7 @@ class FlexTextConfig(ToolConfig):
         self.config_str += "[SYNTAX]"
         self.config_str += "\nFileParser=" + self.fileParser
         self.config_str += "\n[CSV]"
-        self.config_str += "\nFields=" + self.fields
+        self.config_str += "\nFields=" + ','.join(self.fields)
         self.config_str += "\nDelimiter='" + self.delimiter + "'"
         self.config_str += "\nQuoteChar=" + self.quote_char
         self.config_str += "\nEscapeChar=" + self.escape_char

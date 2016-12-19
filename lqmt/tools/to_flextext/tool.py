@@ -89,7 +89,7 @@ class ToFlexText(Tool):
                                  quoting=quote_style
                                  )
 
-            writer = csv.DictWriter(self._file_obj, self._config.fields.split(','), dialect='flext')
+            writer = csv.DictWriter(self._file_obj, self._config.fields, dialect='flext')
 
             writer.writeheader()
             self._config.header_line = False
