@@ -55,19 +55,17 @@ class ToBro(Tool):
         """
         if self.file is None:
             try:
-                file = self._config.file
-                file_dir = os.path.dirname(file)
+                file_dir = os.path.dirname(self._config.file)
                 if not os.path.exists(file_dir):
                     os.makedirs(file_dir, 0o755, True)
-                if not os.path.exists(file):
-                    open(file, 'w').close()
+                if not os.path.exists(self._config.file):
+                    open(self._config.file, 'w').close()
+                    # create header and open file
+                self.bro_header()
+                self.file = open(self._config.file, 'a')
             except Exception as e:
-                self._logger.error("Unable to open csv file: {0}".format(self._config.file_destination))
+                self._logger.error("Unable to open file: {0}".format(self._config.file))
                 self._logger.error(e)
-
-            # create header and open file
-            self.bro_header()
-            self.file = open(file, 'a')
 
     def start_writer(self):
         if self.writer is None and self.file is not None:
@@ -76,7 +74,7 @@ class ToBro(Tool):
     def bro_header(self):
         """
         Function that checks file for header. If the file doesn't exist it is created. If the file exists, and there
-        is no header, the header is written. Bro's inteligence framework format specifies headers by having the first
+        is no header, the header is written. Bro's intelligence framework format specifies headers by having the first
         line in the file be '#fields' followed by user defined fields.
         """
         with open(self._config.file, 'r+') as f:
