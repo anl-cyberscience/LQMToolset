@@ -15,7 +15,7 @@ USERCONFIG = """
 [[Tools.FlexText]]
     name                = "flextext-tool"
     fileParser          = "CSV"
-    fields              = 'indicator,reportedTime,detectedTime,duration1,priors,directSource,reason1,majorTags,sensitivity,reconAllowed,restriction'
+    fields              = ['indicator', 'reportedTime', 'detectedTime', 'duration1', 'priors', 'directSource', 'reason1', 'majorTags', 'sensitivity', 'reconAllowed', 'restriction']
     delimiter           = " "
     quoteChar           = "'"
     escapeChar          = '\\'
