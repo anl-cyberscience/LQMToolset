@@ -1,7 +1,6 @@
 import os
 import logging
 import datetime
-from lqmt.lqm.exceptions import ConfigurationError
 from lqmt.lqm.tool import ToolConfig
 
 
@@ -17,7 +16,6 @@ class FlexTextConfig(ToolConfig):
         super().__init__(config_data, csvToolInfo, unhandledCSV)
 
         self.logger = logging.getLogger("LQMT.FlexText.{0}".format(self.getName()))
-        hasError = False
 
         # FlexTransform configuration variables
         self.header_line = False
@@ -33,26 +31,30 @@ class FlexTextConfig(ToolConfig):
 
         # FlexText configuration variables
         self.fileParser = self.validation('fileParser', str, default="CSV")
-        self.fields = self.validation('fields', list, required=True)
         self.delimiter = self.validation('delimiter', str, required=True)
         self.quote_char = self.validation('quoteChar', str, required=True)
         self.escape_char = self.validation('escapeChar', str, required=True)
         self.header_line = self.validation('headerLine', bool, default=True)
         self.double_quote = self.validation('doubleQuote', bool)
         self.quote_style = self.validation('quoteStyle', str, default="none")
-        self.primary_schema_config = self.validation('primarySchemaConfig', str,
-                                                     default="resources/schemaDefinitions/lqmtools.json")
+        self.primary_schema_config = self.validation('primarySchemaConfig', str, default="resources/schemaDefinitions"
+                                                                                         "/lqmtools.json")
         self.increment_file = self.validation('incrementFile', bool)
         self.file = self.validation('fileDestination', str, required=True)
+
+        # fields variable is configured differently for legacy purposes. The fields variable was originally a string,
+        # so we are first checking to see if it's a string (legacy configs), if so we convert it to a list. Then we
+        # validate it.
+        if 'fields' in config_data:
+            if isinstance(config_data['fields'], str):
+                config_data['fields'] = config_data['fields'].split(',')
+
+            self.fields = self.validation('fields', list, required=True)
 
         if self.increment_file:
             base, extension = os.path.splitext(self.file)
             file_name = "." + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
             self.file_destination = base + file_name + extension
-
-        if hasError:
-            self.disable()
-            raise ConfigurationError("Missing a required value in the user configuration for the to_flextext tool")
 
     def config_to_dict(self):
         """
