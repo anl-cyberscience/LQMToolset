@@ -311,7 +311,7 @@ The token's lifetime is determined by how you configure your Splunk instance - m
 [found here](http://docs.splunk.com/Documentation/Splunk/6.5.1/Admin/Configureusertimeouts)
 
 ### Bro 
-Convert CTI data into Bro's [Intelligence Framework] (https://www.bro.org/sphinx/frameworks/intel.html) format.
+Convert CTI data into Bro's [Intelligence Framework](https://www.bro.org/sphinx/frameworks/intel.html) format. Data in this format can be easily read by your Bro instance.
 
     [[Tools.Bro]]
         name            = "bro-tool"
