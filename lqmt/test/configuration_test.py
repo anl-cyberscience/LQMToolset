@@ -72,9 +72,9 @@ class TestConfiguration(TestCase):
         self.assertTrue(self.toolConfig.validation('incrementFile', bool))
         self.assertEquals(self.toolConfig.validation('fileParser', str, required=True, default="CSV"), 'CSV')
         self.assertEquals(
-            self.toolConfig.validation('fields', str, required=True),
-            "indicator,reportedTime,detectedTime,duration1,priors,directSource,reason1,majorTags,sensitivity,"
-            "reconAllowed,restriction"
+            self.toolConfig.validation('fields', list, required=True),
+            ["indicator", "reportedTime", "detectedTime", "duration1", "priors", "directSource", "reason1", "majorTags",
+             "sensitivity", "reconAllowed", "restriction"]
         )
 
 

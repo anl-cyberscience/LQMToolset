@@ -2,7 +2,7 @@ import logging
 import requests
 from lqmt.lqm.tool import Tool
 from lqmt.lqm.data import AlertAction
-from lqmt.tools.to_splunk.splunk_api import ApiCaller, create_message
+from lqmt.tools.to_splunk.splunk_api import ApiHandler, create_message
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 
@@ -20,7 +20,7 @@ class ToSplunk(Tool):
         if self._config.cert_check is False:
             requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-        self.apicaller = ApiCaller(
+        self.handler = ApiHandler(
             self._config.host,
             self._config.port,
             self._config.username,
@@ -37,11 +37,11 @@ class ToSplunk(Tool):
         """
         Process function. Handles the processing of data for the tool. 
         """
-        self.apicaller.send_message(create_message(alert))
+        self.handler.send_message(create_message(alert))
 
     def commit(self):
         pass
 
     def cleanup(self):
-        self.apicaller.__exit__()
+        self.handler.__exit__()
         pass

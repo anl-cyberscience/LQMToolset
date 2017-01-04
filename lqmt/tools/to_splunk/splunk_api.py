@@ -3,8 +3,6 @@ import requests
 import time
 from xml.etree import ElementTree
 
-from lqmt.lqm.exceptions import AuthenticationError
-
 
 def create_message(alert):
     """
@@ -22,7 +20,7 @@ def create_message(alert):
     return message
 
 
-class ApiCaller:
+class ApiHandler:
     """
     Class for handling API calls to Splunk's REST Api. This class might end up being redundant depending on a few
     things, but that will be fleshed out further as the tool is built.
@@ -75,10 +73,7 @@ class ApiCaller:
                     "Successfully authenticated with Splunk instance. Token received: {0}".format(data[0].text)
                 )
             else:
-                raise AuthenticationError("Authentication failed with the following http status code and message - "
-                                          "Code: {0} "
-                                          "Message: {1}".format(r.status_code, r.reason)
-                                          )
+                r.raise_for_status()
 
             return self.splunk_token
 
@@ -106,6 +101,9 @@ class ApiCaller:
         r = self.requests.post(url, data=message, headers=headers, verify=self.cert_check)
         if r.ok:
             self._messages_processed += 1
+        else:
+            r.raise_for_status()
+
         self._logger.debug("Message sent to Splunk. Status code returned: {0}".format(r.status_code))
 
     def getTotalMessagesProcessed(self):

@@ -27,6 +27,9 @@ class SystemConfig:
                 },
                 'Splunk': {
                     'module': 'to_splunk', 'config_class': 'SplunkConfig', 'tool_class': 'ToSplunk'
+                },
+                'Bro': {
+                    'module': 'to_bro', 'config_class': 'BroConfig', 'tool_class': 'ToBro'
                 }
             },
             'UnprocessedCSV': {

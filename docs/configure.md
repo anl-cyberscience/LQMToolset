@@ -214,7 +214,7 @@ FlexText is a tool used to output parsed alert data in a user-defined, character
     [[Tools.FlexText]]
         name                = "flextext-tool"
         fileParser          = "CSV"
-        fields              = 'action1,indicator,reportedTime'
+        fields              = ['action1', 'indicator', 'reportedTime']
         delimiter           = ","
         quoteChar           = '"'
         escapeChar          = '\\'
@@ -238,10 +238,20 @@ Setting               | Explanation
 `quoteStyle`          | Sets the style of the quoting. Can be one of four values. `Minimal`: only quotes fields that contain special characters. `NonNumeric`: only quotes non-numeric fields. `All`: quotes all fields. `None`: No fields are quoted
 `primarySchemaConfig` | Defines the path to the primary schema configuration. Most users won't need to change the default setting; if you do, then some understanding of FlexTransform is suggested.
 `fileDestination`     | Sets the destination of the output file. 
-`incrementFile`       | Used to increment the output file. When set to `True`, the output file name will be incremented with a timestamp. When set to `False` the output file will be overrune everytime the the tool is run. Defaults to `False`
+`incrementFile`       | Used to increment the output file. When set to `True`, the output file name will be incremented with a timestamp. When set to `False` the output will be appended to any prexisting file of the same name. Defaults to `False`
 
 ### Splunk
 Ingest CTI data into your Splunk instance in a keyword value format. 
+
+    [[Tools.Splunk]]
+        name        = "splunk-tool"
+        host        = "test-splunk.dev.yourdomain.gov"
+        port        = 8089
+        username    = "serviceuser"
+        password    = "greatpassword123"
+        cert_check  = true
+        source      = "lqmt-splunk-tool"
+        sourcetype  = "lqmt-test"
 
 Setting                 | Explanation
 :---------------------: | :-----------
@@ -299,6 +309,24 @@ LQMT supports Splunk using Splunk's [REST API](http://dev.splunk.com/restapi). L
 interactions. When the token exprires, LQMT just reauthenticates and receives a new token. 
 The token's lifetime is determined by how you configure your Splunk instance - more information can be 
 [found here](http://docs.splunk.com/Documentation/Splunk/6.5.1/Admin/Configureusertimeouts)
+
+### Bro 
+Convert CTI data into Bro's [Intelligence Framework] (https://www.bro.org/sphinx/frameworks/intel.html) format.
+
+    [[Tools.Bro]]
+        name            = "bro-tool"
+        file            = "/home/bro/lqmt-feed.txt"
+        header_fields   = ['indicator', 'reportedTime', 'directSource']
+        increment_file  = true
+
+
+Setting                 | Explanation
+:---------------------: | :-----------
+`name`                  | A unique name identifying this tool instance. 
+`header_fields`         | Specify the fields you want converted and included in the output. Valid fields are extrated from the [Intermediate Data Format](#intermediate-data-format). By default, LQMT will extract all valid fields from the intermediate data foramt. 
+`file`                  | Path and name of where you want the file output(Ex: /home/bro/lqmt-bro-feed.txt). By default, LQMT will output the file in the directory where LQMT as a file named `lqmt-bro-feed.txt`.
+`increment_file`        | Used to increment the output file. When set to `True`, the output file name will be incremented with a timestamp. When set to `False` the output will be appended to any prexisting file of the same name. Defaults to `False`
+`null_value`            | Value to be used to represent that a field is empty. Bro's default value is a hyphen ('-'), so by default LQMT uses a hyphen.
 
 # Logging
 
