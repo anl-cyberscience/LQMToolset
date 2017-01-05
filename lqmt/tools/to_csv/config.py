@@ -9,37 +9,20 @@ import datetime
 class CSVConfig(ToolConfig):
     def __init__(self, configData, csvToolInfo, unhandledCSV):
         super().__init__(configData, csvToolInfo, unhandledCSV)
-        self._logger = logging.getLogger("LQMT.CSV.{0}".format(self.getName()))
-        self.fields = ""
+        self.logger = logging.getLogger("LQMT.CSV.{0}".format(self.getName()))
 
-        hasError = False
-        self._file = None
-        if 'file' in configData:
-            file = configData['file']
-            filebase, fext = os.path.splitext(file)
-            tss = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-            self._file = filebase + "." + tss + fext
-        else:
-            hasError = True
-            self._logger.error("'file' must be specified for CSV tool")
+        self._file = self.validation('file', str, required=True)
+        self.fields = self.validation('fields', list, required=True)
 
-        if 'fields' in configData:
-            invalid = self._initFields(configData['fields'])
-            if not invalid:
-                self.fields = configData['fields']
-            else:
-                hasError = True
-                plural = ""
-                if len(invalid) > 1:
-                    plural = "s"
-                self._logger.error("Invalid alert field{0} specified: {1}.".format(plural, ",".join(invalid)))
-        else:
-            self._logger.error("fields must be specified in the configuration")
-            hasError = True
+        # Additional checks:
+        invalid = self._initFields(self.fields)
+        if invalid:
+            raise ConfigurationError("Invalid alert field(s) provided. Invalid field(s): {0}".format(','.join(invalid)))
 
-        if hasError:
-            self.disable()
-            raise ConfigurationError("Missing a required value in the user configuration for the to_csv tool")
+        # File incrementing. Make this an option rather then a default. See to_bro or to_flextext tools
+        base, extension = os.path.splitext(self._file)
+        file_name = "." + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+        self._file = base + file_name + extension
 
     def getFile(self):
         return self._file

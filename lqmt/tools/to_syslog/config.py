@@ -17,43 +17,15 @@ class SysLogConfig(ToolConfig):
     """
     def __init__(self, configData, csvToolInfo, unhandledCSV):
         super().__init__(configData, csvToolInfo, unhandledCSV)
-        self._logger = logging.getLogger("LQMT.SysLog.{0}".format(self.getName()))
-        hasError = False
-        self.port = 514  # default port for syslog is 514.
+        self.logger = logging.getLogger("LQMT.SysLog.{0}".format(self.getName()))
 
-        if 'host' in configData:
-            self.host = configData['host']
-        else:
-            self._logger.error("Host must be specified in the configuration")
-            hasError = True
+        self.host = self.validation('host', str, required=True)
+        self.port = self.validation('port', int, default=514)
+        self.protocol = self.validation('protocol', str, default="tcp")
+        self.messageHead = self.validation('messageHead', str, required=True)
+        self.messageFields = self.validation('messageFields', list, required=True)
 
-        if 'port' in configData:
-            self.port = int(configData['port'])
-        else:
-            self._logger.error("Port not specified. Defaulting to port 514. ")
-
-        if 'protocol' in configData:
-            protocol = configData['protocol']
-            if protocol == 'udp' or protocol == 'tcp':
-                self.protocol = protocol
-            else:
-                self._logger.error("Invalid protocol: {0}".format(protocol))
-                hasError = True
-            self.protocol = protocol
-        else:
-            self._logger.error("Protocol must be specified in the configuration")
-            hasError = True
-
-        if 'messageHead' in configData:
-            self.messageHead = configData['messageHead']
-        else:
-            self._logger.error("A message head must be specified in the configuration.")
-
-        if 'messageFields' in configData:
-            self.messageFields = configData['messageFields']
-        else:
-            self._logger.error("Message fields must be specified in the configuration.")
-
-        if hasError:
-            self.disable()
-            raise ConfigurationError("Missing a required value in the user configuration for the to_syslog tool")
+        # Additional checks
+        if self.protocol.lower() not in ['tcp', 'udp']:
+            raise ConfigurationError("The provided value for the variable configuration variable 'protocol' is "
+                                     "invalid. Value provided: {0} Valid values: 'tcp', 'udp".format(self.protocol))

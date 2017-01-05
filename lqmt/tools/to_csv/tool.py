@@ -44,8 +44,11 @@ class ToCSV(Tool):
             if not os.path.exists(fileDirectory):
                 os.makedirs(fileDirectory, 0o755, True)
             self._fp = open(file, 'a')
-            self._fp.write(",".join(self._config.fields) + "\n")
+            header = ','.join(self._config.fields) + "\n"
+            self._fp.write(header)
+
             return True
+
         except Exception as e:
             self._logger.error("Unable to open csv file: {0}".format(file))
             self._logger.error(e)
