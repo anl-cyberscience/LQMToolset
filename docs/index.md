@@ -24,6 +24,7 @@ Palo Alto        | Automated Firewall Blocks
 Arcsight Logger  | Data Routing       
 Splunk           | Data Routing          
 Syslog           | Data Routing 
+Bro              | Data Translation
 Flextext         | Data Translation
 
 ### Open source
