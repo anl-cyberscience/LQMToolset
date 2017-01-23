@@ -394,7 +394,7 @@ The following sections specify the format of the whitelist file mentioned above.
     http://www.somesite.com/blah
 
 # Intermediate Data Format
-The intermediate data format is a subset/simplification of the complete thread data that can be directly used by a cariety of systems. 
+The intermediate data format is a subset/simplification of the complete threat data that can be directly used by a variety of systems. 
 
 Field Name                      | Description
 :-----------------------------: | :-----------
