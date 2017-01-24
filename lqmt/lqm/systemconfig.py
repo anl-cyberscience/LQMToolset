@@ -30,6 +30,9 @@ class SystemConfig:
                 },
                 'Bro': {
                     'module': 'to_bro', 'config_class': 'BroConfig', 'tool_class': 'ToBro'
+                },
+                'MBL': {
+                    'module': 'to_mbl', 'config_class': 'MBLConfig', 'tool_class': 'ToMBL'
                 }
             },
             'UnprocessedCSV': {

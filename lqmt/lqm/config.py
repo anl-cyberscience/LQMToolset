@@ -1,16 +1,17 @@
 import importlib
 import io
-import sys
 import logging
-import toml
 import os
+import sys
 
-from lqmt.lqm.tool import ToolChain
-from lqmt.whitelist.master import MasterWhitelist
+import toml
+
+from lqmt.lqm.exceptions import ConfigurationError
 from lqmt.lqm.logging import LQMLogging
 from lqmt.lqm.sourcedir import DirectorySource
-from lqmt.lqm.exceptions import ConfigurationError
 from lqmt.lqm.systemconfig import SystemConfig
+from lqmt.lqm.tool import ToolChain
+from lqmt.whitelist.master import MasterWhitelist
 
 sys.path.append('tpl/toml')
 
