@@ -27,7 +27,8 @@ class ToSplunk(Tool):
             self._config.password,
             cert_check=self._config.cert_check,
             source=self._config.source,
-            sourcetype=self._config.sourcetype
+            sourcetype=self._config.sourcetype,
+            index=self._config.index
         )
 
     def initialize(self):

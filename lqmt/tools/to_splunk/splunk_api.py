@@ -20,6 +20,25 @@ def create_message(alert):
     return message
 
 
+def formatUrlParam(parameter, value, addition=False):
+    """
+    Function used to format a string of URL parameters. Example output: "user=bob&title=builder"
+    :param parameter: URL parameter that the value will be assigned to
+    :param value: Value that will be assigned to the provided URL parameter
+    :param addition: True or false value to indicate if this parameter is being added as an addition to other values.
+    :return: If a valid value is given, a formatted string is returned. Otherwise an empty string is returned.
+    """
+    if addition:
+        addition = "&"
+    else:
+        addition = ""
+
+    if value:
+        return "{}{}={}".format(addition, parameter, value)
+    else:
+        return ""
+
+
 class ApiHandler:
     """
     Class for handling API calls to Splunk's REST Api. This class might end up being redundant depending on a few
@@ -32,9 +51,9 @@ class ApiHandler:
         self._logger = logging.getLogger("LQMT.Splunk.ApiCaller")
         self.host = host
         self.port = port
-        self.source = source
-        self.sourcetype = sourcetype
-        self.index = index
+        self.source = formatUrlParam("source", source)
+        self.sourcetype = formatUrlParam("sourcetype", sourcetype, True)
+        self.index = formatUrlParam("index", index, True)
         self.cert_check = cert_check
         self.url = self.host + ":" + str(self.port)
         self.username = username
@@ -93,13 +112,13 @@ class ApiHandler:
 
         # Override's for source, sourcetype, and index
         if source is not None:
-            self.source = source
+            self.source = formatUrlParam("source", source)
 
         if sourcetype is not None:
-            self.sourcetype = sourcetype
+            self.sourcetype = formatUrlParam("sourcetype", sourcetype, True)
 
         if index is not None:
-            self.index = index
+            self.index = formatUrlParam("index", index, True)
 
         # If not authenticated, then authenticate
         if not self.authenticated:
@@ -110,11 +129,12 @@ class ApiHandler:
         headers = dict(list(self.splunk_token.items()) + list(headers.items()))
 
         # Build url for api and send the api request
-        url = self.url + self.stream_service + "?source={0}&sourcetype={1}&index={2}".format(
+        url = self.url + self.stream_service + "?{0}{1}{2}".format(
             self.source,
             self.sourcetype,
             self.index
         )
+
         r = self.requests.post(url, data=message, headers=headers, verify=self.cert_check)
 
         # If parsed successfully, tally and move on. Otherwise raise status
@@ -123,7 +143,9 @@ class ApiHandler:
         else:
             r.raise_for_status()
 
-        self._logger.debug("Message sent to Splunk. Status code returned: {0}".format(r.status_code))
+        self._logger.debug("Message sent to Splunk. "
+                           "\nURL Used: '{0}'; "
+                           "\nStatus code returned: '{1}';".format(url, r.status_code))
 
     def getTotalMessagesProcessed(self):
         return self._messages_processed
