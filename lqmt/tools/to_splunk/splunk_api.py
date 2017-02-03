@@ -63,6 +63,7 @@ class ApiHandler:
         self.splunk_token = {'Authorization': splunk_token}
         self.auth_service = "/services/auth/login/"
         self.stream_service = "/services/receivers/stream/"
+        self.headers = {}
 
         # Call authentication function when class object is created.
         self.authenticate()
@@ -95,6 +96,10 @@ class ApiHandler:
                 self._logger.debug(
                     "Successfully authenticated with Splunk instance. Token received: {0}".format(data[0].text)
                 )
+                # Format headers. Currently using splunks streaming input. Could be opened up later to let the user
+                # choose.
+                self.headers.update(self.splunk_token)
+                self.headers.update({"x-splunk-input-mode": "streaming"})
             else:
                 r.raise_for_status()
 
@@ -124,10 +129,6 @@ class ApiHandler:
         if not self.authenticated:
             self.authenticate()
 
-        # Mom says to properly format your headers
-        headers = {"x-splunk-input-mode": "streaming"}
-        headers = dict(list(self.splunk_token.items()) + list(headers.items()))
-
         # Build url for api and send the api request
         url = self.url + self.stream_service + "?{0}{1}{2}".format(
             self.source,
@@ -135,7 +136,7 @@ class ApiHandler:
             self.index
         )
 
-        r = self.requests.post(url, data=message, headers=headers, verify=self.cert_check)
+        r = self.requests.post(url, data=message, headers=self.headers, verify=self.cert_check)
 
         # If parsed successfully, tally and move on. Otherwise raise status
         if r.ok:

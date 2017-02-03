@@ -45,4 +45,3 @@ class ToSplunk(Tool):
 
     def cleanup(self):
         self.handler.__exit__()
-        pass
