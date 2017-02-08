@@ -2,7 +2,6 @@ class SystemConfig:
     def __init__(self):
         self.system_config = {
             'tools': {
-                'path': 'tools',
                 'Checkpoint': {
                     'module': 'to_checkpoint', 'config_class': 'CheckpointConfig', 'tool_class': 'ToCheckpoint'
                 },
@@ -45,8 +44,6 @@ class SystemConfig:
                            'severity', 'relevancy', 'relatedID', 'relationType', 'comment', 'fileHasMore']
             },
             'parsers': {
-                'path': 'lqm',
-                'additional_paths': ['ft'],
                 'cfm20': {
                     'module': 'lqmt.lqm.parsers.FlexTransform',
                     'parser_class': 'FlexTransformParser',
@@ -74,6 +71,15 @@ class SystemConfig:
 
                     },
                     'format': 'stix-tlp'
+                },
+                'MBL': {
+                    'module': 'lqmt.lqm.parsers.FlexTransform',
+                    'parser_class': 'FlexTransformParser',
+                    'configs': {
+                        'LQMTools': 'resources/sampleConfigurations/lqmtools.cfg',
+                        'mbl': 'resources/sampleConfigurations/MBL.cfg'
+                    },
+                    'format': 'mbl'
                 }
             }
         }

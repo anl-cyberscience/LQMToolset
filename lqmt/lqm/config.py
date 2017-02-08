@@ -12,6 +12,7 @@ from lqmt.lqm.sourcedir import DirectorySource
 from lqmt.lqm.systemconfig import SystemConfig
 from lqmt.lqm.tool import ToolChain
 from lqmt.whitelist.master import MasterWhitelist
+from lqmt.lqm.parsers.FlexTransform import parser as ft_parser
 
 sys.path.append('tpl/toml')
 
@@ -44,6 +45,7 @@ class LQMToolConfig(object):
         self._whitelist = None
         self._loggingCfg = None
         self._toolsList = []
+        self._userConfig = {}
 
         # load config files
         self._loadSystemConfig()
@@ -66,71 +68,62 @@ class LQMToolConfig(object):
         Parses and initializes the system configuration
         :return: toolClasses, which is a dictionary holding classes for the tools assigned in the user configuration
         """
-        self._initParserConfig(self._config)
+        self._initParserConfig(self._config['parsers'])
         toolClasses = self._initToolConfig(self._config)
         return toolClasses
 
-    def _initParserConfig(self, config):
-        parsers = config['parsers']
-        if 'additional_paths' in parsers:
-            add_path = parsers['additional_paths']
-            del parsers['additional_paths']
-            sys.path.extend(add_path)
-        path = None
-        if 'path' in parsers:
-            path = parsers['path']
-            del parsers['path']
+    def _initParserConfig(self, parsers):
+        """
+        Initializes parsers using configuration details provided by the system configuration file
+        :param parsers: Parser information passed from the system configuration file
+        """
+
         # path info is loaded from the config files
-        for key in list(parsers.keys()):
-            parserinfo = parsers[key]
-            if path is not None:
-                sys.path.append(path)
-            importlib.import_module(parserinfo['module'])
-            mod = importlib.import_module(parserinfo['module'] + ".parser")
-            parserClass = getattr(mod, parserinfo['parser_class'])
-            parserConfig = None
-            if "configs" in parserinfo:
-                parserConfig = parserinfo['configs']
-            if parserConfig is not None:
-                parser = parserClass(parserConfig)
+        for key, parserinfo in parsers.items():
+
+            # gets parser class from flexT
+            parserClass = getattr(ft_parser, parserinfo['parser_class'])
+
+            # if particular configs were defined for the parser, pass them to FlexT parser and append to self._parsers
+            if parserinfo['configs']:
+                self._parsers[parserinfo['format']] = parserClass(parserinfo['configs'])
             else:
-                parser = parserClass()
-            self._parsers[parserinfo['format']] = parser
+                self._parsers[parserinfo['format']] = parserClass()
+
         self._logger.debug("Parsers loaded: %s" % ', '.join(self._parsers.keys()))
 
     def _initToolConfig(self, config):
         """
         Set up the system path for the configured tools and create the configuration data for those tools so they can
         be created later.
-
-        Currently all tools are created. Should be updated to only initialize tools that are a part of the configuration
         """
+
+        # Users user configuration to only load tools the user specifies. The CSV tool is appended at the end because
+        # it is needed later regardless of what tools are loaded.
         tooldefs = config['tools']
         usertooldefs = self._userConfig['Tools'].keys()
         usertooldefs = list(usertooldefs)
         usertooldefs.append('CSV')
-        if 'path' in tooldefs:
-            path = tooldefs['path']
-            # add any paths specified to the system path
-            sys.path.append(path)
-            del tooldefs['path']
+
+        # uses dictionary comprehension to filter out only user specified tools from the tooldefs dictionary
+        tooldefs = {tool_key: tooldefs[tool_key] for tool_key in usertooldefs}
+
         toolClasses = {}
         for key in list(tooldefs.keys()):
-            if key in usertooldefs:
-                toolinfo = tooldefs[key]
-                if 'additional_paths' in toolinfo:
-                    # add any additional paths needed by the tool
-                    add_path = toolinfo['additional_paths']
-                    sys.path.extend(add_path)
-                # import the tool & config modules
-                mod = importlib.import_module("lqmt.tools." + toolinfo['module'] + ".tool")
-                toolClass = getattr(mod, toolinfo['tool_class'])
-                mod = importlib.import_module("lqmt.tools." + toolinfo['module'] + ".config")
-                # get the class "object" for later creation
-                cfgClass = getattr(mod, toolinfo['config_class'])
-                toolClasses[key] = ToolInfo(toolClass, cfgClass)
+            toolinfo = tooldefs[key]
+            if 'additional_paths' in toolinfo:
+                # add any additional paths needed by the tool
+                add_path = toolinfo['additional_paths']
+                sys.path.extend(add_path)
+            # import the tool & config modules
+            mod = importlib.import_module("lqmt.tools." + toolinfo['module'] + ".tool")
+            toolClass = getattr(mod, toolinfo['tool_class'])
+            mod = importlib.import_module("lqmt.tools." + toolinfo['module'] + ".config")
+            # get the class "object" for later creation
+            cfgClass = getattr(mod, toolinfo['config_class'])
+            toolClasses[key] = ToolInfo(toolClass, cfgClass)
 
-        self._logger.debug("Tools loaded: %s" % ', '.join(usertooldefs))
+        self._logger.debug("Tools loaded: %s" % ', '.join(tooldefs))
         return toolClasses
 
     def _loadUserConfig(self, configFile):
@@ -138,7 +131,7 @@ class LQMToolConfig(object):
         Loads the user configuration file
         :param configFile: String that defines the path of the user configuration file.
         """
-
+        # if provided config is an existing directory, open and read the file. Else it is assumed to be a config string
         if os.path.exists(configFile):
             cfg = open(configFile)
             topLevelConfig = toml.loads(cfg.read())
@@ -146,7 +139,7 @@ class LQMToolConfig(object):
         else:
             configFile = io.StringIO(configFile)
             topLevelConfig = toml.load(configFile)
-        self._userConfig = {}
+
         self._userConfig.update(topLevelConfig)
 
     def _initializeLogging(self):
@@ -162,21 +155,10 @@ class LQMToolConfig(object):
         # If a whitelist was specified, create it
         if 'Whitelist' in self._userConfig:
             self._whitelist = MasterWhitelist(configData=self._userConfig['Whitelist'])
+
         # create any tools and tool chains in the top-level user config file
         globalTools = self._createTools(self._userConfig, toolClasses)
         self._createToolChains(self._userConfig, globalTools)
-
-        # process any includes
-        if 'includes' in self._userConfig:
-            for incl in self._userConfig['includes']:
-                cfg = open(incl)
-                config = toml.loads(cfg.read())
-                cfg.close()
-                # add any sources specified, if any
-                self._addSourcesConfig(config)
-                # and create all tools/tool chains specified
-                localTools = self._createTools(config, toolClasses)
-                self._createToolChains(config, localTools, globalTools)
 
     def _createTools(self, config, toolClasses):
         if 'Tools' not in config:
@@ -200,7 +182,7 @@ class LQMToolConfig(object):
 
         chains = config['ToolChains']
         for chainCfg in chains:
-            if 'active' in chainCfg and chainCfg['active'] == True:
+            if 'active' in chainCfg and chainCfg['active'] is True:
                 self._toolChains.append(self._createToolChain(chainCfg, localTools, globalTools))
             else:
                 self._logger.info("Toolchain {0} is currently set as inactive in the user configuration. "
