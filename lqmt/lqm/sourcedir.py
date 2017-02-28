@@ -15,8 +15,8 @@ class FilesToProcess(object):
         self._curFiles = None
         self._curDir = None
         self._postProcess = postProcess
-        self._numFiles = 0
-        self._numDirs = 0
+        self.numFiles = 0
+        self.numDirs = 0
 
         self._getNextTLD()
 
@@ -55,7 +55,7 @@ class FilesToProcess(object):
                                     self._postProcess.leavingDirectory(self._curDir)
                                 self._curDir = dirName
                                 self._postProcess.enteringDirectory(self._curDir)
-                                self._numDirs += 1
+                                self.numDirs += 1
                             self._curDir = dirName
                             # if the file hasn't already been processed, then we found the next file
                             if not self._postProcess.isProcessed(path):
@@ -75,7 +75,7 @@ class FilesToProcess(object):
 
     def getNextFile(self):
         self._advanceToNextFile()
-        self._numFiles += 1
+        self.numFiles += 1
         return self._curFiles
 
     def __iter__(self):
@@ -93,6 +93,9 @@ class DirectorySource(Source):
     def __init__(self, config):
         self._logger = logging.getLogger("LQMT.Source.Directory")
         self.files_to_process = None
+        self.post_process = "move"
+        # TODO: Have post_process_location also be used to define where the 'move' post_process option moves files
+        self.post_process_location = "./processed"
 
         if 'dirs' not in config:
             raise ConfigurationError("Missing required key: 'dirs' in section: 'Source.Directory'")
@@ -103,28 +106,35 @@ class DirectorySource(Source):
                 self._logger.error('dir ({0}) is not a valid path'.format(dirName))
                 hasError = True
         if hasError:
-            raise ConfigurationError()
+            raise ConfigurationError("Configuration error with Source.Directory")
 
-        if 'post_process' not in config:
-            post_process = "move"
-        else:
-            post_process = config["post_process"]
-            if post_process not in ["move", "delete", "track", "nothing"]:
+        if 'post_process' in config:
+            self.post_process = config["post_process"]
+            if self.post_process not in ["move", "delete", "track", "nothing"]:
                 raise ConfigurationError(
-                    "Invalid value for key: 'post_process' in section: 'Source.Directory': " + post_process)
-        self._processedHandler = self._getProcessedHandler(post_process)
+                    "Invalid value for key: 'post_process' in section: 'Source.Directory': " + self.post_process)
+
+        if 'post_process_location' in config:
+            self.post_process_location = config['post_process_location']
+        else:
+            if self.post_process == "track":
+                self._logger.info(" Post process option is currently set to track, but a post_process_location was not"
+                                  "provided in the user configuration. Using the default location of "
+                                  "{0}".format(self.post_process_location))
+
+        self._processedHandler = self._getProcessedHandler()
 
     def getFilesToProcess(self):
         self.files_to_process = FilesToProcess(self._dirs, self._processedHandler)
         return self.files_to_process
 
-    def _getProcessedHandler(self, post_process):
-        if post_process == "move":
+    def _getProcessedHandler(self):
+        if self.post_process == "move":
             return processed.ProcessHandlerMove()
-        elif post_process == "delete":
+        elif self.post_process == "delete":
             return processed.ProcessHandlerDelete()
-        elif post_process == "track":
-            return processed.ProcessHandlerTrackFile()
+        elif self.post_process == "track":
+            return processed.ProcessHandlerTrackFile(self.post_process_location)
         else:
             return processed.ProcessHandlerDoNothing()
 
@@ -133,5 +143,9 @@ class DirectorySource(Source):
 
     def logStatistics(self, numAlerts):
         self._logger.info(
-            "dirs: {0} NumDirs: {1} NumFiles: {2}".format(",".join(self._dirs), self.files_to_process._numDirs,
-                                                          self.files_to_process._numFiles))
+            "dirs: {0} Directories Scanned: {1}, Files located: {2}".format(
+                ",".join(self._dirs),
+                self.files_to_process.numDirs,
+                self.files_to_process.numFiles
+            )
+        )
