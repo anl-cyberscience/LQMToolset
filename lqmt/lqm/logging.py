@@ -42,7 +42,7 @@ class LQMLogging(object):
         if 'active' in config:
             active = bool(config['active'])
 
-        if active:
+        if active and not len(rootLogger.handlers):
             if 'debug' in config:
                 LQMLogging._debug = config['debug']
             else:
