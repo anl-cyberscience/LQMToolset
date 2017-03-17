@@ -48,7 +48,7 @@ setup(
         'netaddr',
         'pan-python',
         'toml',
-        'FlexTransform',
+        'FlexTransform>=1.2.0',
         'requests'
     ],
     entry_points={

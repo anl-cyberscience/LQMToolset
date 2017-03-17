@@ -22,9 +22,9 @@ class FlexTransformParser(object):
         # config
         if config is not None:
             for p, c in config.items():
-                self.addParser(p, c)
+                self.add_parser(p, c)
 
-    def addParser(self, parserName, parserConfiguration):
+    def add_parser(self, parserName, parserConfiguration):
         """
         Function that extends the AddParser function from FlexTransform.
         :param parserName: Name of the parser being added
@@ -32,7 +32,7 @@ class FlexTransformParser(object):
         """
         if parserName not in self._transform.Parsers:
             config_file = open(os.path.join(self._current_dir, parserConfiguration), 'r')
-            self._transform.AddParser(parserName, config_file)
+            self._transform.add_parser(parserName, config_file)
 
     def parse(self, datafile, meta=None):
         """
@@ -51,11 +51,19 @@ class FlexTransformParser(object):
         # TODO: Stix-tlp parser currently doesn't support meta files. Until it does, meta files are for the cfm format
         try:
             if meta['PayloadFormat'] == 'stix-tlp' or meta is None:
-                data = self._transform.TransformFile(sourceFileName=datafile, sourceParserName=meta['PayloadFormat'],
-                                                     targetParserName='LQMTools')
+                data = self._transform.transform(
+                    datafile,
+                    meta['PayloadFormat'],
+                    "LQMTools"
+                )
             else:
-                data = self._transform.TransformFile(sourceFileName=datafile, sourceParserName=meta['PayloadFormat'],
-                                                     targetParserName='LQMTools', sourceMetaData=meta)
+                data = self._transform.transform(
+                    datafile,
+                    meta['PayloadFormat'],
+                    "LQMTools",
+                    source_meta_data=meta
+                )
+
         except Exception as e:
             data = []
             self._logger.error(
@@ -85,24 +93,25 @@ class FlexTransformParser(object):
         if 'FlexText' not in self._transform.Parsers:
             config_str_io = io.StringIO(config_str)
             config_str_txt = io.StringIO(config_str_io.read())
-            self._transform.AddParser("FlexText", config_str_txt)
+            self._transform.add_parser("FlexText", config_str_txt)
 
         # Run FlexText parser
         try:
             if meta['PayloadFormat'] == 'stix-tlp':
-                self._transform.TransformFile(
-                    sourceFileName=datafile,
-                    targetFileName=destination_file_obj,
-                    sourceParserName=meta['PayloadFormat'],
-                    targetParserName="FlexText",
+                self._transform.transform(
+                    datafile,
+                    meta['PayloadFormat'],
+                    "FlexText",
+                    target_file=destination_file_obj
                 )
+
             else:
-                self._transform.TransformFile(
-                    sourceFileName=datafile,
-                    targetFileName=destination_file_obj,
-                    sourceParserName=meta['PayloadFormat'],
-                    targetParserName="FlexText",
-                    sourceMetaData=meta
+                self._transform.transform(
+                    datafile,
+                    meta['PayloadFormat'],
+                    "FlexText",
+                    target_file=destination_file_obj,
+                    source_meta_data=meta
                 )
 
         except Exception as e:
