@@ -77,7 +77,10 @@ class SystemConfig:
                     'parser_class': 'FlexTransformParser',
                     'configs': {
                         'LQMTools': 'resources/sampleConfigurations/lqmtools.cfg',
-                        'mbl': 'resources/sampleConfigurations/MBL.cfg'
+                        'mbl': 'resources/sampleConfigurations/MBL.cfg',
+                        'Cfm20Alert': 'resources/sampleConfigurations/cfm20alert.cfg',
+                        'stix-tlp': 'resources/sampleConfigurations/stix_tlp.cfg'
+
                     },
                     'format': 'mbl'
                 }

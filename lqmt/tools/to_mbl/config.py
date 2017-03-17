@@ -15,3 +15,4 @@ class MBLConfig(ToolConfig):
         self.source = self.validation('source', str, default="lqmt")
         self.sourcetype = self.validation('sourcetype', str)
         self.index = self.validation('index', str)
+        self.override_parser = self.validation('override_parser', str, default="MBL")
