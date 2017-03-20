@@ -19,10 +19,10 @@ class TestParser(TestCase):
         self.flext = FlexTransformParser()
 
         # Add parsers for the different data formats
-        self.flext.addParser('LQMTools', 'resources/sampleConfigurations/lqmtools.cfg')
-        self.flext.addParser('Cfm13Alert', 'resources/sampleConfigurations/cfm13.cfg')
-        self.flext.addParser('Cfm20Alert', 'resources/sampleConfigurations/cfm20alert.cfg')
-        self.flext.addParser('stixtlp', 'resources/sampleConfigurations/stix_tlp.cfg')
+        self.flext.add_parser('LQMTools', 'resources/sampleConfigurations/lqmtools.cfg')
+        self.flext.add_parser('Cfm13Alert', 'resources/sampleConfigurations/cfm13.cfg')
+        self.flext.add_parser('Cfm20Alert', 'resources/sampleConfigurations/cfm20alert.cfg')
+        self.flext.add_parser('stixtlp', 'resources/sampleConfigurations/stix_tlp.cfg')
 
         # Standard timestamp that can be used so all meta files use the same time and for easier validation
         self.time = str(time.time()).split('.')[0]

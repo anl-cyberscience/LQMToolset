@@ -20,7 +20,7 @@ class ToFlexText(Tool):
         # initialize parser with a dict created with variables from flextext configuration
         self._parser = FlexTransformParser({'CSV': self._config.flext_config})
         for file_type, source_config in self._config.source_configs.items():
-            self._parser.addParser(file_type, source_config)
+            self._parser.add_parser(file_type, source_config)
 
         self._file_obj = None
         self._processed = []
