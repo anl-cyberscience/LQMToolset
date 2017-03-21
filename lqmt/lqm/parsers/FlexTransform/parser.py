@@ -68,7 +68,6 @@ class FlexTransformParser(object):
             data = []
             self._logger.error(
                 "LQMT-FlexTransform-Parser: Error parsing file file='{0}' exception='{1}'".format(datafile, e))
-
         for d in data:
             alert = Alert()
             alert.setFromDict(d)
@@ -117,3 +116,17 @@ class FlexTransformParser(object):
         except Exception as e:
             self._logger.error(
                 "LQMT-FlexText-Parser: Error parsing file file='{0}' exception='{1}'".format(datafile, e))
+
+    def custom_parser(self, datafile, payloadformat, targetparser, meta=None):
+        output = None
+        try:
+            output = self._transform.transform(
+                datafile,
+                payloadformat,
+                targetparser,
+                source_meta_data=meta
+            )
+        except Exception as e:
+            self._logger.error("LQMT-Custom-Parser: Error parsing file. file='{0}' exception='{1}'".format(datafile, e))
+
+        return output

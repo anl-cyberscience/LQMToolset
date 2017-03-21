@@ -9,6 +9,7 @@ class ToolConfig:
     """Base class for all tool configs"""
 
     def __init__(self, configData, csvToolInfo, unhandledCSV):
+        self._logger = logging.getLogger("LQMT.ToolConfig")
         self._name = configData['name']  # the tool's name
         self._enabled = self._name is not None  # whether or not the tool is enabled
         self._unprocessedHandler = None  # The handler to use if there is an unprocessed alert
@@ -64,7 +65,7 @@ class ToolConfig:
 
             # if value is not in config, but there is a default, then return the default. Otherwise raise config error
             elif default is not None:
-                self.logger.info(
+                self._logger.info(
                     "The '{0}' parameter wasn't specified in your config. Defaulting to value of '{1}'.".format(
                         value, default
                     )
@@ -138,7 +139,7 @@ class Tool:
         NotImplementedError
 
     # Will only be called for alerts this tool can process
-    def process(self, alert):
+    def process(self, alert, meta=None):
         """Process the alert."""
         NotImplementedError
 
@@ -227,7 +228,7 @@ class ToolChain:
         self._tools = tools
         self._name = name
         self._enabled = enabled
-        self._logger = logging.getLogger("LQMT.Tools")
+        self._logger = logging.getLogger("LQMT.ToolChain")
         self._actionsToProcess = None
         for tool in self._tools:
             if self._actionsToProcess is None:
@@ -277,7 +278,7 @@ class ToolChain:
                     self._alertsProcessed += 1
                     for tool in self._tools:
                         # FlexText requires the datafile instead of the processed data.
-                        if tool.toolName == "FlexText":
+                        if tool.toolName == "FlexText" or tool.toolName == 'MBL':
                             tool.process(datafile, meta)
                         else:
                             tool.process(data)

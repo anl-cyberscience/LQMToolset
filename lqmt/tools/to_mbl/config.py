@@ -7,6 +7,12 @@ class MBLConfig(ToolConfig):
         super().__init__(configData, csvToolInfo, unhandledCSV)
         self.logger = logging.getLogger("LQMT.ToolName.{0}".format(self.getName()))
 
+        self.source_configs = {
+            'Cfm13Alert': 'resources/sampleConfigurations/cfm13.cfg',
+            'Cfm20Alert': 'resources/sampleConfigurations/cfm20alert.cfg',
+            'stix-tlp': 'resources/sampleConfigurations/stix_tlp.cfg'
+        }
+
         self.host = self.validation('host', str, required=True)
         self.port = self.validation('port', int, default=8089)
         self.username = self.validation('username', str, required=True)
