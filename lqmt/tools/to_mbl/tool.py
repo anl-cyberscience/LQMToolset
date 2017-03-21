@@ -60,7 +60,7 @@ class ToMBL(Tool):
 
     def commit(self):
         print("committing")
-        print(self.sort_alert_dictionary())
+        print(self.parse_alert_dictionary())
 
         # eventually, this is where the message will be sent from
         # self.handler.send_message(create_message(alert), sourcetype="PULL FROM ALERT")
