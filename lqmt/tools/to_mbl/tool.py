@@ -1,7 +1,7 @@
 import logging
 from lqmt.lqm.tool import Tool
 from lqmt.lqm.data import AlertAction
-from lqmt.tools.to_splunk.splunk_api import create_message, ApiHandler
+from lqmt.tools.to_splunk.splunk_api import ApiHandler
 from lqmt.lqm.parsers.FlexTransform.parser import FlexTransformParser
 import hashlib
 
@@ -21,17 +21,16 @@ class ToMBL(Tool):
         for file_type, source_config in self._config.source_configs.items():
             self._parser.add_parser(file_type, source_config)
 
-            # commenting out splunk handler until data is formmated correctly first
-            # self.handler = ApiHandler(
-            #     self._config.host,
-            #     self._config.port,
-            #     self._config.username,
-            #     self._config.password,
-            #     cert_check=self._config.cert_check,
-            #     source=self._config.source,
-            #     index=self._config.index,
-            #
-            # )
+            self.splunk_handler = ApiHandler(
+                self._config.host,
+                self._config.port,
+                self._config.username,
+                self._config.password,
+                cert_check=self._config.cert_check,
+                source=self._config.source,
+                index=self._config.index,
+
+            )
 
     def initialize(self):
         super().initialize()
@@ -53,17 +52,19 @@ class ToMBL(Tool):
                 self.alerts[key_hash] = mbl_alert
 
     def commit(self):
-        print("committing")
-
+        """
+        Commit function where the data is actually transmitted to Splunk instance. 
+        """
         for dict_key, alert_data in self.alerts.items():
             sourcetype, message = self.parse_alert_dictionary(alert_data)
 
-            print("Sourcetype: {0}; Message: {1};".format(sourcetype, message))
+            # sourcetype override from user configuration
+            if self._config.sourcetype:
+                sourcetype = self._config.sourcetype
 
-            # eventually, this is where the message will be sent from
+            # if sourcetype is valid, then send message
             if sourcetype in self.sourcetype_lexicon:
-                pass
-                # self.handler.send_message(message), sourcetype=sourcetype)
+                self.splunk_handler.send_message(message, sourcetype=sourcetype)
 
     def cleanup(self):
         pass
@@ -80,10 +81,14 @@ class ToMBL(Tool):
         sourcetype = ""
         for alert_dictionary in alert_data:
             if 'sourcetype' in alert_dictionary:
-                sourcetype = alert_dictionary['sourcetype']
+
+                # Extract sourcetype from alert data and delete key from dictionary.
+                sourcetype = alert_dictionary['sourcetype'].strip("'")
                 del alert_dictionary['sourcetype']
+
+            # format message in key value format. Replace single string with double quotes.
             for key, data in alert_dictionary.items():
-                message += str(key) + ": " + str(data) + " "
+                message += "{0}={1} ".format(key, str(data).replace("'", '"'))
 
         return sourcetype, message
 

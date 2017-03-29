@@ -19,6 +19,6 @@ class MBLConfig(ToolConfig):
         self.password = self.validation('password', str, required=True)
         self.cert_check = self.validation('cert_check', bool, default=True)
         self.source = self.validation('source', str, default="lqmt")
-        self.sourcetype = self.validation('sourcetype', str)
+        self.sourcetype = self.validation('sourcetype', str, default="")
         self.index = self.validation('index', str)
         self.override_parser = self.validation('override_parser', str, default="MBL")
