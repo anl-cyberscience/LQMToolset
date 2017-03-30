@@ -9,7 +9,7 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 class ToSplunk(Tool):
     def __init__(self, config):
         """
-        ToFlexText tool. Used to reformat CTI data in a user configured manner.
+        ToSplunk tool. Used to push data to Splunk using Splunk web API.
 
         :param config: configuration file
         """
@@ -27,7 +27,8 @@ class ToSplunk(Tool):
             self._config.password,
             cert_check=self._config.cert_check,
             source=self._config.source,
-            sourcetype=self._config.sourcetype
+            sourcetype=self._config.sourcetype,
+            index=self._config.index
         )
 
     def initialize(self):
@@ -44,4 +45,3 @@ class ToSplunk(Tool):
 
     def cleanup(self):
         self.handler.__exit__()
-        pass

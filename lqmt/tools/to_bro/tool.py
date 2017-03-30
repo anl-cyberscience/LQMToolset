@@ -48,6 +48,7 @@ class ToBro(Tool):
 
         # write to file
         self.writer.writerow(row)
+        self._logger.debug("File written: {0}".format(self._config.file))
 
     def openfile(self):
         """
@@ -82,6 +83,7 @@ class ToBro(Tool):
             if "#fields" not in header:
                 writer = csv.writer(f, delimiter='\t')
                 writer.writerow(["#fields"] + self.header_keys)
+            self._logger.debug("Header written to file: {0}".format(self.header_keys))
 
     def header_formatting(self):
         if self._config.header_fields is 'all':

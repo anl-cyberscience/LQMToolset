@@ -2,7 +2,6 @@ class SystemConfig:
     def __init__(self):
         self.system_config = {
             'tools': {
-                'path': 'tools',
                 'Checkpoint': {
                     'module': 'to_checkpoint', 'config_class': 'CheckpointConfig', 'tool_class': 'ToCheckpoint'
                 },
@@ -30,6 +29,9 @@ class SystemConfig:
                 },
                 'Bro': {
                     'module': 'to_bro', 'config_class': 'BroConfig', 'tool_class': 'ToBro'
+                },
+                'MBL': {
+                    'module': 'to_mbl', 'config_class': 'MBLConfig', 'tool_class': 'ToMBL'
                 }
             },
             'UnprocessedCSV': {
@@ -42,8 +44,6 @@ class SystemConfig:
                            'severity', 'relevancy', 'relatedID', 'relationType', 'comment', 'fileHasMore']
             },
             'parsers': {
-                'path': 'lqm',
-                'additional_paths': ['ft'],
                 'cfm20': {
                     'module': 'lqmt.lqm.parsers.FlexTransform',
                     'parser_class': 'FlexTransformParser',
@@ -71,6 +71,18 @@ class SystemConfig:
 
                     },
                     'format': 'stix-tlp'
+                },
+                'MBL': {
+                    'module': 'lqmt.lqm.parsers.FlexTransform',
+                    'parser_class': 'FlexTransformParser',
+                    'configs': {
+                        'LQMTools': 'resources/sampleConfigurations/lqmtools.cfg',
+                        'mbl': 'resources/sampleConfigurations/MBL.cfg',
+                        'Cfm20Alert': 'resources/sampleConfigurations/cfm20alert.cfg',
+                        'stix-tlp': 'resources/sampleConfigurations/stix_tlp.cfg'
+
+                    },
+                    'format': 'mbl'
                 }
             }
         }
