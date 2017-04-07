@@ -186,7 +186,8 @@ class Alert(object):
                 return True
         return False
 
-    def _getIndicatorType(self, indType):
+    @staticmethod
+    def _getIndicatorType(indType):
         """Return the enumerated indicator type of the indType"""
         if indType == "IPv4Address":
             return IndicatorTypes.ipv4

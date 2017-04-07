@@ -41,7 +41,8 @@ class LQMToolConfig(object):
         self._logger = logging.getLogger("LQMT.Config")
         self._sources = []
         self._parsers = {}
-        self._toolChains = []
+        self._toolChains = {'ingress': [], 'egress': []}
+        # self._toolChains = []
         self._whitelist = None
         self._loggingCfg = None
         self._toolsList = []
@@ -98,11 +99,16 @@ class LQMToolConfig(object):
         be created later.
         """
 
-        # Users user configuration to only load tools the user specifies. The CSV tool is appended at the end because
+        # Use user configuration to only load tools the user specifies. The CSV tool is appended at the end because
         # it is needed later regardless of what tools are loaded.
         tooldefs = config['tools']
-        usertooldefs = self._userConfig['Tools'].keys()
-        usertooldefs = list(usertooldefs)
+        usertooldefs = []
+
+        for key, config in self._userConfig['Tools'].items():
+            usertooldefs.append(key)
+
+        # usertooldefs = self._userConfig['Tools'].keys()
+        # usertooldefs = list(usertooldefs)
         usertooldefs.append('CSV')
 
         # uses dictionary comprehension to filter out only user specified tools from the tooldefs dictionary
@@ -123,7 +129,7 @@ class LQMToolConfig(object):
             cfgClass = getattr(mod, toolinfo['config_class'])
             toolClasses[key] = ToolInfo(toolClass, cfgClass)
 
-        self._logger.debug("Tools loaded: %s" % ', '.join(tooldefs))
+        self._logger.debug("Loading the following tools: %s" % ', '.join(tooldefs))
         return toolClasses
 
     def _loadUserConfig(self, configFile):
@@ -157,15 +163,15 @@ class LQMToolConfig(object):
             self._whitelist = MasterWhitelist(configData=self._userConfig['Whitelist'])
 
         # create any tools and tool chains in the top-level user config file
-        globalTools = self._createTools(self._userConfig, toolClasses)
-        self._createToolChains(self._userConfig, globalTools)
+        tools = self._createTools(self._userConfig, toolClasses)
+        self._createToolChains(self._userConfig, tools)
 
     def _createTools(self, config, toolClasses):
         if 'Tools' not in config:
             return
         tools = config['Tools']
 
-        theseTools = {}
+        theseTools = {'ingress': {}, 'egress': {}}
         for key in tools:
             if key in toolClasses:
                 toolInfo = toolClasses[key]
@@ -173,8 +179,16 @@ class LQMToolConfig(object):
                 for cfgData in tools[key]:
                     tool = toolInfo.create(cfgData, toolClasses['CSV'], self._config['UnprocessedCSV'])
                     tool.toolName = key
-                    theseTools[tool.getName()] = tool
+                    theseTools[self.get_tool_type(key)][tool.getName()] = tool
         return theseTools
+
+    @staticmethod
+    def get_tool_type(toolname):
+        tool_type = 'egress'
+        if 'from' in toolname.lower():
+            tool_type = 'ingress'
+
+        return tool_type
 
     def _createToolChains(self, config, localTools, globalTools=None):
         if 'ToolChains' not in config:
@@ -183,32 +197,39 @@ class LQMToolConfig(object):
         chains = config['ToolChains']
         for chainCfg in chains:
             if 'active' in chainCfg and chainCfg['active'] is True:
-                self._toolChains.append(self._createToolChain(chainCfg, localTools, globalTools))
+                self._createToolChain(chainCfg, localTools, globalTools)
+                # self._toolChains.append(self._createToolChain(chainCfg, localTools, globalTools))
             else:
                 self._logger.info("Toolchain {0} is currently set as inactive in the user configuration. "
                                   "Tools in this toolchain will not run.".format(chainCfg['name']))
 
     def _createToolChain(self, chainCfg, localTools, globalTools):
-        chain = []
+        chain = {'ingress': [], 'egress': []}
+        # chain = []
         allEnabled = True
-        for toolName in chainCfg['chain']:
-            if toolName in localTools:
-                tool = localTools[toolName]
-            elif globalTools is not None and toolName in globalTools:
-                tool = globalTools[toolName]
-            else:
-                raise ConfigurationError("Named tool not found: " + toolName)
-            chain.append(tool)
-            allEnabled = allEnabled and tool.isEnabled()
-            if not tool.isEnabled():
-                self._logger.error("Tool chain {0} is disabled due to tool {1} being disabled".format(chainCfg['name'],
+        for tool_type, tools in localTools.items():
+            for toolName in chainCfg['chain']:
+                if toolName in tools:
+                    tool = tools[toolName]
+                elif globalTools is not None and toolName in globalTools:
+                    tool = globalTools[toolName]
+                else:
+                    # TODO: Reestablish process for raising configuration error when tool is not found
+                    break
+                    # raise ConfigurationError("Named tool not found: " + toolName)
+                chain[tool_type].append(tool)
+                allEnabled = allEnabled and tool.isEnabled()
+                if not tool.isEnabled():
+                    self._logger.error("Tool chain {0} is disabled due to tool {1} being disabled".format(chainCfg['name'],
                                                                                                       tool.getName()))
 
         chain = ToolChain(chain, chainCfg['name'], enabled=allEnabled)
         if allEnabled:
             self._logger.info("Created tool chain: {0}".format(chain.getName()))
         chain.printTools()
-        return chain
+        # TODO: Need to split egress and ingress tools into their own toolchains. Should setup framework to allow users
+        # to configure this, but have a filtering process to catch if they fail to do so.
+        self._toolChains.append(chain)
 
     def _addSourcesConfig(self, config):
         if 'Source' not in config:

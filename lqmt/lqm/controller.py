@@ -27,7 +27,13 @@ class LQMToolController:
         Main function of the controller. Runs through the various methods used to gather alert files, parse them,
         and send the parsed alert data to the various tools.
         """
+        self.ingress()
+        self.egress()
 
+    def egress(self):
+        """
+        Function for initializing and running all the user defined "from" tools. 
+        """
         alert_files = self._initialize()
 
         for data, unparsed_metadata in alert_files:
@@ -35,6 +41,9 @@ class LQMToolController:
             if metadata:
                 self._parse(data, metadata)
         self._chainCleanup()
+
+    def ingress(self):
+        print("from tools, engaged.")
 
     def _parsemeta(self, metafile):
         """
@@ -76,7 +85,7 @@ class LQMToolController:
 
     def _parse(self, data, metadata):
         """
-        Defines all parses needed based on the metadata given. Once defined, the parsers are used to parse alert data
+        Defines all parsers needed based on the metadata given. Once defined, the parsers are used to parse alert data
         and pass the data to tools.
         :param data: Alert data
         :param metadata: Alert metadata

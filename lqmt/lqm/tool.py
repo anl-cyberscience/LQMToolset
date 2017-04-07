@@ -4,6 +4,40 @@ from lqmt.lqm.data import AlertAction
 from lqmt.lqm.unprocessed import UnprocessedAlertHandler
 from lqmt.lqm.exceptions import ConfigurationError
 
+class EgressTool:
+    def __init__(self, config):
+
+        self._config = config  # the configuration object
+        self.toolName = ""  # The name of the tool defined by the tools class
+
+    def getConfig(self):
+        return self._config
+
+    def isEnabled(self):
+        return self._config.isEnabled()
+
+    def disable(self):
+        """Disable the tool"""
+        self._config.disable()
+
+    def getName(self):
+        nm = self._config.getName()
+        if nm:
+            return nm
+        else:
+            return "UNKNOWN-{0}".format(type(self).__name__)
+
+    def getActionsToProcess(self):
+        return None
+
+class EgressToolConfig:
+    """"Base class for all egress tool configs"""
+
+    def __init__(self, configData):
+        self._logger = logging.getLogger("LQMT.EgressToolConfig")
+        self.configData = configData
+
+
 
 class ToolConfig:
     """Base class for all tool configs"""
@@ -110,7 +144,7 @@ class Tool:
 
     def getName(self):
         nm = self._config.getName()
-        if (nm):
+        if nm:
             return nm
         else:
             return "UNKNOWN-{0}".format(type(self).__name__)
@@ -151,7 +185,8 @@ class Tool:
         """called after commit to perform any cleanup necessary."""
         NotImplementedError
 
-    def is_valid_ipv6(self, ip):
+    @staticmethod
+    def is_valid_ipv6(ip):
         """Validates IPv6 addresses."""
         pattern = re.compile(r"""
             ^
@@ -181,7 +216,8 @@ class Tool:
         """, re.VERBOSE | re.IGNORECASE | re.DOTALL)
         return pattern.match(ip) is not None
 
-    def is_valid_ipv4(self, ip):
+    @staticmethod
+    def is_valid_ipv4(ip):
         """Validates IPv4 addresses.
         """
         pattern = re.compile(r"""
@@ -224,17 +260,19 @@ class Tool:
 class ToolChain:
     """A ToolChain is a list of tools that pass data from one to the next"""
 
-    def __init__(self, tools, name, enabled):
-        self._tools = tools
+    def __init__(self, chain_tools, name, enabled):
+        self._tools = chain_tools
         self._name = name
         self._enabled = enabled
         self._logger = logging.getLogger("LQMT.ToolChain")
         self._actionsToProcess = None
-        for tool in self._tools:
-            if self._actionsToProcess is None:
-                self._actionsToProcess = tool.getActionsToProcess()
-            else:
-                self._actionsToProcess &= tool.getActionsToProcess()
+        for tool_type, tools in self._tools.items():
+            if tool_type == "egress":
+                for tool in tools:
+                    if self._actionsToProcess is None:
+                        self._actionsToProcess = tool.getActionsToProcess()
+                    else:
+                        self._actionsToProcess &= tool.getActionsToProcess()
         self._alertsProcessed = 0
         self._alertsNotProcessed = 0
 
@@ -322,8 +360,9 @@ class ToolChain:
     def printTools(self):
         toolStr = ""
         comma = " "
-        for tool in self._tools:
-            toolStr += comma
-            toolStr += tool.getName()
-            comma = ", "
-        self._logger.debug("Tools in toolchain '{0}': {1}".format(self._name, toolStr))
+        for tool_type, tools in self._tools.items():
+            for tool in tools:
+                toolStr += comma
+                toolStr += tool.getName()
+                comma = ", "
+        self._logger.debug("Tools in toolchain '{0}': {1}. Type: {2}".format(self._name, toolStr, tool_type))
