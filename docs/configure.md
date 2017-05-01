@@ -252,6 +252,7 @@ Ingest CTI data into your Splunk instance in a keyword value format.
         cert_check  = true
         source      = "lqmt-splunk-tool"
         sourcetype  = "lqmt-test"
+        index       = "main"
 
 Setting                 | Explanation
 :---------------------: | :-----------
@@ -262,7 +263,8 @@ Setting                 | Explanation
 `password`              | Password that you want to authenticate with.
 `cert_check`            | Used to disable the the certificate check. This is helpful for testing on a machine that you haven't imported your Splunk SSL cert on yet. Defaults to `false`.
 `source`                | Name of the source you want the data to be identified by. Defaults to `lqmt`. 
-`sourcetype`            | The sourcetype that you want to insert the data into. 
+`sourcetype`            | The sourcetype that you want to ingest the data into. 
+`index`                 | The index that you want to ingest data into.
 
 #### Device Setup and Configuration 
 LQMT authenticates using Splunk's token-based authentication endpoint. This requires you to provide a username and 
