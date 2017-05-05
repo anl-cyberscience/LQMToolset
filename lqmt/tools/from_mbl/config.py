@@ -18,4 +18,5 @@ class FromMBLConfig(ToolConfig):
         self.earliest = self.validation('earliest', str)
         self.latest = self.validation('latest', str)
         self.output_mode = self.validation('output_mode', str, default="CSV")
+        # TODO: Give user the option to use the the source_dir as the output dir. Possibly if this var is empty?
         self.output_directory = self.validation('output_directory', str)

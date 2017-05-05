@@ -10,21 +10,22 @@ class FromMBL(EgressTool):
         :param config: configuration file
         """
         super().__init__(config)
-        print('in from tool')
+        print('Init function of FromMBL Tool')
         self._logger = logging.getLogger("LQMT.ToolName.{0}".format(self.getName()))
 
     def initialize(self):
-        pass
+        print("Initialize function of FormMBL Tool")
         # super().initialize()
 
     def process(self, alert):
         """
         Process function. Handles the processing of data for the tool. 
         """
-        pass
+        print("Process function of FromMBL Tool")
 
     def commit(self):
-        pass
+        print("Commit function of FromMBL Tool")
+
 
     def cleanup(self):
-        pass
+        print("Cleanup function of FromMBL Tool")

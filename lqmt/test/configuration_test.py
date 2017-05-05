@@ -64,7 +64,8 @@ class TestConfiguration(TestCase):
         self.assertEqual(self.user_config.getToolsList(), ['FlexText'])
 
     def test_user_toolchain(self):
-        toolchain = self.user_config.getToolChains().pop()
+        # TODO: Current test only applies to egress tools. Need to add test for ingress tools.
+        toolchain = self.user_config.getToolChains()['egress'].pop()
         self.assertEquals(toolchain._name, "anl-flextext-test")
         self.assertEquals(len(toolchain._tools), 1)
 

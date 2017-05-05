@@ -44,6 +44,14 @@ class LQMToolController:
 
     def ingress(self):
         print("from tools, engaged.")
+        self._ingress_process()
+
+    def _ingress_process(self):
+        #TODO: All tool functions contained to this function. Should give ingress tools their own chain type and break out the other functions out to the chain class. Similar to how it's done for egress tools now.
+        for chain in self.toolChains['ingress']:
+            chain.ingress_process()
+
+            print("Ingress chain enabled status: {0}".format(chain._enabled))
 
     def _parsemeta(self, metafile):
         """
@@ -72,9 +80,14 @@ class LQMToolController:
 
         filesToProcess = None
 
-        for chain in self.toolChains:
-            if chain.isEnabled():
+        for chain in self.toolChains['egress']:
+            test = chain._enabled
+            print("Egress Chain is enabled value: {0}".format(test))
+            if chain._enabled:
                 chain.initialize()
+            else:
+                self._logger.error("Toolchain '{0}' is disabled due to user configuration, or because no tools were "
+                                   "correctly configured for the toolchain.".format(chain.getName()))
             chain.updateEnabled()
 
         for src in self._config.getSources():
@@ -98,7 +111,7 @@ class LQMToolController:
                 # tell each chain there is a new file
                 alerts = parser.parse(data, metadata)
                 if alerts:
-                    for chain in self.toolChains:
+                    for chain in self.toolChains['egress']:
                         if chain.isEnabled():
                             chain.fileBegin()
                             self._process_alerts(alerts, chain, data, metadata)
@@ -132,7 +145,7 @@ class LQMToolController:
         Cleans up tools that are done processing and logs statistics on amount of processed alerts.
         """
 
-        for chain in self.toolChains:
+        for chain in self.toolChains['egress']:
             if chain.isEnabled():
                 chain.commit()
                 chain.cleanup()

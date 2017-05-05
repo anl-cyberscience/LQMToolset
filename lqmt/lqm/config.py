@@ -190,34 +190,47 @@ class LQMToolConfig(object):
 
         return tool_type
 
+    @staticmethod
+    def parse_toolchain_type(tools, chains):
+        test_value = "test"
+
+        return test_value
+
     def _createToolChains(self, config, localTools, globalTools=None):
         if 'ToolChains' not in config:
             return
 
         chains = config['ToolChains']
+
         for chainCfg in chains:
             if 'active' in chainCfg and chainCfg['active'] is True:
-                self._createToolChain(chainCfg, localTools, globalTools)
-                # self._toolChains.append(self._createToolChain(chainCfg, localTools, globalTools))
+
+                if localTools['egress']:
+                    self._toolChains['egress'].append(
+                        self._createToolChain(chainCfg, localTools['egress'], globalTools))
+
+                if localTools['ingress']:
+                    self._toolChains['ingress'].append(
+                        self._createToolChain(chainCfg, localTools['ingress'], globalTools))
             else:
                 self._logger.info("Toolchain {0} is currently set as inactive in the user configuration. "
                                   "Tools in this toolchain will not run.".format(chainCfg['name']))
 
     def _createToolChain(self, chainCfg, localTools, globalTools):
-        chain = {'ingress': [], 'egress': []}
-        # chain = []
+        chain = []
         allEnabled = True
-        for tool_type, tools in localTools.items():
-            for toolName in chainCfg['chain']:
-                if toolName in tools:
-                    tool = tools[toolName]
-                elif globalTools is not None and toolName in globalTools:
-                    tool = globalTools[toolName]
-                else:
-                    # TODO: Reestablish process for raising configuration error when tool is not found
-                    break
-                    # raise ConfigurationError("Named tool not found: " + toolName)
-                chain[tool_type].append(tool)
+
+        for toolName in chainCfg['chain']:
+            tool = None
+            if toolName in localTools:
+                tool = localTools[toolName]
+            elif globalTools is not None and toolName in globalTools:
+                tool = globalTools[toolName]
+            else:
+                pass
+            # raise ConfigurationError("Named tool not found: " + toolName)
+            if tool is not None:
+                chain.append(tool)
                 allEnabled = allEnabled and tool.isEnabled()
                 if not tool.isEnabled():
                     self._logger.error("Tool chain {0} is disabled due to tool {1} being disabled".format(chainCfg['name'],
@@ -227,9 +240,7 @@ class LQMToolConfig(object):
         if allEnabled:
             self._logger.info("Created tool chain: {0}".format(chain.getName()))
         chain.printTools()
-        # TODO: Need to split egress and ingress tools into their own toolchains. Should setup framework to allow users
-        # to configure this, but have a filtering process to catch if they fail to do so.
-        self._toolChains.append(chain)
+        return chain
 
     def _addSourcesConfig(self, config):
         if 'Source' not in config:

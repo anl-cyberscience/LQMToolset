@@ -4,6 +4,7 @@ from lqmt.lqm.data import AlertAction
 from lqmt.lqm.unprocessed import UnprocessedAlertHandler
 from lqmt.lqm.exceptions import ConfigurationError
 
+
 class EgressTool:
     def __init__(self, config):
 
@@ -30,13 +31,13 @@ class EgressTool:
     def getActionsToProcess(self):
         return None
 
+
 class EgressToolConfig:
     """"Base class for all egress tool configs"""
 
     def __init__(self, configData):
         self._logger = logging.getLogger("LQMT.EgressToolConfig")
         self.configData = configData
-
 
 
 class ToolConfig:
@@ -260,24 +261,23 @@ class Tool:
 class ToolChain:
     """A ToolChain is a list of tools that pass data from one to the next"""
 
-    def __init__(self, chain_tools, name, enabled):
-        self._tools = chain_tools
+    def __init__(self, tools, name, enabled):
+        self._tools = tools
         self._name = name
-        self._enabled = enabled
+        self._enabled = True
         self._logger = logging.getLogger("LQMT.ToolChain")
         self._actionsToProcess = None
-        for tool_type, tools in self._tools.items():
-            if tool_type == "egress":
-                for tool in tools:
-                    if self._actionsToProcess is None:
-                        self._actionsToProcess = tool.getActionsToProcess()
-                    else:
-                        self._actionsToProcess &= tool.getActionsToProcess()
+        for tool in self._tools:
+            if self._actionsToProcess is None:
+                self._actionsToProcess = tool.getActionsToProcess()
+            else:
+                self._actionsToProcess &= tool.getActionsToProcess()
         self._alertsProcessed = 0
         self._alertsNotProcessed = 0
 
     def isEnabled(self):
-        return self._enabled
+        if self._enabled and self._tools:
+            return self._enabled
 
     def initialize(self):
         """called by the controller at the beginning of processing to allow the tool chain to initialize itself."""
@@ -327,6 +327,13 @@ class ToolChain:
             else:
                 self._alertsNotProcessed += 1
 
+    def ingress_process(self):
+        if self.isEnabled():
+            for tool in self._tools:
+                tool.process(None)
+                tool.commit()
+                tool.cleanup()
+
     def commit(self):
         """Called at the end of processing to allow the tool chain to perform any finalization"""
         if self.isEnabled():
@@ -360,9 +367,8 @@ class ToolChain:
     def printTools(self):
         toolStr = ""
         comma = " "
-        for tool_type, tools in self._tools.items():
-            for tool in tools:
-                toolStr += comma
-                toolStr += tool.getName()
-                comma = ", "
-        self._logger.debug("Tools in toolchain '{0}': {1}. Type: {2}".format(self._name, toolStr, tool_type))
+        for tool in self._tools:
+            toolStr += comma
+            toolStr += tool.getName()
+            comma = ", "
+        self._logger.debug("Tools in toolchain '{0}': {1}".format(self._name, toolStr))
