@@ -42,11 +42,11 @@ def formatUrlParam(parameter, value, addition=False):
 class ApiHandler:
     """
     Class for handling API calls to Splunk's REST Api. This class might end up being redundant depending on a few
-    things, but that will be fleshed out further as the tool is built.
+    things, but that will be fleshed out further as the tool is built. 
     """
 
     def __init__(self, host=None, port=None, username=None, password=None, splunk_token="", cert_check=True,
-                 source=None, sourcetype=None, index=None):
+                 source=None, sourcetype=None, index=None, timeout_duration=0):
         self._messages_processed = 0
         self._logger = logging.getLogger("LQMT.Splunk.ApiCaller")
         self.host = host
@@ -61,9 +61,15 @@ class ApiHandler:
         self.requests = requests
         self.authenticated = False
         self.splunk_token = {'Authorization': splunk_token}
-        self.auth_service = "/services/auth/login/"
-        self.stream_service = "/services/receivers/stream/"
+        self.service = {
+            'auth': "/services/auth/login/",
+            'stream': "/services/receivers/stream/",
+            'search': "/services/search/jobs"}
         self.headers = {}
+        self.job_id = ""
+        self.response = ""
+        self.query = None
+        self.timeout_duration = timeout_duration
 
         # Call authentication function when class object is created.
         self.authenticate()
@@ -86,7 +92,7 @@ class ApiHandler:
         if not self.authenticated:
             # Format username and password, then send the request
             data = {'username': self.username, 'password': self.password}
-            r = self.requests.post(self.url + self.auth_service, data=data, verify=self.cert_check)
+            r = self.requests.post(self.url + self.service['auth'], data=data, verify=self.cert_check)
 
             # If authentication is successful, then pull out the token and set our auth status. If not, weep.
             if r.ok:
@@ -130,7 +136,7 @@ class ApiHandler:
             self.authenticate()
 
         # Build url for api and send the api request
-        url = self.url + self.stream_service + "?{0}{1}{2}".format(
+        url = self.url + self.service['stream'] + "?{0}{1}{2}".format(
             self.source,
             self.sourcetype,
             self.index
@@ -148,5 +154,88 @@ class ApiHandler:
                            "\nURL Used: '{0}'; "
                            "\nStatus code returned: '{1}';".format(url, r.status_code))
 
+    def send_post_request(self, message, url):
+
+        self.response = self.requests.post(url, data=message, headers=self.headers, verify=self.cert_check)
+
+        # If parsed successfully, tally and move on. Otherwise raise status
+        if self.response.ok:
+            root = ElementTree.fromstring(self.response.text)
+            self.job_id = root[0].text
+            self._messages_processed += 1
+
+        else:
+            self.response.raise_for_status()
+            self.job_id = "N/A"
+
+        self._logger.debug("Message sent to Splunk. "
+                           "\nURL Used: '{0}'"
+                           "\nMessage Sent: {1}"
+                           "\nStatus code returned: '{2}'"
+                           "\nJob ID: {3}".format(url, message, self.response.status_code, self.job_id))
+
+        return self.job_id
+
+    def fetch_job(self, job_id=None):
+        """
+        Used to fetch the results from a search job
+        :param job_id: the Splunk job ID provided after you submit a search request. Defaults to None because if using
+        the api, you most likely already have a job id assigned to self.job_id. Override if needed.
+        :return: 
+        """
+        job_status = "PENDING"
+        sleep_inc = 1
+        if job_id is not None:
+            self.job_id = job_id
+
+        if self.response.ok:
+            while job_status != "DONE":
+                self._logger.debug("Fetch Job - Job still pending.")
+                status_response = requests.get(self.url + "/services/search/jobs/" + job_id + "/",
+                                               auth=(self.username, self.password),
+                                               verify=self.cert_check)
+
+                if status_response.status_code == 200 and status_response.ok:
+                    job_status = "DONE"
+
+                if job_status != "DONE" and sleep_inc > self.timeout_duration:
+                    # TODO: Update sleep function
+                    time.sleep(sleep_inc)
+                    sleep_inc += 2
+                else:
+                    self._logger.exception("Splunk search job has exceeded your defined timeout duration of {0}".format(
+                        self.timeout_duration
+                    ))
+        else:
+            self._logger.error("Error authenticating request.")
+
+        self._logger.debug("Job Finished. Fetching results.")
+        payload = {'output_mode': 'csv'}
+        job_result = requests.get(self.url + "/services/search/jobs/" + job_id + "/results/",
+                                  auth=(self.username, self.password), verify=False, params=payload)
+
+        return job_result
+
     def getTotalMessagesProcessed(self):
         return self._messages_processed
+
+    def build_url(self, host, port, service, params):
+        url = host + ":" + str(port) + self.service[service] + params
+
+        return url
+
+    @staticmethod
+    def write_file(response, file):
+        if response:
+            f = open(file, 'w')
+            f.write(response.text)
+            f.close()
+
+    @staticmethod
+    def format_url_params(params):
+        url_params = "?"
+        params = list(filter(None, params))
+        for param in params:
+            url_params += param + "&"
+
+        return url_params[:-1]

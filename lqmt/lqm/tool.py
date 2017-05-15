@@ -330,6 +330,7 @@ class ToolChain:
     def ingress_process(self):
         if self.isEnabled():
             for tool in self._tools:
+                tool.initialize()
                 tool.process(None)
                 tool.commit()
                 tool.cleanup()

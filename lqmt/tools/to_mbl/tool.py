@@ -64,8 +64,7 @@ class ToMBL(Tool):
 
             # if sourcetype is valid, then send message
             if sourcetype in self.sourcetype_lexicon:
-                pass
-                # self.splunk_handler.send_message(message, sourcetype=sourcetype)
+                self.splunk_handler.send_message(message, sourcetype=sourcetype)
 
     def cleanup(self):
         pass

@@ -15,8 +15,8 @@ class FromMBLConfig(ToolConfig):
         self.source = self.validation('source', str, default="")
         self.sourcetype = self.validation('sourcetype', str, default="")
         self.index = self.validation('index', str)
-        self.earliest = self.validation('earliest', str)
-        self.latest = self.validation('latest', str)
         self.output_mode = self.validation('output_mode', str, default="CSV")
         # TODO: Give user the option to use the the source_dir as the output dir. Possibly if this var is empty?
         self.output_directory = self.validation('output_directory', str)
+        self.timeout_duration = self.validation('timeout_duration', int, default=15)
+        self.splunk_query = self.validation('splunk_query', str, required=True)

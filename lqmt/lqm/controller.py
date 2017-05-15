@@ -81,8 +81,7 @@ class LQMToolController:
         filesToProcess = None
 
         for chain in self.toolChains['egress']:
-            test = chain._enabled
-            print("Egress Chain is enabled value: {0}".format(test))
+            print("Egress Chain is enabled value: {0}".format(chain._enabled))
             if chain._enabled:
                 chain.initialize()
             else:
