@@ -1,4 +1,5 @@
 import logging
+import os
 from lqmt.lqm.tool import EgressTool
 from lqmt.tools.to_splunk.splunk_api import ApiHandler
 
@@ -42,13 +43,26 @@ class FromMBL(EgressTool):
 
         # fetch job results
         self.response = self.splunk_handler.fetch_job(self.job_id)
+        self.write_results()
 
     def commit(self):
         print("Commit function of FromMBL Tool")
-        # self.write_results(self.response)
+        # self.write_results()
 
     def cleanup(self):
         print("Cleanup function of FromMBL Tool")
 
     def write_results(self):
-        pass
+        if self._config.output_directory is not None:
+            file = self._config.output_directory
+
+            file_dir = os.path.dirname(file)
+            if not os.path.exists(file_dir):
+                os.makedirs(file_dir, 0o755, True)
+            if not os.path.exists(file):
+                open(file, 'w').close()
+
+            if self.response is not None:
+                results = self.response.text
+                with open(file, 'r+') as output_file:
+                    output_file.write(results)

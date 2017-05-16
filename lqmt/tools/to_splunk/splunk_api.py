@@ -1,6 +1,7 @@
 import logging
 import requests
 import time
+import xmltodict
 from xml.etree import ElementTree
 
 
@@ -70,6 +71,7 @@ class ApiHandler:
         self.response = ""
         self.query = None
         self.timeout_duration = timeout_duration
+        self.dispatch_states = ['QUEUED', 'PARSING', 'RUNNING', 'PAUSED', 'FINALIZING', 'FAILED', 'DONE']
 
         # Call authentication function when class object is created.
         self.authenticate()
@@ -190,19 +192,23 @@ class ApiHandler:
 
         if self.response.ok:
             while job_status != "DONE":
-                self._logger.debug("Fetch Job - Job still pending.")
+                self._logger.debug("Fetching Job - Job still pending.")
                 status_response = requests.get(self.url + "/services/search/jobs/" + job_id + "/",
                                                auth=(self.username, self.password),
                                                verify=self.cert_check)
 
                 if status_response.status_code == 200 and status_response.ok:
-                    job_status = "DONE"
+                    parsed_state = self.parse_xml_for_state(status_response.text)
+                    if parsed_state in self.dispatch_states:
+                        job_status = parsed_state
 
-                if job_status != "DONE" and sleep_inc > self.timeout_duration:
+                if job_status != "DONE":
                     # TODO: Update sleep function
                     time.sleep(sleep_inc)
                     sleep_inc += 2
-                else:
+
+                elif sleep_inc > self.timeout_duration:
+                    pass
                     self._logger.exception("Splunk search job has exceeded your defined timeout duration of {0}".format(
                         self.timeout_duration
                     ))
@@ -239,3 +245,13 @@ class ApiHandler:
             url_params += param + "&"
 
         return url_params[:-1]
+
+    @staticmethod
+    def parse_xml_for_state(content):
+        value = None
+        xml_dict = xmltodict.parse(content)
+        for item in xml_dict['entry']['content']['s:dict']['s:key']:
+            if '@name' in item:
+                if item['@name'] == "dispatchState":
+                    value = item['#text']
+        return value

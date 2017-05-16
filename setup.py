@@ -49,7 +49,8 @@ setup(
         'pan-python',
         'toml',
         'FlexTransform>=1.2.0',
-        'requests'
+        'requests',
+        'xmltodict'
     ],
     entry_points={
         'console_scripts': [
