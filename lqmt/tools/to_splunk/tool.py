@@ -38,7 +38,7 @@ class ToSplunk(Tool):
         """
         Process function. Handles the processing of data for the tool. 
         """
-        self.handler.send_message(create_message(alert))
+        self.handler.send_message(create_message(alert, self._config.fields))
 
     def commit(self):
         pass

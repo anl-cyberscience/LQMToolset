@@ -4,7 +4,7 @@ import time
 from xml.etree import ElementTree
 
 
-def create_message(alert):
+def create_message(alert, fields):
     """
     Creates a key-value formatted message for Splunk that contains parsed data from FlexT. Defaulting to parsing
     empty values.
@@ -12,9 +12,16 @@ def create_message(alert):
     :param alert: Parsed alert data from FlexT
     :return: Returns formatted string.
     """
-    data = alert.getAllFields(dictionary=True, parseEmpty=True)
+    if "all" in fields:
+        data = alert.getAllFields(dictionary=True, parseEmpty=True)
+    else:
+        data = alert.getFields(fields, dictionary=True)
+
     message = "{0} LQMT: ".format(time.asctime())
     for key, value in data.items():
+        if value is "":
+            value = None
+
         message += "{0}={1} ".format(key, value)
 
     return message

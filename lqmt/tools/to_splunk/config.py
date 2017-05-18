@@ -16,3 +16,4 @@ class SplunkConfig(ToolConfig):
         self.source = self.validation('source', str, default="lqmt")
         self.sourcetype = self.validation('sourcetype', str, required=True)
         self.index = self.validation('index', str, required=False)
+        self.fields = self.validation('fields', list, default=["all"])
