@@ -77,6 +77,12 @@ class LQMToolConfig(object):
         Initializes parsers using configuration details provided by the system configuration file
         :param parsers: Parser information passed from the system configuration file
         """
+        if 'Parsers' in self._userConfig:
+            parser_overrides = self._userConfig['Parsers']
+        else:
+            parser_overrides = None
+
+        parsers = self._parser_override_check(parsers, parser_overrides)
 
         # path info is loaded from the config files
         for key, parserinfo in parsers.items():
@@ -86,11 +92,45 @@ class LQMToolConfig(object):
 
             # if particular configs were defined for the parser, pass them to FlexT parser and append to self._parsers
             if parserinfo['configs']:
-                self._parsers[parserinfo['format']] = parserClass(parserinfo['configs'])
+                # Check if a parser is enabled by default. Otherwise, check if user has enabled it. If not, it will not
+                # be configured.
+                if parserinfo['default_enabled']:
+                    # Support for multiple format types that use the same configuration files. Useful for formats,
+                    # such as stix, that can be identified in a few ways, but have similar structures.
+                    if type(parserinfo['format']) is list:
+                        for format_type in parserinfo['format']:
+                            self._parsers[format_type] = parserClass(parserinfo['configs'])
+                    else:
+                        self._parsers[parserinfo['format']] = parserClass(parserinfo['configs'])
             else:
                 self._parsers[parserinfo['format']] = parserClass()
 
         self._logger.debug("Parsers loaded: %s" % ', '.join(self._parsers.keys()))
+
+    @staticmethod
+    def _parser_override_check(parsers, parser_overrides):
+        """
+        Function used to enable or disable parsers based on user configuration file.
+        :param parsers: Parser details from system_config
+        :param parser_overrides: Parser overrides provided from the user_config
+        :return: Dict of parser details.
+        """
+        if parser_overrides:
+            for key, parserinfo in parsers.items():
+                if type(parserinfo['format']) is list:
+                    for format_type in parserinfo['format']:
+                        if format_type in parser_overrides['disable']:
+                            parserinfo['default_enabled'] = False
+                        elif format_type in parser_overrides['enable']:
+                            parserinfo['default_enabled'] = True
+                else:
+                    if parserinfo['format'] in parser_overrides['disable']:
+                        parserinfo['default_enabled'] = False
+                    elif parserinfo['format'] in parser_overrides['enable']:
+                        parserinfo['default_enabled'] = True
+            return parsers
+        else:
+            return parsers
 
     def _initToolConfig(self, config):
         """

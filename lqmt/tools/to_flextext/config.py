@@ -26,7 +26,9 @@ class FlexTextConfig(ToolConfig):
         self.source_configs = {
             'Cfm13Alert': 'resources/sampleConfigurations/cfm13.cfg',
             'Cfm20Alert': 'resources/sampleConfigurations/cfm20alert.cfg',
-            'stix-tlp': 'resources/sampleConfigurations/stix_tlp.cfg'
+            'stix-tlp': 'resources/sampleConfigurations/stix_tlp.cfg',
+            'STIX': 'resources/sampleConfigurations/stix_tlp.cfg',
+            'IIDactiveBadHosts': 'resources/sampleConfigurations/iid_host_active.cfg',
         }
 
         # FlexText configuration variables

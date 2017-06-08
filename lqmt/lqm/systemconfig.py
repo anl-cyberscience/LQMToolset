@@ -51,7 +51,8 @@ class SystemConfig:
                         'LQMTools': 'resources/sampleConfigurations/lqmtools.cfg',
                         'Cfm20Alert': 'resources/sampleConfigurations/cfm20alert.cfg'
                     },
-                    'format': 'Cfm20Alert'
+                    'format': 'Cfm20Alert',
+                    'default_enabled': True
                 },
                 'cfm13': {
                     'module': 'lqmt.lqm.parsers.FlexTransform',
@@ -60,17 +61,20 @@ class SystemConfig:
                         'LQMTools': 'resources/sampleConfigurations/lqmtools.cfg',
                         'Cfm13Alert': 'resources/sampleConfigurations/cfm13.cfg'
                     },
-                    'format': 'Cfm13Alert'
+                    'format': 'Cfm13Alert',
+                    'default_enabled': True
                 },
                 'stixtlp': {
                     'module': 'lqmt.lqm.parsers.FlexTransform',
                     'parser_class': 'FlexTransformParser',
                     'configs': {
                         'LQMTools': 'resources/sampleConfigurations/lqmtools.cfg',
-                        'stix-tlp': 'resources/sampleConfigurations/stix_tlp.cfg'
+                        'stix-tlp': 'resources/sampleConfigurations/stix_tlp.cfg',
+                        'STIX': 'resources/sampleConfigurations/stix_tlp.cfg'
 
                     },
-                    'format': 'stix-tlp'
+                    'format': ['stix-tlp', 'STIX'],
+                    'default_enabled': True
                 },
                 'MBL': {
                     'module': 'lqmt.lqm.parsers.FlexTransform',
@@ -82,7 +86,18 @@ class SystemConfig:
                         'stix-tlp': 'resources/sampleConfigurations/stix_tlp.cfg'
 
                     },
-                    'format': 'mbl'
+                    'format': 'mbl',
+                    'default_enabled': True
+                },
+                'IIDactiveBadHosts': {
+                    'module': 'lqmt.lqm.parsers.FlexTransform',
+                    'parser_class': 'FlexTransformParser',
+                    'configs': {
+                        'LQMTools': 'resources/sampleConfigurations/lqmtools.cfg',
+                        'IIDactiveBadHosts': 'resources/sampleConfigurations/iid_host_active.cfg'
+                    },
+                    'format': 'IIDactiveBadHosts',
+                    'default_enabled': False
                 }
             }
         }

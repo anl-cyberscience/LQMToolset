@@ -86,7 +86,7 @@ CFM20ALERT = """
 </CFMAlert>
 """
 
-STIXTLP = """<stix:STIX_Package
+STIX = """<stix:STIX_Package
         xmlns:cyboxCommon="http://cybox.mitre.org/common-2"
         xmlns:cybox="http://cybox.mitre.org/cybox-2"
         xmlns:cyboxVocabs="http://cybox.mitre.org/default_vocabularies-2"

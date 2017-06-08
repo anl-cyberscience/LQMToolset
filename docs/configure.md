@@ -253,6 +253,7 @@ Ingest CTI data into your Splunk instance in a keyword value format.
         source      = "lqmt-splunk-tool"
         sourcetype  = "lqmt-test"
         index       = "main"
+        fields      = ['action1', 'indicator', 'reportedTime']
 
 Setting                 | Explanation
 :---------------------: | :-----------
@@ -265,6 +266,8 @@ Setting                 | Explanation
 `source`                | Name of the source you want the data to be identified by. Defaults to `lqmt`. 
 `sourcetype`            | The sourcetype that you want to ingest the data into. 
 `index`                 | The index that you want to ingest data into.
+`fields`                | Fields, identified from the intermediate format, to be extracted. If `fields` are not provided, then it defaults to a value of ['all'], which will automatically extract all supported field types. 
+
 
 #### Device Setup and Configuration 
 LQMT authenticates using Splunk's token-based authentication endpoint. This requires you to provide a username and 
