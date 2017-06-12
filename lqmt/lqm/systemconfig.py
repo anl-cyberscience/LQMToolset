@@ -44,7 +44,7 @@ class SystemConfig:
                            'severity', 'relevancy', 'relatedID', 'relationType', 'comment', 'fileHasMore']
             },
             'parsers': {
-                'cfm20': {
+                'Cfm20Alert': {
                     'module': 'lqmt.lqm.parsers.FlexTransform',
                     'parser_class': 'FlexTransformParser',
                     'configs': {
@@ -54,7 +54,7 @@ class SystemConfig:
                     'format': 'Cfm20Alert',
                     'default_enabled': True
                 },
-                'cfm13': {
+                'Cfm13Alert': {
                     'module': 'lqmt.lqm.parsers.FlexTransform',
                     'parser_class': 'FlexTransformParser',
                     'configs': {
@@ -97,6 +97,36 @@ class SystemConfig:
                         'IIDactiveBadHosts': 'resources/sampleConfigurations/iid_host_active.cfg'
                     },
                     'format': 'IIDactiveBadHosts',
+                    'default_enabled': False
+                },
+                'IIDcombinedURL': {
+                    'module': 'lqmt.lqm.parsers.FlexTransform',
+                    'parser_class': 'FlexTransformParser',
+                    'configs': {
+                        'LQMTools': 'resources/sampleConfigurations/lqmtools.cfg',
+                        'IIDcombinedURL': 'resources/sampleConfigurations/iid_combined_recent.cfg'
+                    },
+                    'format': 'IIDcombinedURL',
+                    'default_enabled': False
+                },
+                'IIDdynamicBadHosts': {
+                    'module': 'lqmt.lqm.parsers.FlexTransform',
+                    'parser_class': 'FlexTransformParser',
+                    'configs': {
+                        'LQMTools': 'resources/sampleConfigurations/lqmtools.cfg',
+                        'IIDdynamicBadHosts': 'resources/sampleConfigurations/iid_host_dynamic.cfg'
+                    },
+                    'format': 'IIDdynamicBadHosts',
+                    'default_enabled': False
+                },
+                'IIDrecentBadIP': {
+                    'module': 'lqmt.lqm.parsers.FlexTransform',
+                    'parser_class': 'FlexTransformParser',
+                    'configs': {
+                        'LQMTools': 'resources/sampleConfigurations/lqmtools.cfg',
+                        'IIDrecentBadIP': 'resources/sampleConfigurations/iid_ipv4_recent.cfg'
+                    },
+                    'format': 'IIDrecentBadIP',
                     'default_enabled': False
                 }
             }
