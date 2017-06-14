@@ -18,7 +18,14 @@ class FlexTransformParser(object):
         # get the FlexTransform directory
         self._current_dir, name = os.path.split(inspect.getfile(FlexTransform.FlexTransform))
         self._transform = FlexTransform.FlexTransform.FlexTransform()
-        self._exceptions = ('stix-tlp', 'IIDactiveBadHosts', 'STIX')
+        self._exceptions = (
+            'stix-tlp',
+            'STIX',
+            'IIDactiveBadHosts',
+            'IIDdynamicBadHosts',
+            'IIDrecentBadIP',
+            'IIDcombinedURL'
+        )
 
         # config
         if config is not None:

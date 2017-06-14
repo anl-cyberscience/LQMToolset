@@ -44,7 +44,7 @@ class FlexTextConfig(ToolConfig):
             # released, this fix can be removed. 
             ft_version = get_distribution('FlexTransform').version
             ft_version = tuple([int(x) for x in ft_version.split('.')])
-            if ft_version <= (1, 2, 1):
+            if ft_version < (1, 2, 1):
                 if "IID" in parser_name:
                     del (parsers['configs'][parser_name])
 

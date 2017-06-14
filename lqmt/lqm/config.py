@@ -119,14 +119,14 @@ class LQMToolConfig(object):
             for key, parserinfo in parsers.items():
                 if type(parserinfo['format']) is list:
                     for format_type in parserinfo['format']:
-                        if format_type in parser_overrides['disable']:
+                        if 'disable' in parser_overrides and format_type in parser_overrides['disable']:
                             parserinfo['default_enabled'] = False
-                        elif format_type in parser_overrides['enable']:
+                        elif 'enable' in parser_overrides and format_type in parser_overrides['enable']:
                             parserinfo['default_enabled'] = True
                 else:
-                    if parserinfo['format'] in parser_overrides['disable']:
+                    if 'disable' in parser_overrides and parserinfo['format'] in parser_overrides['disable']:
                         parserinfo['default_enabled'] = False
-                    elif parserinfo['format'] in parser_overrides['enable']:
+                    elif 'enable' in parser_overrides and  parserinfo['format'] in parser_overrides['enable']:
                         parserinfo['default_enabled'] = True
             return parsers
         else:
