@@ -99,15 +99,15 @@ class TestParser(TestCase):
 
     # STIX format tests
     def test_stix_content_returned(self):
-        self.assertEquals(len(self.stix_parsed_data), 7)
+        self.assertEquals(len(self.stix_parsed_data), 11)
 
     def test_stix_indicator(self):
         self.assertEquals(self.stix_parsed_data[1]._indicator, "13.13.13.13")
-        self.assertEquals(self.stix_parsed_data[5]._indicator, "bad.domain.be/poor/path")
+        self.assertEquals(self.stix_parsed_data[9]._indicator, "bad.domain.be/poor/path")
 
     def test_stix_indicator_type(self):
         self.assertEquals(self.stix_parsed_data[1]._indicatorType, "IPv4Address")
-        self.assertEquals(self.stix_parsed_data[5]._indicatorType, "URL")
+        self.assertEquals(self.stix_parsed_data[5]._indicatorType, "FilePath")
 
     def test_stix_action(self):
         self.assertEquals(self.stix_parsed_data[1]._action1, "Block")
