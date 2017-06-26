@@ -198,6 +198,10 @@ class Alert(object):
             return IndicatorTypes.host
         elif indType == "URL":
             return IndicatorTypes.url
+        elif indType == "FilePath":
+            return IndicatorTypes.filepath
+        elif indType == "FileHash":
+            return IndicatorTypes.filehash
 
     def setDataItemID(self, dataItemID):
         self._dataItemID = dataItemID

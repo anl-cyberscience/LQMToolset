@@ -28,6 +28,8 @@ class IndicatorTypes(object):
     domain = 'domain'
     host = 'host'
     url = 'url'
+    filepath = "filepath"
+    filehash = "filehash"
 
 
 class MasterWhitelist(object):

@@ -65,11 +65,13 @@ class FlexTransformParser(object):
             data = []
             self._logger.error(
                 "LQMT-FlexTransform-Parser: Error parsing file file='{0}' exception='{1}'".format(datafile, e))
-        for d in data:
-            alert = Alert()
-            alert.setFromDict(d)
-            alerts.append(alert)
-
+        try:
+            for d in data:
+                alert = Alert()
+                alert.setFromDict(d)
+                alerts.append(alert)
+        except Exception as e:
+            self._logger.error("LQMT-FlexTransform-Parser: Problem with parsed data. Exception={0}".format(e))
         return alerts
 
     def parseflextext(self, datafile, meta, destination_file_obj, config_str):
