@@ -107,8 +107,7 @@ class LQMToolConfig(object):
 
         self._logger.debug("Parsers loaded: %s" % ', '.join(self._parsers.keys()))
 
-    @staticmethod
-    def _parser_override_check(parsers, parser_overrides):
+    def _parser_override_check(self, parsers, parser_overrides):
         """
         Function used to enable or disable parsers based on user configuration file.
         :param parsers: Parser details from system_config
@@ -119,18 +118,24 @@ class LQMToolConfig(object):
             for key, parserinfo in parsers.items():
                 if type(parserinfo['format']) is list:
                     for format_type in parserinfo['format']:
-                        if 'disable' in parser_overrides and format_type in parser_overrides['disable']:
-                            parserinfo['default_enabled'] = False
-                        elif 'enable' in parser_overrides and format_type in parser_overrides['enable']:
-                            parserinfo['default_enabled'] = True
+                        parserinfo['default_enabled'] = self._parser_override(format_type, parser_overrides,
+                                                                              parserinfo['default_enabled'])
                 else:
-                    if 'disable' in parser_overrides and parserinfo['format'] in parser_overrides['disable']:
-                        parserinfo['default_enabled'] = False
-                    elif 'enable' in parser_overrides and  parserinfo['format'] in parser_overrides['enable']:
-                        parserinfo['default_enabled'] = True
+                    parserinfo['default_enabled'] = self._parser_override(parserinfo['format'], parser_overrides,
+                                                                          parserinfo['default_enabled'])
+
             return parsers
         else:
             return parsers
+
+    @staticmethod
+    def _parser_override(format_type, parser_overrides, default):
+        if 'disable' in parser_overrides and format_type in parser_overrides['disable']:
+            return False
+        elif 'enable' in parser_overrides and format_type in parser_overrides['enable']:
+            return True
+        else:
+            return default
 
     def _initToolConfig(self, config):
         """
