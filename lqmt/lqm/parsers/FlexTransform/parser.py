@@ -18,6 +18,14 @@ class FlexTransformParser(object):
         # get the FlexTransform directory
         self._current_dir, name = os.path.split(inspect.getfile(FlexTransform.FlexTransform))
         self._transform = FlexTransform.FlexTransform.FlexTransform()
+        self._exceptions = (
+            'stix-tlp',
+            'STIX',
+            'IIDactiveBadHosts',
+            'IIDdynamicBadHosts',
+            'IIDrecentBadIP',
+            'IIDcombinedURL'
+        )
 
         # config
         if config is not None:
@@ -49,30 +57,21 @@ class FlexTransformParser(object):
         alerts = []
 
         # TODO: Stix-tlp parser currently doesn't support meta files. Until it does, meta files are for the cfm format
+
         try:
-            if meta['PayloadFormat'] == 'stix-tlp' or meta is None:
-                data = self._transform.transform(
-                    datafile,
-                    meta['PayloadFormat'],
-                    "LQMTools"
-                )
-            else:
-                data = self._transform.transform(
-                    datafile,
-                    meta['PayloadFormat'],
-                    "LQMTools",
-                    source_meta_data=meta
-                )
+            data = self.custom_parser(datafile, meta['PayloadFormat'], 'LQMTools', meta=meta)
 
         except Exception as e:
             data = []
             self._logger.error(
                 "LQMT-FlexTransform-Parser: Error parsing file file='{0}' exception='{1}'".format(datafile, e))
-        for d in data:
-            alert = Alert()
-            alert.setFromDict(d)
-            alerts.append(alert)
-
+        try:
+            for d in data:
+                alert = Alert()
+                alert.setFromDict(d)
+                alerts.append(alert)
+        except Exception as e:
+            self._logger.error("LQMT-FlexTransform-Parser: Problem with parsed data. Exception={0}".format(e))
         return alerts
 
     def parseflextext(self, datafile, meta, destination_file_obj, config_str):
@@ -96,36 +95,44 @@ class FlexTransformParser(object):
 
         # Run FlexText parser
         try:
-            if meta['PayloadFormat'] == 'stix-tlp':
-                self._transform.transform(
-                    datafile,
-                    meta['PayloadFormat'],
-                    "FlexText",
-                    target_file=destination_file_obj
-                )
-
-            else:
-                self._transform.transform(
-                    datafile,
-                    meta['PayloadFormat'],
-                    "FlexText",
-                    target_file=destination_file_obj,
-                    source_meta_data=meta
-                )
+            self.custom_parser(datafile, meta['PayloadFormat'], 'FlexText', target_file=destination_file_obj, meta=meta)
 
         except Exception as e:
             self._logger.error(
                 "LQMT-FlexText-Parser: Error parsing file file='{0}' exception='{1}'".format(datafile, e))
 
-    def custom_parser(self, datafile, payloadformat, targetparser, meta=None):
+    def custom_parser(self, datafile, payloadformat, targetparser, target_file=None, meta=None):
+        """
+        Custom parser wrapper for the flex_transform transform function.
+
+        :return: returns the parsed data when a target_file is not specified
+        """
         output = None
+
+        # check against the list of file types that currently have exceptions for meta data files
+        if meta['PayloadFormat'] in self._exceptions:
+            meta = None
+
         try:
-            output = self._transform.transform(
-                datafile,
-                payloadformat,
-                targetparser,
-                source_meta_data=meta
-            )
+            # if datafile is already an io object, use it
+            if isinstance(datafile, io.StringIO):
+                output = self._transform.transform(
+                    datafile,
+                    payloadformat,
+                    targetparser,
+                    target_file=target_file,
+                    source_meta_data=meta
+                )
+            # else, check if it is a valid file path. If so, open it for parsing.
+            elif os.path.exists(datafile):
+                with open(datafile, 'r') as file:
+                    output = self._transform.transform(
+                        file,
+                        payloadformat,
+                        targetparser,
+                        target_file=target_file,
+                        source_meta_data=meta
+                    )
         except Exception as e:
             self._logger.error("LQMT-Custom-Parser: Error parsing file. file='{0}' exception='{1}'".format(datafile, e))
 

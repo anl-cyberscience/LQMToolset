@@ -1,7 +1,7 @@
 from unittest import TestCase, main
 from lqmt.lqm.parsers.FlexTransform.parser import FlexTransformParser
 from lqmt.lqm.systemconfig import SystemConfig
-from lqmt.test.test_data.sample_inputs import CFM13ALERT, CFM20ALERT
+from lqmt.test.test_data.sample_inputs import CFM13ALERT, CFM20ALERT, STIX
 import io
 import time
 import uuid
@@ -23,6 +23,7 @@ class TestParser(TestCase):
         self.flext.add_parser('Cfm13Alert', 'resources/sampleConfigurations/cfm13.cfg')
         self.flext.add_parser('Cfm20Alert', 'resources/sampleConfigurations/cfm20alert.cfg')
         self.flext.add_parser('stixtlp', 'resources/sampleConfigurations/stix_tlp.cfg')
+        self.flext.add_parser('STIX', 'resources/sampleConfigurations/stix_tlp.cfg')
 
         # Standard timestamp that can be used so all meta files use the same time and for easier validation
         self.time = str(time.time()).split('.')[0]
@@ -30,6 +31,7 @@ class TestParser(TestCase):
         # Parse all the data ahead of the tests
         self.cfm13_parsed_data = self.flext.parse(io.StringIO(CFM13ALERT), self.getMeta("Cfm13Alert"))
         self.cfm20_parsed_data = self.flext.parse(io.StringIO(CFM20ALERT), self.getMeta("Cfm20Alert"))
+        self.stix_parsed_data = self.flext.parse(io.StringIO(STIX), self.getMeta("STIX"))
 
     def getMeta(self, payloadFormat):
         """
@@ -62,10 +64,6 @@ class TestParser(TestCase):
     def test_cfm13_action(self):
         self.assertEquals(self.cfm13_parsed_data[0]._action1, "Block")
 
-    def test_cfm13_detectedTime(self):
-        pass
-        # self.assertEquals(self.cfm13_parsed_data[0]._detectedTime, 1456116353.0)
-
     def test_cfm13_duration(self):
         self.assertEquals(self.cfm13_parsed_data[0]._duration1, "86400")
         self.assertIsNone(self.cfm13_parsed_data[0]._duration2)
@@ -89,9 +87,6 @@ class TestParser(TestCase):
     def test_cfm20_action(self):
         self.assertEquals(self.cfm13_parsed_data[0]._action1, "Block")
 
-    def test_cfm20_detectedTime(self):
-        pass
-
     def test_cfm20_duration(self):
         self.assertEquals(self.cfm20_parsed_data[0]._duration1, "86400")
         self.assertIsNone(self.cfm20_parsed_data[0]._duration2)
@@ -102,9 +97,30 @@ class TestParser(TestCase):
     def test_cfm20_restriction(self):
         self.assertIsNone(self.cfm20_parsed_data[0]._restriction)
 
-    # STIX TLP format tests
-    def test_stix_tlp(self):
-        pass
+    # STIX format tests
+    def test_stix_content_returned(self):
+        self.assertEquals(len(self.stix_parsed_data), 11)
+
+    def test_stix_indicator(self):
+        self.assertEquals(self.stix_parsed_data[1]._indicator, "13.13.13.13")
+        self.assertEquals(self.stix_parsed_data[9]._indicator, "bad.domain.be/poor/path")
+
+    def test_stix_indicator_type(self):
+        self.assertEquals(self.stix_parsed_data[1]._indicatorType, "IPv4Address")
+        self.assertEquals(self.stix_parsed_data[5]._indicatorType, "FilePath")
+
+    def test_stix_action(self):
+        self.assertEquals(self.stix_parsed_data[1]._action1, "Block")
+
+    def test_stix_duration(self):
+        self.assertEquals(self.stix_parsed_data[1]._duration1, "86400")
+        self.assertIsNone(self.stix_parsed_data[1]._duration2)
+
+    def test_stix_sensitivity(self):
+        self.assertEquals(self.stix_parsed_data[1]._sensitivity, "noSensitivity")
+
+    def test_stix_restriction(self):
+        self.assertIsNone(self.stix_parsed_data[1]._restriction)
 
 if __name__ == '__main__':
     main()

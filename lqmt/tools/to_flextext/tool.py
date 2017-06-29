@@ -53,7 +53,7 @@ class ToFlexText(Tool):
             file_dir = os.path.dirname(file)
             if not os.path.exists(file_dir):
                 os.makedirs(file_dir, 0o755, True)
-            self._file_obj = open(file, 'a')
+            self._file_obj = open(file, 'a', newline='')
             self.writeheader()
             return True
         except Exception as e:

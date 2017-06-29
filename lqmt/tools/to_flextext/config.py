@@ -2,6 +2,9 @@ import os
 import logging
 import datetime
 from lqmt.lqm.tool import ToolConfig
+from lqmt.lqm.systemconfig import SystemConfig
+from pkg_resources import get_distribution
+
 
 
 class FlexTextConfig(ToolConfig):
@@ -21,13 +24,33 @@ class FlexTextConfig(ToolConfig):
         self.header_line = False
         self.increment_file = False
         self.flext_config = 'resources/sampleConfigurations/flextext.cfg'
+        self.system_config = SystemConfig()
+        self.system_config = self.system_config.getConfig()
         self.config_dict = {}
         self.config_str = ""
-        self.source_configs = {
-            'Cfm13Alert': 'resources/sampleConfigurations/cfm13.cfg',
-            'Cfm20Alert': 'resources/sampleConfigurations/cfm20alert.cfg',
-            'stix-tlp': 'resources/sampleConfigurations/stix_tlp.cfg'
-        }
+
+        # Configure FlexT parsers based on system configuration
+        self.source_configs = {}
+        for parser_name, parsers in self.system_config['parsers'].items():
+            # Exceptions: LQMTools is a part of every set of parser
+            del (parsers['configs']['LQMTools'])
+
+            # If it's more specific, like MBL, then you need to first check that it exists first during iteration by
+            # checking the parser_name
+            if parser_name == 'mbl':
+                del (parsers['configs']['mbl'])
+
+            # Temporary fix for failing tests. Tests fail due to current FlexT version. Once FlexT version 1.2.1 is
+            # released, this fix can be removed. 
+            ft_version = get_distribution('FlexTransform').version
+            ft_version = tuple([int(x) for x in ft_version.split('.')])
+            if ft_version < (1, 2, 1):
+                if "IID" in parser_name:
+                    del (parsers['configs'][parser_name])
+
+
+            # after the exceptions, update the source_configs with remaining parser configs
+            self.source_configs.update(parsers['configs'])
 
         # FlexText configuration variables
         self.fileParser = self.validation('fileParser', str, default="CSV")

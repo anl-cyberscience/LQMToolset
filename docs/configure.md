@@ -12,6 +12,26 @@ Setting        | Explanation
     `dirs`     | A list of directory paths, whose contents will be scanned for input files to process.
 `post_process` | An action for LQMToolset to perform after processing a file. Allowed values include `delete`, `move`, and `track`. While `delete` is self-explanatory, `move` will mark the input files to be moved after processing to another directory. `track` will mark the input files to be tracked in another text file. `move` is the default value when nothing is set in the user configuration file. 
 
+# Parsers
+LQMT uses special parsers for each type of alert file to get all the data into one common format. By default, the majority of the parsers are enabled, but some parsers are disabled by default. Detailed below are the types of parsers LQMT uses, which are enabled by default, and how you can configure LQMT to disable or enable them. 
+
+Parsers             | Enabled by Default
+:-----------------: | :----------------:
+`Cfm13Alert`        | `True`
+`Cfm20Alert`        | `True`
+`STIX`              | `True`
+`stix-tlp`          | `True`
+`IIDactiveBadHosts` | `False`
+`IIDcombinedUrl`    | `False`
+`IIDdynamicBadHosts`| `False`
+`IIDrecentBadIP`    | `False`
+
+## Configuration 
+    [Parsers]
+        # The enabled and disabled params use lists to track which parsers to override.
+        enabled = [ 'IIDcombinedUrl', 'IIDdynamicBadHosts', 'IIDrecentBadIP' ]
+        disabled = [ 'STIX', 'Cfm20Alert' ]
+
 # Tool Chains
 Tool Chains are built from tool instances, which are created from the available tools in LQMToolset. Chaining these tool instances together creates Tool Chains. To configure a new device, an entry must be added in the configuration file.
 
@@ -253,6 +273,7 @@ Ingest CTI data into your Splunk instance in a keyword value format.
         source      = "lqmt-splunk-tool"
         sourcetype  = "lqmt-test"
         index       = "main"
+        fields      = ['action1', 'indicator', 'reportedTime']
 
 Setting                 | Explanation
 :---------------------: | :-----------
@@ -265,6 +286,8 @@ Setting                 | Explanation
 `source`                | Name of the source you want the data to be identified by. Defaults to `lqmt`. 
 `sourcetype`            | The sourcetype that you want to ingest the data into. 
 `index`                 | The index that you want to ingest data into.
+`fields`                | Fields, identified from the intermediate format, to be extracted. If `fields` are not provided, then it defaults to a value of ['all'], which will automatically extract all supported field types. 
+
 
 #### Device Setup and Configuration 
 LQMT authenticates using Splunk's token-based authentication endpoint. This requires you to provide a username and 
