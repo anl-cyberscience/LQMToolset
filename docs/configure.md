@@ -8,29 +8,9 @@ This setting specifies root source directories and what to do with the files onc
         post_process = "delete"
 
 Setting        | Explanation
--------------: | :----------
-`dirs`     | A list of directory paths, whose contents will be scanned for input files to process.
+:------------: | :----------
+    `dirs`     | A list of directory paths, whose contents will be scanned for input files to process.
 `post_process` | An action for LQMToolset to perform after processing a file. Allowed values include `delete`, `move`, and `track`. While `delete` is self-explanatory, `move` will mark the input files to be moved after processing to another directory. `track` will mark the input files to be tracked in another text file. `move` is the default value when nothing is set in the user configuration file. 
-
-# Parsers
-LQMT uses special parsers for each type of alert file to get all the data into one common format. By default, the majority of the parsers are enabled, but some parsers are disabled by default. Detailed below are the types of parsers LQMT uses, which are enabled by default, and how you can configure LQMT to disable or enable them. 
-
-Parsers             | Enabled by Default
-------------------: | :----------------
-`Cfm13Alert`        | `True`
-`Cfm20Alert`        | `True`
-`STIX`              | `True`
-`stix-tlp`          | `True`
-`IIDactiveBadHosts` | `False`
-`IIDcombinedUrl`    | `False`
-`IIDdynamicBadHosts`| `False`
-`IIDrecentBadIP`    | `False`
-
-## Configuration 
-    [Parsers]
-        # The enabled and disabled params use lists to track which parsers to override.
-        enabled = [ 'IIDcombinedUrl', 'IIDdynamicBadHosts', 'IIDrecentBadIP' ]
-        disabled = [ 'STIX', 'Cfm20Alert' ]
 
 # Tool Chains
 Tool Chains are built from tool instances, which are created from the available tools in LQMToolset. Chaining these tool instances together creates Tool Chains. To configure a new device, an entry must be added in the configuration file.
@@ -40,7 +20,7 @@ Tool Chains are built from tool instances, which are created from the available 
         chain = [ "cef-mapping", "arcsight-1" ]
 
 Setting | Explanation
-------: | :----------
+:-----: | :----------
 `name`  | A unique name identifying the Tool Chain.
 `chain` | A list of tools to chain together to perform processing on each record.
 `active`| Enables this Tool Chain if set to `true`. Otherwise, it will disable this Tool Chain if set to `false`. `active` is optional, and will default to `true` if not specified.
@@ -67,7 +47,7 @@ The Palo Alto tool places or removes blocks on Palo Alto Networks firewall devic
         unprocessed_file = "unprocessed/pa-ames.csv"
 
 Setting              | Explanation
--------------------: | :----------
+:------------------: | :----------
 `name`               | A unique name identifying this device.
 `api_key`            | The API key retrieved from the Palo Alto device for remote access. Note: You can either use an API key, or a username/password. An API key is recommended.
 `api_username`       | A username with with API access/privileges to the Palo Alto device. Note: You can either use an API key, or a username/password. An API key is recommended.
@@ -147,7 +127,7 @@ Place or remove blocks on Checkpoint devices. The connection to Checkpoint devic
         
 
 Setting                 | Explanation
-----------------------: | :----------
+:---------------------: | :----------
 `name`                  | A unique name identifying this tool instance. 
 `hostname`              | The Checkpoint device's hostname or IP address.
 `port`                  | The port number through which to connect via SSH.
@@ -182,7 +162,7 @@ The ArcSight tool places or removes blocks on ArcSight devices.
         actions_to_process = [ "All" ]
 
 Setting              | Explanation
--------------------: | :----------
+:------------------: | :----------
 `name`               | A unique name identifying this tool instance.
 `host`               | The hostname or IP address of the ArcSight device.
 `port`               | The port number on which the ArcSight device is listening.
@@ -199,7 +179,7 @@ The CEF tool converts data from the intermediate format to the CEF format.
         name = "cef-mapping"
 
 Setting | Explanation
-------: | :----------
+:-----: | :----------
 `name`  | A unique name identifying this tool instance.
 
 ### Syslog
@@ -220,7 +200,7 @@ Example output in syslog:
     Aug 26 14:24:05 WY rsyslogd: Message from LQMT - indicatorType="IPv4Address" indicator="192.168.1.5" action1="Block"
 
 Setting         | Explanation
---------------: | :-----------
+:-------------: | :-----------
 `name`          | A unique name identifying this tool instance.
 `host`          | The hostname or IP address of the remote syslog server.
 `port`          | The port number the Syslog server is listening on. Note: Syslog defaults to 514, so if left blank LQMT will also default to 514 for communication. 
@@ -246,7 +226,7 @@ FlexText is a tool used to output parsed alert data in a user-defined, character
         incrementFile       = true
 
 Setting               | Explanation
---------------------: | :-----------
+:-------------------: | :-----------
 `name`                | A unique name identifying this tool instance.
 `fileParser`          | Select parser type. Currently only supports and defaults to `CSV`.
 `fields`              | Fields, identified from the intermediate format, to be extracted. The order of the fields here determines the order of the output.
@@ -273,10 +253,9 @@ Ingest CTI data into your Splunk instance in a keyword value format.
         source      = "lqmt-splunk-tool"
         sourcetype  = "lqmt-test"
         index       = "main"
-        fields      = ['action1', 'indicator', 'reportedTime']
 
 Setting                 | Explanation
-----------------------: | :-----------
+:---------------------: | :-----------
 `name`                  | A unique name identifying this tool instance. 
 `host`                  | Host address of your Splunk instance.
 `port`                  | Port used to communicate with your Splunk instances REST API interface. Defaults to `8089`.
@@ -286,8 +265,6 @@ Setting                 | Explanation
 `source`                | Name of the source you want the data to be identified by. Defaults to `lqmt`. 
 `sourcetype`            | The sourcetype that you want to ingest the data into. 
 `index`                 | The index that you want to ingest data into.
-`fields`                | Fields, identified from the intermediate format, to be extracted. If `fields` are not provided, then it defaults to a value of ['all'], which will automatically extract all supported field types. 
-
 
 #### Device Setup and Configuration 
 LQMT authenticates using Splunk's token-based authentication endpoint. This requires you to provide a username and 
@@ -346,7 +323,7 @@ Convert CTI data into Bro's [Intelligence Framework](https://www.bro.org/sphinx/
 
 
 Setting                 | Explanation
-----------------------: | :-----------
+:---------------------: | :-----------
 `name`                  | A unique name identifying this tool instance. 
 `header_fields`         | Specify the fields you want converted and included in the output. Valid fields are extrated from the [Intermediate Data Format](#intermediate-data-format). By default, LQMT will extract all valid fields from the intermediate data foramt. 
 `file`                  | Path and name of where you want the file output(Ex: /home/bro/lqmt-bro-feed.txt). By default, LQMT will output the file in the directory where LQMT as a file named `lqmt-bro-feed.txt`.
@@ -360,7 +337,7 @@ Setting                 | Explanation
         debug = true
 
 Setting       | Explanation
-------------: | :----------
+:-----------: | :----------
 `logfilebase` |The path and filename prefix to the LQMToolset log file. Multiple log files will be created based on the filename prefix specified in this setting. For example, if `LogFileBase` is "/var/log/lqmt", "/var/log/lqmt.err.log" and "/var/log/lqmt.info.log" will be created.
 `debug`       | Enable debug-level logging, which will create an additional log file, *.debug.log*. `Debug` is optional, and it accepts either `true` or `false`.
 
@@ -372,7 +349,7 @@ LQMToolset allows indicators to be whitelisted. When you define a path to a text
         dbfile = "/path/to/whitelist/database.db"
 
 Setting     | Explanation
-----------: | :----------
+:---------: | :----------
 `whitelist` | The full path to the text file containing whitelisted indicators, adhering to the whitelist format below.
 `dbfile`    | The location of the SQLite database that holds the whitelist information.
 
@@ -422,7 +399,7 @@ The following sections specify the format of the whitelist file mentioned above.
 The intermediate data format is a subset/simplification of the complete threat data that can be directly used by a variety of systems. 
 
 Field Name                      | Description
-------------------------------: | :-----------
+:-----------------------------: | :-----------
 `dataItemID`                    | UUID for data item
 `fieldID`                       | UUID for file
 `detectedTime`                  | UTC epoch of time in the alert itself (if present, filled with reportedTime)
