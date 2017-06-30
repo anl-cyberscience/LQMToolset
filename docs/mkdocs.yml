@@ -1,0 +1,7 @@
+site_name: LQMToolset
+pages:
+    - index.md
+    - install.md
+    - configure.md
+    - use.md
+    - contribute.md
