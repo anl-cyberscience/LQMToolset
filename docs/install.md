@@ -32,9 +32,14 @@ Use a Python virtual environment if you have other Python projects, whose depend
     virtualenv -p `which python3` lqmt
     source lqmt/bin/activate
 
-# LQMToolset
+# LQMT Installation
 
     pip3 install lqmt
     lqmt -h
 
 If you successfully ran lqmt with the help command, you can move on to configuration. 
+
+# LQMT Upgrade
+If you already have LQMT installed and wish to upgrade to a newer version, try the following command: 
+
+    pip3 install lqmt --upgrade

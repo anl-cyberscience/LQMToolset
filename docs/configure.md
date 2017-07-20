@@ -9,7 +9,7 @@ This setting specifies root source directories and what to do with the files onc
 
 Setting        | Explanation
 -------------: | :----------
-`dirs`     | A list of directory paths, whose contents will be scanned for input files to process.
+`dirs`         | A list of directory paths, whose contents will be scanned for input files to process.
 `post_process` | An action for LQMToolset to perform after processing a file. Allowed values include `delete`, `move`, and `track`. While `delete` is self-explanatory, `move` will mark the input files to be moved after processing to another directory. `track` will mark the input files to be tracked in another text file. `move` is the default value when nothing is set in the user configuration file. 
 
 # Parsers
@@ -457,3 +457,6 @@ Field Name                      | Description
 `relationType`                  | enum (supersedes, extends, superseded by, extended by)
 `comment`                       | A string that represents a comment that was included with the alert.
 `fileHasMore`                   | Boolean: false (default) = data has been translated, true = More details on the data item are present in file. 
+
+# Actions 
+The most common action seen for the fields `action1`, and `action2` is `block`, but occasionaly a `revoke` action will be put out for alerts that a no longer needed or were sent out by mistake. `revoke` actions are taken care of automatically with the supported firewall tools, but you should take special note of them when using a custom outputs like FlexText. Not all data processed should be assumed to be malicious or worthy of a block action, and the `action` fields are meant to be better help determine what actions should be taken on data. 
