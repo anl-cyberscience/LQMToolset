@@ -56,7 +56,7 @@ class LQMLogging(object):
                 logger.setLevel(logging.DEBUG)
 
             if 'dailyrotation' in config and config['dailyrotation'] is True:
-                rotation = time.strftime("_%Y-%m-%d")
+                rotation = time.strftime("_%d-%m-%Y")
             else:
                 rotation = ""
 
