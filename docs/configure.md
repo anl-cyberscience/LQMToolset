@@ -361,12 +361,13 @@ Setting                 | Explanation
     [Logging]
         logfilebase = "/var/log/lqmt"
         debug = true
+        dailyrotation = true
 
 Setting             | Explanation
 ------------------: | :----------
 `logfilebase`       |The path and filename prefix to the LQMToolset log file. Multiple log files will be created based on the filename prefix specified in this setting. For example, if `LogFileBase` is "/var/log/lqmt", "/var/log/lqmt.err.log" and "/var/log/lqmt.info.log" will be created.
 `debug`             | Enable debug-level logging, which will create an additional log file, *.debug.log*. `Debug` is optional, and it accepts either `true` or `false`.
-`daily_rotation`    | Enable daily log rotation. When enabled, log file names will be appended with the current date (ex: lqmt_09-01-2017.debug). This makes it easier to parse logs and allows users to create rotation processes.
+`dailyrotation`    | Enable daily log rotation. When enabled, log file names will be appended with the current date (ex: lqmt_09-01-2017.debug). This makes it easier to parse logs and allows users to create rotation processes.
 
 # Whitelists
 LQMToolset allows indicators to be whitelisted. When you define a path to a text file containing the whitelisted indicators, LQMToolset will check the file for modifications and then update the internal database.
