@@ -1,5 +1,6 @@
 import logging
 import os.path
+import time
 from logging import FileHandler, Formatter
 from lqmt.lqm.exceptions import ConfigurationError
 
@@ -18,8 +19,8 @@ class LQMLogging(object):
     @staticmethod
     def lowerconfig(config):
         """
-        Method that makes all keys in the config dict lowercase. Prevents errors where users supply old config style for
-        logging.
+        Method that makes all keys in the config dict lowercase. Prevents errors where users supply old 
+        config style forlogging.
         :param config: Dict containing configuration data
         :return: Returns config dict with all of it's keys in lowercase.
         """
@@ -54,26 +55,31 @@ class LQMLogging(object):
             else:
                 logger.setLevel(logging.DEBUG)
 
+            if 'dailyrotation' in config and config['dailyrotation'] is True:
+                rotation = time.strftime("_%d-%m-%Y")
+            else:
+                rotation = ""
+
             if 'logfilebase' in config:
                 lfb = config['logfilebase']
 
                 ldir = os.path.dirname(lfb)
-                if (not os.path.exists(ldir)):
+                if not os.path.exists(ldir):
                     os.makedirs(ldir, 0o755, True)
 
                 # create handlers/files for error, info, and debug (if necessary)
-                errHandler = FileHandler("{0}.err.log".format(lfb))
+                errHandler = FileHandler("{0}{1}.err.log".format(lfb, rotation))
                 errHandler.setLevel(logging.ERROR)
                 errHandler.setFormatter(formatter)
                 rootLogger.addHandler(errHandler)
 
-                infoHandler = FileHandler("{0}.info.log".format(lfb))
+                infoHandler = FileHandler("{0}{1}.info.log".format(lfb, rotation))
                 infoHandler.setLevel(logging.INFO)
                 infoHandler.setFormatter(formatter)
                 rootLogger.addHandler(infoHandler)
 
                 if LQMLogging._debug:
-                    debugHandler = FileHandler("{0}.debug.log".format(lfb))
+                    debugHandler = FileHandler("{0}{1}.debug.log".format(lfb, rotation))
                     debugHandler.setLevel(logging.DEBUG)
                     debugHandler.setFormatter(formatter)
                     rootLogger.addHandler(debugHandler)
@@ -81,7 +87,7 @@ class LQMLogging(object):
                 # The ft handler creates a separate logger for FlexTransform errors
                 # There were some files that caused a large number of FlexTransform errors and polluted the regular log
                 # files. If it is determined that those issues are gone, then this can be removed
-                ftHandler = FileHandler("{0}.ft.log".format(lfb))
+                ftHandler = FileHandler("{0}{1}.ft.log".format(lfb, rotation))
                 ftHandler.setFormatter(formatter)
                 logger = logging.getLogger('FlexTransform')
                 logger.addHandler(ftHandler)

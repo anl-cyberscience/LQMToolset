@@ -6,11 +6,14 @@ This setting specifies root source directories and what to do with the files onc
     [[Source.Directory]]
         dirs = ["/tmp", "/var/spool"]
         post_process = "delete"
+        post_process_location = "/home/lqmt/post_process/"
 
 Setting        | Explanation
--------------: | :----------
-`dirs`         | A list of directory paths, whose contents will be scanned for input files to process.
-`post_process` | An action for LQMToolset to perform after processing a file. Allowed values include `delete`, `move`, and `track`. While `delete` is self-explanatory, `move` will mark the input files to be moved after processing to another directory. `track` will mark the input files to be tracked in another text file. `move` is the default value when nothing is set in the user configuration file. 
+----------------------: | :----------
+`dirs`                  | A list of directory paths, whose contents will be scanned for input files to process.
+`post_process`          | An action for LQMToolset to perform after processing a file. Allowed values include `delete`, `move`, and `track`. While `delete` is self-explanatory, `move` will mark the input files to be moved after processing to another directory. `track` will mark the input files to be tracked in another text file. `move` is the default value when nothing is set in the user configuration file. 
+`post_process_location` | Used in conjunction with the `track` post process option. Used to specify a custom location for where your track file will be placed. 
+
 
 # Parsers
 LQMT uses special parsers for each type of alert file to get all the data into one common format. By default, the majority of the parsers are enabled, but some parsers are disabled by default. Detailed below are the types of parsers LQMT uses, which are enabled by default, and how you can configure LQMT to disable or enable them. 
@@ -358,11 +361,13 @@ Setting                 | Explanation
     [Logging]
         logfilebase = "/var/log/lqmt"
         debug = true
+        dailyrotation = true
 
-Setting       | Explanation
-------------: | :----------
-`logfilebase` |The path and filename prefix to the LQMToolset log file. Multiple log files will be created based on the filename prefix specified in this setting. For example, if `LogFileBase` is "/var/log/lqmt", "/var/log/lqmt.err.log" and "/var/log/lqmt.info.log" will be created.
-`debug`       | Enable debug-level logging, which will create an additional log file, *.debug.log*. `Debug` is optional, and it accepts either `true` or `false`.
+Setting             | Explanation
+------------------: | :----------
+`logfilebase`       |The path and filename prefix to the LQMToolset log file. Multiple log files will be created based on the filename prefix specified in this setting. For example, if `LogFileBase` is "/var/log/lqmt", "/var/log/lqmt.err.log" and "/var/log/lqmt.info.log" will be created.
+`debug`             | Enable debug-level logging, which will create an additional log file, *.debug.log*. `Debug` is optional, and it accepts either `true` or `false`.
+`dailyrotation`    | Enable daily log rotation. When enabled, log file names will be appended with the current date (ex: lqmt_09-01-2017.debug). This makes it easier to parse logs and allows users to create rotation processes.
 
 # Whitelists
 LQMToolset allows indicators to be whitelisted. When you define a path to a text file containing the whitelisted indicators, LQMToolset will check the file for modifications and then update the internal database.
