@@ -57,9 +57,7 @@ class LQMLogging(object):
 
             if 'dailyrotation' in config and config['dailyrotation'] is True:
                 rotation = time.strftime("_%Y-%m-%d")
-                print("Rotation on: {0}".format(rotation))
             else:
-                print("Rotation off:")
                 rotation = ""
 
             if 'logfilebase' in config:
