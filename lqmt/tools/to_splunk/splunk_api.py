@@ -142,8 +142,8 @@ class ApiHandler:
             self.sourcetype,
             self.index
         )
-
-        r = self.requests.post(url, data=message, headers=self.headers, verify=self.cert_check)
+        
+        r = self.requests.post(url, data=message.encode('utf-8'), headers=self.headers, verify=self.cert_check)
 
         # If parsed successfully, tally and move on. Otherwise raise status
         if r.ok:
