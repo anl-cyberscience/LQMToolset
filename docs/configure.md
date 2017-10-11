@@ -29,11 +29,16 @@ Parsers             | Enabled by Default
 `IIDdynamicBadHosts`| `False`
 `IIDrecentBadIP`    | `False`
 
+Setting | Explanation
+--------: | :-----------
+`enable`  | A list of parsers to enable.
+`disable` | A list of parsers to disable.
+
 ## Configuration 
     [Parsers]
         # The enabled and disabled params use lists to track which parsers to override.
-        enabled = [ 'IIDcombinedUrl', 'IIDdynamicBadHosts', 'IIDrecentBadIP' ]
-        disabled = [ 'STIX', 'Cfm20Alert' ]
+        enable = [ 'IIDcombinedUrl', 'IIDdynamicBadHosts', 'IIDrecentBadIP' ]
+        disable = [ 'STIX', 'Cfm20Alert' ]
 
 # Tool Chains
 Tool Chains are built from tool instances, which are created from the available tools in LQMToolset. Chaining these tool instances together creates Tool Chains. To configure a new device, an entry must be added in the configuration file.
