@@ -5,6 +5,41 @@ from lqmt.lqm.unprocessed import UnprocessedAlertHandler
 from lqmt.lqm.exceptions import ConfigurationError
 
 
+class PullTool:
+    def __init__(self, config):
+
+        self._config = config  # the configuration object
+        self.toolName = ""  # The name of the tool defined by the tools class
+
+    def getConfig(self):
+        return self._config
+
+    def isEnabled(self):
+        return self._config.isEnabled()
+
+    def disable(self):
+        """Disable the tool"""
+        self._config.disable()
+
+    def getName(self):
+        nm = self._config.getName()
+        if nm:
+            return nm
+        else:
+            return "UNKNOWN-{0}".format(type(self).__name__)
+
+    def getActionsToProcess(self):
+        return None
+
+
+class PullToolConfig:
+    """"Base class for all to tool configs"""
+
+    def __init__(self, configData):
+        self._logger = logging.getLogger("LQMT.PullToolConfig")
+        self.configData = configData
+
+
 class ToolConfig:
     """Base class for all tool configs"""
 
@@ -110,7 +145,7 @@ class Tool:
 
     def getName(self):
         nm = self._config.getName()
-        if (nm):
+        if nm:
             return nm
         else:
             return "UNKNOWN-{0}".format(type(self).__name__)
@@ -151,7 +186,8 @@ class Tool:
         """called after commit to perform any cleanup necessary."""
         NotImplementedError
 
-    def is_valid_ipv6(self, ip):
+    @staticmethod
+    def is_valid_ipv6(ip):
         """Validates IPv6 addresses."""
         pattern = re.compile(r"""
             ^
@@ -181,7 +217,8 @@ class Tool:
         """, re.VERBOSE | re.IGNORECASE | re.DOTALL)
         return pattern.match(ip) is not None
 
-    def is_valid_ipv4(self, ip):
+    @staticmethod
+    def is_valid_ipv4(ip):
         """Validates IPv4 addresses.
         """
         pattern = re.compile(r"""
@@ -227,7 +264,7 @@ class ToolChain:
     def __init__(self, tools, name, enabled):
         self._tools = tools
         self._name = name
-        self._enabled = enabled
+        self._enabled = True
         self._logger = logging.getLogger("LQMT.ToolChain")
         self._actionsToProcess = None
         for tool in self._tools:
@@ -239,7 +276,8 @@ class ToolChain:
         self._alertsNotProcessed = 0
 
     def isEnabled(self):
-        return self._enabled
+        if self._enabled and self._tools:
+            return self._enabled
 
     def initialize(self):
         """called by the controller at the beginning of processing to allow the tool chain to initialize itself."""
@@ -288,6 +326,14 @@ class ToolChain:
                             data.getIPToBlock()))
             else:
                 self._alertsNotProcessed += 1
+
+    def pull_process(self):
+        if self.isEnabled():
+            for tool in self._tools:
+                tool.initialize()
+                tool.process(None)
+                tool.commit()
+                tool.cleanup()
 
     def commit(self):
         """Called at the end of processing to allow the tool chain to perform any finalization"""

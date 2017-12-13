@@ -41,7 +41,7 @@ class LQMToolConfig(object):
         self._logger = logging.getLogger("LQMT.Config")
         self._sources = []
         self._parsers = {}
-        self._toolChains = []
+        self._toolChains = {'pull': [], 'push': []}
         self._whitelist = None
         self._loggingCfg = None
         self._toolsList = []
@@ -55,8 +55,10 @@ class LQMToolConfig(object):
         # process config files
         toolClasses = self._processSystemConfig()
         self._processUserConfig(toolClasses)
-        if not self._sources:
+        if not self._sources and not self._toolChains['pull']:
             raise ConfigurationError("No sources specified")
+        else:
+            self._sources = None
 
     def _loadSystemConfig(self):
         """Load the System configuration file"""
@@ -77,12 +79,6 @@ class LQMToolConfig(object):
         Initializes parsers using configuration details provided by the system configuration file
         :param parsers: Parser information passed from the system configuration file
         """
-        if 'Parsers' in self._userConfig:
-            parser_overrides = self._userConfig['Parsers']
-        else:
-            parser_overrides = None
-
-        parsers = self._parser_override_check(parsers, parser_overrides)
 
         # path info is loaded from the config files
         for key, parserinfo in parsers.items():
@@ -92,50 +88,15 @@ class LQMToolConfig(object):
 
             # if particular configs were defined for the parser, pass them to FlexT parser and append to self._parsers
             if parserinfo['configs']:
-                # Check if a parser is enabled by default. Otherwise, check if user has enabled it. If not, it will not
-                # be configured.
-                if parserinfo['default_enabled']:
-                    # Support for multiple format types that use the same configuration files. Useful for formats,
-                    # such as stix, that can be identified in a few ways, but have similar structures.
-                    if type(parserinfo['format']) is list:
-                        for format_type in parserinfo['format']:
-                            self._parsers[format_type] = parserClass(parserinfo['configs'])
-                    else:
-                        self._parsers[parserinfo['format']] = parserClass(parserinfo['configs'])
+                if type(parserinfo['format']) is list:
+                    for p_format in parserinfo['format']:
+                        self._parsers[p_format] = parserClass(parserinfo['configs'])
+                else:
+                    self._parsers[parserinfo['format']] = parserClass(parserinfo['configs'])
             else:
                 self._parsers[parserinfo['format']] = parserClass()
 
         self._logger.debug("Parsers loaded: %s" % ', '.join(self._parsers.keys()))
-
-    def _parser_override_check(self, parsers, parser_overrides):
-        """
-        Function used to enable or disable parsers based on user configuration file.
-        :param parsers: Parser details from system_config
-        :param parser_overrides: Parser overrides provided from the user_config
-        :return: Dict of parser details.
-        """
-        if parser_overrides:
-            for key, parserinfo in parsers.items():
-                if type(parserinfo['format']) is list:
-                    for format_type in parserinfo['format']:
-                        parserinfo['default_enabled'] = self._parser_override(format_type, parser_overrides,
-                                                                              parserinfo['default_enabled'])
-                else:
-                    parserinfo['default_enabled'] = self._parser_override(parserinfo['format'], parser_overrides,
-                                                                          parserinfo['default_enabled'])
-
-            return parsers
-        else:
-            return parsers
-
-    @staticmethod
-    def _parser_override(format_type, parser_overrides, default):
-        if 'disable' in parser_overrides and format_type in parser_overrides['disable']:
-            return False
-        elif 'enable' in parser_overrides and format_type in parser_overrides['enable']:
-            return True
-        else:
-            return default
 
     def _initToolConfig(self, config):
         """
@@ -143,11 +104,16 @@ class LQMToolConfig(object):
         be created later.
         """
 
-        # Users user configuration to only load tools the user specifies. The CSV tool is appended at the end because
+        # Use user configuration to only load tools the user specifies. The CSV tool is appended at the end because
         # it is needed later regardless of what tools are loaded.
         tooldefs = config['tools']
-        usertooldefs = self._userConfig['Tools'].keys()
-        usertooldefs = list(usertooldefs)
+        usertooldefs = []
+
+        for key, config in self._userConfig['Tools'].items():
+            usertooldefs.append(key)
+
+        # usertooldefs = self._userConfig['Tools'].keys()
+        # usertooldefs = list(usertooldefs)
         usertooldefs.append('CSV')
 
         # uses dictionary comprehension to filter out only user specified tools from the tooldefs dictionary
@@ -168,7 +134,7 @@ class LQMToolConfig(object):
             cfgClass = getattr(mod, toolinfo['config_class'])
             toolClasses[key] = ToolInfo(toolClass, cfgClass)
 
-        self._logger.debug("Tools loaded: %s" % ', '.join(tooldefs))
+        self._logger.debug("Loading the following tools: %s" % ', '.join(tooldefs))
         return toolClasses
 
     def _loadUserConfig(self, configFile):
@@ -202,15 +168,15 @@ class LQMToolConfig(object):
             self._whitelist = MasterWhitelist(configData=self._userConfig['Whitelist'])
 
         # create any tools and tool chains in the top-level user config file
-        globalTools = self._createTools(self._userConfig, toolClasses)
-        self._createToolChains(self._userConfig, globalTools)
+        tools = self._createTools(self._userConfig, toolClasses)
+        self._createToolChains(self._userConfig, tools)
 
     def _createTools(self, config, toolClasses):
         if 'Tools' not in config:
             return
         tools = config['Tools']
 
-        theseTools = {}
+        theseTools = {'pull': {}, 'push': {}}
         for key in tools:
             if key in toolClasses:
                 toolInfo = toolClasses[key]
@@ -218,17 +184,33 @@ class LQMToolConfig(object):
                 for cfgData in tools[key]:
                     tool = toolInfo.create(cfgData, toolClasses['CSV'], self._config['UnprocessedCSV'])
                     tool.toolName = key
-                    theseTools[tool.getName()] = tool
+                    theseTools[self.get_tool_type(key)][tool.getName()] = tool
         return theseTools
+
+    @staticmethod
+    def get_tool_type(toolname):
+        tool_type = 'push'
+        if 'pull' in toolname.lower():
+            tool_type = 'pull'
+
+        return tool_type
 
     def _createToolChains(self, config, localTools, globalTools=None):
         if 'ToolChains' not in config:
             return
 
         chains = config['ToolChains']
+
         for chainCfg in chains:
             if 'active' in chainCfg and chainCfg['active'] is True:
-                self._toolChains.append(self._createToolChain(chainCfg, localTools, globalTools))
+
+                if localTools['push']:
+                    self._toolChains['push'].append(
+                        self._createToolChain(chainCfg, localTools['push'], globalTools))
+
+                if localTools['pull']:
+                    self._toolChains['pull'].append(
+                        self._createToolChain(chainCfg, localTools['pull'], globalTools))
             else:
                 self._logger.info("Toolchain {0} is currently set as inactive in the user configuration. "
                                   "Tools in this toolchain will not run.".format(chainCfg['name']))
@@ -236,17 +218,21 @@ class LQMToolConfig(object):
     def _createToolChain(self, chainCfg, localTools, globalTools):
         chain = []
         allEnabled = True
+
         for toolName in chainCfg['chain']:
+            tool = None
             if toolName in localTools:
                 tool = localTools[toolName]
             elif globalTools is not None and toolName in globalTools:
                 tool = globalTools[toolName]
             else:
-                raise ConfigurationError("Named tool not found: " + toolName)
-            chain.append(tool)
-            allEnabled = allEnabled and tool.isEnabled()
-            if not tool.isEnabled():
-                self._logger.error("Tool chain {0} is disabled due to tool {1} being disabled".format(chainCfg['name'],
+                pass
+            # raise ConfigurationError("Named tool not found: " + toolName)
+            if tool is not None:
+                chain.append(tool)
+                allEnabled = allEnabled and tool.isEnabled()
+                if not tool.isEnabled():
+                    self._logger.error("Tool chain {0} is disabled due to tool {1} being disabled".format(chainCfg['name'],
                                                                                                       tool.getName()))
 
         chain = ToolChain(chain, chainCfg['name'], enabled=allEnabled)

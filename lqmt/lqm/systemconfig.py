@@ -32,6 +32,12 @@ class SystemConfig:
                 },
                 'MBL': {
                     'module': 'to_mbl', 'config_class': 'MBLConfig', 'tool_class': 'ToMBL'
+                },
+                'From_MBL': {
+                    'module': 'from_mbl', 'config_class': 'FromMBLConfig', 'tool_class': 'FromMBL'
+                },
+                'Pull_Test': {
+                    'module': 'pull_test', 'config_class': 'PullTestConfig', 'tool_class': 'PullTest'
                 }
             },
             'UnprocessedCSV': {

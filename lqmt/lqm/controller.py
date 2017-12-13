@@ -27,14 +27,26 @@ class LQMToolController:
         Main function of the controller. Runs through the various methods used to gather alert files, parse them,
         and send the parsed alert data to the various tools.
         """
+        self.pull()
+        self.push()
 
+    def push(self):
+        """
+        Function for initializing and running all the user defined "from" tools.
+        """
         alert_files = self._initialize()
-
-        for data, unparsed_metadata in alert_files:
-            metadata = self._parsemeta(unparsed_metadata)
-            if metadata:
-                self._parse(data, metadata)
+        if alert_files:
+            for data, unparsed_metadata in alert_files:
+                metadata = self._parsemeta(unparsed_metadata)
+                if metadata:
+                    self._parse(data, metadata)
         self._chainCleanup()
+
+    def pull(self):
+        # TODO: All tool functions contained to this function. Should give pull tools their own chain type and break
+        # out the other functions out to the chain class. Similar to how it's done for push tools now.
+        for chain in self.toolChains['pull']:
+            chain.pull_process()
 
     def _parsemeta(self, metafile):
         """
@@ -42,7 +54,6 @@ class LQMToolController:
         :param metafile: Path to metadata file
         :return: Returns parsed metadata if the file path is valid. If not, then it returns None
         """
-
         try:
             f = open(metafile, 'r')
             meta = ast.literal_eval(f.read())
@@ -63,20 +74,24 @@ class LQMToolController:
 
         filesToProcess = None
 
-        for chain in self.toolChains:
-            if chain.isEnabled():
+        for chain in self.toolChains['push']:
+            if chain._enabled:
                 chain.initialize()
+            else:
+                self._logger.error("Toolchain '{0}' is disabled due to user configuration, or because no tools were "
+                                   "correctly configured for the toolchain.".format(chain.getName()))
             chain.updateEnabled()
 
-        for src in self._config.getSources():
-            self.src = src
-            filesToProcess = src.getFilesToProcess()
+        if self._config.getSources():
+            for src in self._config.getSources():
+                self.src = src
+                filesToProcess = src.getFilesToProcess()
 
         return filesToProcess
 
     def _parse(self, data, metadata):
         """
-        Defines all parses needed based on the metadata given. Once defined, the parsers are used to parse alert data
+        Defines all parsers needed based on the metadata given. Once defined, the parsers are used to parse alert data
         and pass the data to tools.
         :param data: Alert data
         :param metadata: Alert metadata
@@ -89,7 +104,7 @@ class LQMToolController:
                 # tell each chain there is a new file
                 alerts = parser.parse(data, metadata)
                 if alerts:
-                    for chain in self.toolChains:
+                    for chain in self.toolChains['push']:
                         if chain.isEnabled():
                             chain.fileBegin()
                             self._process_alerts(alerts, chain, data, metadata)
@@ -123,7 +138,7 @@ class LQMToolController:
         Cleans up tools that are done processing and logs statistics on amount of processed alerts.
         """
 
-        for chain in self.toolChains:
+        for chain in self.toolChains['push']:
             if chain.isEnabled():
                 chain.commit()
                 chain.cleanup()

@@ -186,7 +186,8 @@ class Alert(object):
                 return True
         return False
 
-    def _getIndicatorType(self, indType):
+    @staticmethod
+    def _getIndicatorType(indType):
         """Return the enumerated indicator type of the indType"""
         if indType == "IPv4Address":
             return IndicatorTypes.ipv4
@@ -198,10 +199,6 @@ class Alert(object):
             return IndicatorTypes.host
         elif indType == "URL":
             return IndicatorTypes.url
-        elif indType == "FilePath":
-            return IndicatorTypes.filepath
-        elif indType == "FileHash":
-            return IndicatorTypes.filehash
 
     def setDataItemID(self, dataItemID):
         self._dataItemID = dataItemID
@@ -458,15 +455,10 @@ class Alert(object):
     def getFileHasMore(self):
         return self._fileHasMore
 
-    def getFields(self, fieldNames, dictionary=False):
+    def getFields(self, fieldNames):
         fields = []
         for field in fieldNames:
             fields.append(Alert._alertFields.getStringRepresentation(field, self._getField(field)))
-
-        # uses zip functions to convert the two lists into a dictionary. fieldNames used as keys, fields as values
-        if dictionary:
-            fields = dict(zip(fieldNames, fields))
-
         return fields
 
     def _getField(self, field):

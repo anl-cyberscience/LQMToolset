@@ -31,3 +31,4 @@ dist/
 
 #DB files
 *.db
+.noseids
