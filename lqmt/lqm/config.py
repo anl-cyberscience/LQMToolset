@@ -57,8 +57,6 @@ class LQMToolConfig(object):
         self._processUserConfig(toolClasses)
         if not self._sources and not self._toolChains['pull']:
             raise ConfigurationError("No sources specified")
-        else:
-            self._sources = None
 
     def _loadSystemConfig(self):
         """Load the System configuration file"""
