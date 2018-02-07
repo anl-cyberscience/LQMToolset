@@ -1,4 +1,8 @@
 # CHANGELOG
+## [TBD] - TBD
+- Added the ability to filter files prior to passing to the parser based on the meta-data file's contents.  The parameters that are checked are SendingSite, PayloadType, PayloadFormat, DataSensitivity, SharingRestrictions, ReconPolicy, and SentTimestamp.
+- These configuration filter parameters are not required in the file and if not present are ignored when checking the file against filters.
+
 ## [3.4.1] - 2017-09-26
 - Added a configuration for log rotation. When enabled, log files will be appended with the current date when written. This feature was requested to make it easier to enable processes that will rotate out log files after a certain time, make the files easier to parse, and to break up the logs so that they do not grow to be so large. Looking into making the format of the rotation more configurable and possibly a feature for LQMT to do the actual file rotation. 
 - Added this changelog. All changes were previously detailed in git commit messages. This practice will continue, but this file will make it easier to scan for changes and will be more detailed about the actual changes. 

@@ -9,6 +9,7 @@ import toml
 from lqmt.lqm.exceptions import ConfigurationError
 from lqmt.lqm.logging import LQMLogging
 from lqmt.lqm.sourcedir import DirectorySource
+from lqmt.lqm.sourcefilter import SourceFilters
 from lqmt.lqm.systemconfig import SystemConfig
 from lqmt.lqm.tool import ToolChain
 from lqmt.whitelist.master import MasterWhitelist
@@ -46,6 +47,7 @@ class LQMToolConfig(object):
         self._loggingCfg = None
         self._toolsList = []
         self._userConfig = {}
+        self._pre_filters = []
 
         # load config files
         self._loadSystemConfig()
@@ -248,6 +250,8 @@ class LQMToolConfig(object):
             for cfg in srcCfgs[key]:
                 if key == "Directory":
                     self._sources.append(DirectorySource(cfg))
+                elif key == "Filters":
+                    self._pre_filters = SourceFilters(cfg)
 
     def getSources(self):
         return self._sources
@@ -268,3 +272,6 @@ class LQMToolConfig(object):
         :return: Returns a list of tools that are currently active in the toolchain.
         """
         return self._toolsList
+
+    def getSourceFilters(self):
+        return self._pre_filters

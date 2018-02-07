@@ -39,7 +39,12 @@ class LQMToolController:
             for data, unparsed_metadata in alert_files:
                 metadata = self._parsemeta(unparsed_metadata)
                 if metadata:
-                    self._parse(data, metadata)
+                    filters = self._config.getSourceFilters()
+                    if filters:
+                        if filters.checkAllFilters(metadata):
+                            self._parse(data, metadata)
+                    else:
+                        self._parse(data, metadata)
         self._chainCleanup()
 
     def pull(self):

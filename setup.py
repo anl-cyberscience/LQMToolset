@@ -49,7 +49,8 @@ setup(
         'pan-python',
         'toml',
         'FlexTransform>=1.2.1',
-        'requests'
+        'requests',
+        'arrow'
     ],
     entry_points={
         'console_scripts': [

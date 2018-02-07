@@ -29,3 +29,13 @@
     - [X] domains
     - [X] host
     - [X] url
+- [ ] Filter Configuration Validation
+    - [X] Site includes
+    - [X] Site excludes
+    - [X] Payload types
+    - [X] Payload formats
+    - [X] Sensitivities
+    - [X] Restrictions
+    - [X] Reconnaisance
+    - [X] Age of File
+    - [ ] File based (pre-parser) validation

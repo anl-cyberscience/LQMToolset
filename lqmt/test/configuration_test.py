@@ -49,6 +49,16 @@ class TestConfiguration(TestCase):
         self.assertEquals(sources._dirs, [self.alerts.replace("\\\\", "\\")])
         self.assertIsNone(sources.files_to_process)
 
+    def test_user_source_filters(self):
+        filters = self.user_config.getSourceFilters()
+        self.assertIsNotNone(filters._site_includes)
+        self.assertIsNotNone(filters._site_excludes)
+        self.assertIsNotNone(filters._payload_formats)
+        self.assertIsNotNone(filters._sensitivities)
+        self.assertIsNotNone(filters._restrictions)
+        self.assertIsNotNone(filters._reconnaissance)
+        self.assertIsNotNone(filters._max_file_age)
+
     def test_user_whitelist(self):
         whitelist = self.user_config.getWhitelist()
         self.assertIsNotNone(whitelist)

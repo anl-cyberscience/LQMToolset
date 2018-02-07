@@ -15,6 +15,30 @@ Setting        | Explanation
 `post_process_location` | Used in conjunction with the `track` post process option. Used to specify a custom location for where your track file will be placed. 
 
 
+# Source Filters
+This setting specifies meta-data file based filtering of files before being processed.  This allows a user to include or exclude files from being parsed and utilized in tools.  The parameters are not required and do not need to be present in the configuration file.
+
+    [[Source.Filters]]
+        site_includes = [ 'SITE1' ]
+        site_excludes = [ 'SITE2' ]
+        payload_types = [ 'Alert' ]
+        payload_formats = [ 'STIX' ]
+        sensitivities = [ 'noSensitivity' ]
+        restrictions = [ 'WHITE' ]
+        reconnaissance = [ 'Touch' ]
+        max_file_age = "2 mon"
+
+Setting        | Explanation
+----------------------: | :----------
+`site_includes`     | (Optional) A list of `SendingSite` entries that are allowed.  An empty list or no entry results in `True` to not filter for this setting.
+`site_excludes`     | (Optional) A list of `SendingSite` entries that are to be filtered out.  An empty list or no entry results in `True` to not filter for this setting. 
+`payload_types`     | (Optional) A list of `PayloadType` entries that are allowed (e.g. `Alert`, `Report`, etc).  An empty list or no entry results in `True` to not filter for this setting. 
+`payload_formats`   | (Optional) A list of `PayloadFormat` entries that are allowed (e.g. `STIX`, `Cfm13Alert`, etc).  An empty list or no entry results in `True` to not filter for this setting.
+`sensitivities`     | (Optional) A list of `DataSensitivity` entries that are allowed (e.g. `ouo`, `noSensitivity`, etc).  An empty list or no entry results in `True` to not filter for this setting.
+`restrictions`      | (Optional) A list of `SharingRestrictions` entries that are allowed (e.g. `WHITE`, `AMBER`, etc).  An empty list or no entry results in `True` to not filter for this setting.
+`reconnaissance`    | (Optional) A list of `ReconPolicy` entries that are allowed (e.g. `Touch`, `NoTouch`, etc).  An empty list or no entry results in `True` to not filter for this setting.
+`max_file_age`      | (Optional) A string formatted `%d %s` for the maximum age file to be processed.  This supports an offset for seconds `'s', 'sec', 'secs', 'second', 'seconds'`, minutes `'m', 'min', 'minute', 'minutes'`, hours `'h', 'hr', 'hrs', 'hour', 'hours'`, days `'d', 'day', 'days'`, weeks `'w', 'week', 'weeks'`, months `'mon', 'month', 'months'`, years `'y', 'yr', 'yrs', 'year', 'years'`.
+
 # Parsers
 LQMT uses special parsers for each type of alert file to get all the data into one common format. By default, the majority of the parsers are enabled, but some parsers are disabled by default. Detailed below are the types of parsers LQMT uses, which are enabled by default, and how you can configure LQMT to disable or enable them. 
 
