@@ -73,6 +73,29 @@ class LQMToolConfig(object):
         self._initParserConfig(self._config['parsers'])
         toolClasses = self._initToolConfig(self._config)
         return toolClasses
+    
+    def _filter_parsers(self, parsers):
+        """
+        Filter parsers based on if they should be enabled or disabled. 
+        :param parsers: dictionary containing parsers from system config
+        :return: a dictionary of filtered parsers. 
+        """
+        enable = []
+        disable = []
+        if 'Parsers' in self._userConfig:
+            parser_switch = self._userConfig['Parsers'].pop()
+            if 'enable' in parser_switch:
+                enable = parser_switch['enable']
+            if 'disable' in parser_switch:
+                disable = parser_switch['disable']
+        
+        for key, info in parsers.items():
+            if key in disable:
+                parsers[key]['default_enabled'] = False
+            if key in enable:
+                parsers[key]['default_enabled'] = True
+        
+        return parsers
 
     def _initParserConfig(self, parsers):
         """
@@ -80,6 +103,7 @@ class LQMToolConfig(object):
         :param parsers: Parser information passed from the system configuration file
         """
 
+        parsers = self._filter_parsers(parsers)
         # path info is loaded from the config files
         for key, parserinfo in parsers.items():
 
@@ -87,14 +111,15 @@ class LQMToolConfig(object):
             parserClass = getattr(ft_parser, parserinfo['parser_class'])
 
             # if particular configs were defined for the parser, pass them to FlexT parser and append to self._parsers
-            if parserinfo['configs']:
-                if type(parserinfo['format']) is list:
-                    for p_format in parserinfo['format']:
-                        self._parsers[p_format] = parserClass(parserinfo['configs'])
+            if parserinfo['default_enabled'] is True:
+                if parserinfo['configs']:
+                    if type(parserinfo['format']) is list:
+                        for p_format in parserinfo['format']:
+                            self._parsers[p_format] = parserClass(parserinfo['configs'])
+                    else:
+                        self._parsers[parserinfo['format']] = parserClass(parserinfo['configs'])
                 else:
-                    self._parsers[parserinfo['format']] = parserClass(parserinfo['configs'])
-            else:
-                self._parsers[parserinfo['format']] = parserClass()
+                    self._parsers[parserinfo['format']] = parserClass()
 
         self._logger.debug("Parsers loaded: %s" % ', '.join(self._parsers.keys()))
 
