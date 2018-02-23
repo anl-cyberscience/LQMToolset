@@ -133,10 +133,40 @@ class LQMToolController:
         """
 
         for alert in alerts:
-            self.numAlerts += 1
-            isWL = alert.isWhitelisted(self._config.getWhitelist())
-            chain.process(alert, isWL, datafile, metadata)
-            chain.fileDone()
+            if self._post_filter_pass(alert):
+                self.numAlerts += 1
+                isWL = alert.isWhitelisted(self._config.getWhitelist())
+                chain.process(alert, isWL, datafile, metadata)
+                chain.fileDone()
+
+    def _post_filter_pass(self, alert):
+        """
+        Pass through filter for post-processed data.
+        :param alert: Alert object
+        :return: Bool
+        """
+        if not self._filter_check(alert._indicatorType, 'type'):
+            return False
+        if not self._filter_check(alert._directSource, 'source'):
+            return False
+        if not self._filter_check(alert._action1, 'action'):
+            return False
+        if not self._filter_check(alert._restriction, 'restriction'):
+            return False
+
+        return True
+    
+    def _filter_check(self, alert_value, filter_type):
+        """
+        Function to properly check filters.
+        :param alert_value: The given alert value needed to check
+        :param filter_type: Type of filter to check for
+        :return: Bool
+        """
+        if isinstance(alert_value, str):
+            if alert_value.upper() in self._config._filter['exclude'][filter_type]:
+                return False
+        return True
 
     def _chainCleanup(self):
         """

@@ -48,6 +48,8 @@ class LQMToolConfig(object):
         self._toolsList = []
         self._userConfig = {}
         self._pre_filters = []
+        self._data_types = {'exclude': []}
+        self._filter = {'exclude': {'type': [], 'source': [], 'restriction': [], 'action': []}}
 
         # load config files
         self._loadSystemConfig()
@@ -89,7 +91,7 @@ class LQMToolConfig(object):
             if 'disable' in parser_switch:
                 disable = parser_switch['disable']
         
-        for key, info in parsers.items():
+        for key in parsers.items():
             if key in disable:
                 parsers[key]['default_enabled'] = False
             if key in enable:
@@ -188,6 +190,9 @@ class LQMToolConfig(object):
         # Add any sources specified
         self._addSourcesConfig(self._userConfig)
 
+        # ADd any filters specified
+        self._addFilterConfig(self._userConfig)
+
         # If a whitelist was specified, create it
         if 'Whitelist' in self._userConfig:
             self._whitelist = MasterWhitelist(configData=self._userConfig['Whitelist'])
@@ -277,6 +282,25 @@ class LQMToolConfig(object):
                     self._sources.append(DirectorySource(cfg))
                 elif key == "Filters":
                     self._pre_filters = SourceFilters(cfg)
+
+    def _addFilterConfig(self, config):
+        if 'Filter' not in config:
+            return
+        srcCfgs = config['Filter']
+        for key in srcCfgs:
+            if key == "Exclude":
+                for cfg in srcCfgs[key]:
+                    for filter_key, item in self._filter['exclude'].items():
+                        if filter_key in cfg:
+                            self._filter['exclude'][filter_key] = list(map(str.upper, cfg[filter_key])) 
+                    # if "type" in cfg:
+                    #    self._filter['exclude']["type"] = list(map(str.upper, cfg["type"])) 
+                    # if "source" in cfg:
+                    #     self._filter['exclude']["source"] = list(map(str.upper, cfg["source"]))
+                    # if "restriction" in cfg:
+                    #     self._filter['exclude']['restriction'] = list(map(str.upper, cfg["restriction"]))
+                    # if "action" in cfg:
+                    #     self._filter['exclude']['restriction'] = list(map(str.upper, cfg["restriction"]))
 
     def getSources(self):
         return self._sources

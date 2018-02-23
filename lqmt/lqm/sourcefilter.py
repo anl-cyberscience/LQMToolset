@@ -133,8 +133,7 @@ class SourceFilters(object):
 
         return ret
 
-    def checkDataSensitivity(self,
-                             metafile):
+    def checkDataSensitivity(self, metafile):
         """
         Checks the Data Sensitivity against configured list.
         :param metafile: Meta-data file to compare to the filter parameters
