@@ -54,6 +54,9 @@ class AlertFields(object):
     def fields(self):
         return self._fields
 
+    def field_list(self):
+        return list(self._fields.keys())
+
 
 class Alert(object):
     """The Alert object represents the LQM intermediate format"""

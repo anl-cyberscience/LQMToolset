@@ -48,8 +48,10 @@ class LQMToolConfig(object):
         self._toolsList = []
         self._userConfig = {}
         self._pre_filters = []
-        self._data_types = {'exclude': []}
-        self._filter = {'exclude': {'type': [], 'source': [], 'restriction': [], 'action': []}}
+        self._filter = {
+            'exclude': {'type': [], 'source': [], 'restriction': [], 'action': []},
+            'include': {}
+        }
 
         # load config files
         self._loadSystemConfig()
@@ -292,15 +294,12 @@ class LQMToolConfig(object):
                 for cfg in srcCfgs[key]:
                     for filter_key, item in self._filter['exclude'].items():
                         if filter_key in cfg:
-                            self._filter['exclude'][filter_key] = list(map(str.upper, cfg[filter_key])) 
-                    # if "type" in cfg:
-                    #    self._filter['exclude']["type"] = list(map(str.upper, cfg["type"])) 
-                    # if "source" in cfg:
-                    #     self._filter['exclude']["source"] = list(map(str.upper, cfg["source"]))
-                    # if "restriction" in cfg:
-                    #     self._filter['exclude']['restriction'] = list(map(str.upper, cfg["restriction"]))
-                    # if "action" in cfg:
-                    #     self._filter['exclude']['restriction'] = list(map(str.upper, cfg["restriction"]))
+                            self._filter['exclude'][filter_key] = list(map(str.upper, cfg[filter_key]))
+            if key == "Include":
+                for cfg in srcCfgs[key]:
+                    for filter_key, item in self._filter['include'].items():
+                        if filter_key in cfg:
+                            self._filter['include'][filter_key] = list(map(str.upper, cfg[filter_key]))
 
     def getSources(self):
         return self._sources

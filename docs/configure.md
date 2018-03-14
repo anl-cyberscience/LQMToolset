@@ -281,7 +281,7 @@ Setting               | Explanation
 --------------------: | :-----------
 `name`                | A unique name identifying this tool instance.
 `fileParser`          | Select parser type. Currently only supports and defaults to `CSV`.
-`fields`              | Fields, identified from the intermediate format, to be extracted. The order of the fields here determines the order of the output.
+`fields`              | Fields, identified from the intermediate format, to be extracted. The order of the fields here determines the order of the output. If you want to extract all valid fields, set the variable to ['all']. 
 `delimiter`           | A single character delimiter used to separate fields. Default value is `,`.
 `quoteChar`           | Character used to quote respective values.
 `escapeChar`          | Character used to escape other characters.

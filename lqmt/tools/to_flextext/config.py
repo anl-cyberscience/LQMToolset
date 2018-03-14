@@ -4,6 +4,7 @@ import datetime
 from lqmt.lqm.tool import ToolConfig
 from lqmt.lqm.systemconfig import SystemConfig
 from pkg_resources import get_distribution
+from lqmt.lqm.data import AlertFields
 
 
 
@@ -40,15 +41,6 @@ class FlexTextConfig(ToolConfig):
             if parser_name == 'mbl':
                 del (parsers['configs']['mbl'])
 
-            # Temporary fix for failing tests. Tests fail due to current FlexT version. Once FlexT version 1.2.1 is
-            # released, this fix can be removed. 
-            ft_version = get_distribution('FlexTransform').version
-            ft_version = tuple([int(x) for x in ft_version.split('.')])
-            if ft_version < (1, 2, 1):
-                if "IID" in parser_name:
-                    del (parsers['configs'][parser_name])
-
-
             # after the exceptions, update the source_configs with remaining parser configs
             self.source_configs.update(parsers['configs'])
 
@@ -73,6 +65,9 @@ class FlexTextConfig(ToolConfig):
                 config_data['fields'] = config_data['fields'].split(',')
 
             self.fields = self.validation('fields', list, required=True)
+
+        if 'all' in self.fields:
+            self.fields = AlertFields().field_list()
 
         if self.increment_file:
             base, extension = os.path.splitext(self.file)

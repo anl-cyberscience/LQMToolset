@@ -251,3 +251,26 @@ class SourceFilters(object):
                 ret = True
 
         return ret
+
+class PostFilter(object):
+    def __init__(self, config):
+        self.config = config
+        self.stuff = None
+
+    def checkAllFilters(self, alert):
+        """
+
+        :param alert: Alert object
+        return Bool
+        """
+
+        if not self.checkType(alert._indicatorType):
+            pass
+
+    def checkType(self, check):
+        """
+
+        :param check: The value being checked
+        """
+        if isinstance(check, str) and check.lower() in self.config._filter['exclude']['type']:
+            pass
