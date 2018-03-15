@@ -9,7 +9,7 @@ import toml
 from lqmt.lqm.exceptions import ConfigurationError
 from lqmt.lqm.logging import LQMLogging
 from lqmt.lqm.sourcedir import DirectorySource
-from lqmt.lqm.sourcefilter import SourceFilters
+from lqmt.lqm.filters import SourceFilters
 from lqmt.lqm.systemconfig import SystemConfig
 from lqmt.lqm.tool import ToolChain
 from lqmt.whitelist.master import MasterWhitelist
@@ -192,7 +192,7 @@ class LQMToolConfig(object):
         # Add any sources specified
         self._addSourcesConfig(self._userConfig)
 
-        # ADd any filters specified
+        # Add any filters specified
         self._addFilterConfig(self._userConfig)
 
         # If a whitelist was specified, create it
@@ -282,8 +282,6 @@ class LQMToolConfig(object):
             for cfg in srcCfgs[key]:
                 if key == "Directory":
                     self._sources.append(DirectorySource(cfg))
-                elif key == "Filters":
-                    self._pre_filters = SourceFilters(cfg)
 
     def _addFilterConfig(self, config):
         if 'Filter' not in config:
@@ -300,6 +298,9 @@ class LQMToolConfig(object):
                     for filter_key, item in self._filter['include'].items():
                         if filter_key in cfg:
                             self._filter['include'][filter_key] = list(map(str.lower, cfg[filter_key]))
+            if key == "Source":
+                for cfg in srcCfgs[key]:
+                    self._pre_filters = SourceFilters(cfg)
 
     def getSources(self):
         return self._sources

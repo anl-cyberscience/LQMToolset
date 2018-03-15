@@ -18,7 +18,7 @@ Setting        | Explanation
 # Source Filters
 This setting specifies meta-data file based filtering of files before being processed.  This allows a user to include or exclude files from being parsed and utilized in tools.  The parameters are not required and do not need to be present in the configuration file.
 
-    [[Source.Filters]]
+    [[Filter.Source]]
         site_includes = [ 'SITE1' ]
         site_excludes = [ 'SITE2' ]
         payload_types = [ 'Alert' ]

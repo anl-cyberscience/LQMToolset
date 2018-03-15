@@ -3,7 +3,7 @@ USERCONFIG = """
     dirs = [ "{0}" ]
     post_process = "nothing"
 
-[[Source.Filters]]
+[[Filter.Source]]
     site_includes = [ ]
     site_excludes = [ ]
     payload_types = [ ]

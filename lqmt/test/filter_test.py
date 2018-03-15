@@ -4,13 +4,13 @@ import arrow
 from unittest import TestCase, main
 from lqmt.test.test_data.filters.filter_configs import TESTCONFIG1
 from lqmt.test.test_data.filters.filter_inputs import INPUT1
-from lqmt.lqm.sourcefilter import SourceFilters
+from lqmt.lqm.filters import SourceFilters
 
 
 class TestFilters(TestCase):
     def setUp(self):
         self.user_config = toml.loads(TESTCONFIG1)
-        self.filters = SourceFilters(self.user_config['Source']['Filters'][0])
+        self.filters = SourceFilters(self.user_config['Filter']['Source'][0])
 
     def test_all_filters(self):
         meta = json.loads(INPUT1)

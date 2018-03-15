@@ -1,5 +1,5 @@
 TESTCONFIG1 = """
-[[Source.Filters]]
+[[Filter.Source]]
     site_includes = [ 'SiTE1' ]
     site_excludes = [ 'SitE2' ]
     payload_types = [ 'alert' ]

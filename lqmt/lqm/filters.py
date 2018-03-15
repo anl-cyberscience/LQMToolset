@@ -272,6 +272,8 @@ class PostFilter(object):
             return False
         if not self.checkType(alert._restriction, 'restriction'):
             return False
+        if not self.checkType(alert._sensitivity, 'sensitivity'):
+            return False
         
         return True
 
