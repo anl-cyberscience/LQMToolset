@@ -259,18 +259,30 @@ class PostFilter(object):
 
     def checkAllFilters(self, alert):
         """
-
+        Pass through filter for post-processed data. 
         :param alert: Alert object
-        return Bool
+        :return Bool
         """
 
-        if not self.checkType(alert._indicatorType):
-            pass
+        if not self.checkType(alert._indicatorType, 'type'):
+            return False
+        if not self.checkType(alert._directSource, 'source'):
+            return False
+        if not self.checkType(alert._action1, 'action'):
+            return False
+        if not self.checkType(alert._restriction, 'restriction'):
+            return False
+        
+        return True
 
-    def checkType(self, check):
+    def checkType(self, check, type):
         """
-
+        Function for checking alert type values against filters. 
         :param check: The value being checked
+        :param type: The type of filter to check for
         """
-        if isinstance(check, str) and check.lower() in self.config._filter['exclude']['type']:
-            pass
+        if isinstance(check, str): 
+            if check.lower() in self.config['exclude'][type]:
+                return False
+        
+        return True

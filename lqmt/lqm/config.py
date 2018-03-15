@@ -294,12 +294,12 @@ class LQMToolConfig(object):
                 for cfg in srcCfgs[key]:
                     for filter_key, item in self._filter['exclude'].items():
                         if filter_key in cfg:
-                            self._filter['exclude'][filter_key] = list(map(str.upper, cfg[filter_key]))
+                            self._filter['exclude'][filter_key] = list(map(str.lower, cfg[filter_key]))
             if key == "Include":
                 for cfg in srcCfgs[key]:
                     for filter_key, item in self._filter['include'].items():
                         if filter_key in cfg:
-                            self._filter['include'][filter_key] = list(map(str.upper, cfg[filter_key]))
+                            self._filter['include'][filter_key] = list(map(str.lower, cfg[filter_key]))
 
     def getSources(self):
         return self._sources
