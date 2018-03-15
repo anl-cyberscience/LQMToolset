@@ -1,0 +1,98 @@
+<stix:STIX_Package xmlns:cyboxCommon="http://cybox.mitre.org/common-2" xmlns:cybox="http://cybox.mitre.org/cybox-2" xmlns:cyboxVocabs="http://cybox.mitre.org/default_vocabularies-2" xmlns:ArtifactObj="http://cybox.mitre.org/objects#ArtifactObject-2" xmlns:FileObj="http://cybox.mitre.org/objects#FileObject-2" xmlns:WinExecutableFileObj="http://cybox.mitre.org/objects#WinExecutableFileObject-2" xmlns:WinFileObj="http://cybox.mitre.org/objects#WinFileObject-2" xmlns:marking="http://data-marking.mitre.org/Marking-1" xmlns:tlpMarking="http://data-marking.mitre.org/extensions/MarkingStructure#TLP-1" xmlns:TOUMarking="http://data-marking.mitre.org/extensions/MarkingStructure#Terms_Of_Use-1" xmlns:maecBundle="http://maec.mitre.org/XMLSchema/maec-bundle-4" xmlns:maecPackage="http://maec.mitre.org/XMLSchema/maec-package-2" xmlns:maecVocabs="http://maec.mitre.org/default_vocabularies-1" xmlns:incident="http://stix.mitre.org/Incident-1" xmlns:indicator="http://stix.mitre.org/Indicator-2" xmlns:ttp="http://stix.mitre.org/TTP-1" xmlns:stixCommon="http://stix.mitre.org/common-1" xmlns:stixVocabs="http://stix.mitre.org/default_vocabularies-1" xmlns:stix-maec="http://stix.mitre.org/extensions/Malware#MAEC4.1-1" xmlns:yaraTM="http://stix.mitre.org/extensions/TestMechanism#YARA-1" xmlns:stix="http://stix.mitre.org/stix-1" xmlns:NCCIC="http://www.us-cert.gov/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="  http://cybox.mitre.org/common-2 http://cybox.mitre.org/XMLSchema/common/2.1/cybox_common.xsd  http://cybox.mitre.org/cybox-2 http://cybox.mitre.org/XMLSchema/core/2.1/cybox_core.xsd  http://cybox.mitre.org/default_vocabularies-2 http://cybox.mitre.org/XMLSchema/default_vocabularies/2.1/cybox_default_vocabularies.xsd  http://cybox.mitre.org/objects#ArtifactObject-2 http://cybox.mitre.org/XMLSchema/objects/Artifact/2.1/Artifact_Object.xsd  http://cybox.mitre.org/objects#FileObject-2 http://cybox.mitre.org/XMLSchema/objects/File/2.1/File_Object.xsd  http://cybox.mitre.org/objects#WinExecutableFileObject-2 http://cybox.mitre.org/XMLSchema/objects/Win_Executable_File/2.1/Win_Executable_File_Object.xsd  http://cybox.mitre.org/objects#WinFileObject-2 http://cybox.mitre.org/XMLSchema/objects/Win_File/2.1/Win_File_Object.xsd  http://data-marking.mitre.org/Marking-1 http://stix.mitre.org/XMLSchema/data_marking/1.1.1/data_marking.xsd  http://data-marking.mitre.org/extensions/MarkingStructure#TLP-1 http://stix.mitre.org/XMLSchema/extensions/marking/tlp/1.1.1/tlp_marking.xsd  http://data-marking.mitre.org/extensions/MarkingStructure#Terms_Of_Use-1 http://stix.mitre.org/XMLSchema/extensions/marking/terms_of_use/1.0.1/terms_of_use_marking.xsd  http://maec.mitre.org/XMLSchema/maec-bundle-4 http://maec.mitre.org/language/version4.1/maec_bundle_schema.xsd  http://maec.mitre.org/XMLSchema/maec-package-2 http://maec.mitre.org/language/version4.1/maec_package_schema.xsd  http://maec.mitre.org/default_vocabularies-1 http://maec.mitre.org/language/version4.1/maec_default_vocabularies.xsd  http://stix.mitre.org/Incident-1 http://stix.mitre.org/XMLSchema/incident/1.1.1/incident.xsd  http://stix.mitre.org/Indicator-2 http://stix.mitre.org/XMLSchema/indicator/2.1.1/indicator.xsd  http://stix.mitre.org/TTP-1 http://stix.mitre.org/XMLSchema/ttp/1.1.1/ttp.xsd  http://stix.mitre.org/common-1 http://stix.mitre.org/XMLSchema/common/1.1.1/stix_common.xsd  http://stix.mitre.org/default_vocabularies-1 http://stix.mitre.org/XMLSchema/default_vocabularies/1.1.1/stix_default_vocabularies.xsd  http://stix.mitre.org/extensions/Malware#MAEC4.1-1 http://stix.mitre.org/XMLSchema/extensions/malware/maec_4.1/1.0.1/maec_4.1_malware.xsd  http://stix.mitre.org/extensions/TestMechanism#YARA-1 http://stix.mitre.org/XMLSchema/extensions/test_mechanism/yara/1.1.1/yara_test_mechanism.xsd  http://stix.mitre.org/stix-1 http://stix.mitre.org/XMLSchema/core/1.1.1/stix_core.xsd" id="NCCIC:Package-744e8c25-3e5b-4f0e-a7c4-2a9ba01def88" version="1.1.1" timestamp="2018-02-14T18:12:49-05:00">
+    <stix:STIX_Header>
+        <stix:Title>Simulated Rules File</stix:Title>
+        <stix:Package_Intent>Parser Testing</stix:Package_Intent>
+        <stix:Handling>
+            <marking:Marking>
+                <marking:Controlled_Structure>//node() | //@*</marking:Controlled_Structure>
+                <marking:Marking_Structure xsi:type="tlpMarking:TLPMarkingStructureType" color="GREEN"/>
+                <marking:Marking_Structure xsi:type="TOUMarking:TermsOfUseMarkingStructureType">
+                    <TOUMarking:Terms_Of_Use>This document is marked TLP:GREEN. Limited disclosure, restricted to the community. Sources may use TLP:GREEN when information is useful for the awareness of all participating organizations as well as with peers within the broader community or sector. Recipients may share TLP:GREEN information with peers and partner organizations within their sector or community, but not via publicly accessible channels. Information in this category can be circulated widely within a particular community. TLP:GREEN information may not be released outside of the community. For more information on the Traffic Light Protocol, see http://www.us-cert.gov/tlp.</TOUMarking:Terms_Of_Use>
+                </marking:Marking_Structure>
+            </marking:Marking>
+        </stix:Handling>
+        <stix:Information_Source>
+            <stixCommon:Identity>
+                <stixCommon:Name>Test Source</stixCommon:Name>
+            </stixCommon:Identity>
+            <stixCommon:Time>
+                <cyboxCommon:Produced_Time>2018-02-14T18:12:49-05:00</cyboxCommon:Produced_Time>
+            </stixCommon:Time>
+            <stixCommon:Tools>
+                <cyboxCommon:Tool>
+                    <cyboxCommon:Name>Test</cyboxCommon:Name>
+                    <cyboxCommon:Version>1.0.0</cyboxCommon:Version>
+                </cyboxCommon:Tool>
+            </stixCommon:Tools>
+        </stix:Information_Source>
+    </stix:STIX_Header>
+    <stix:Indicators>
+        <stix:Indicator id="example:indicator-567b201c-4fd5-4bde-a5db-42abc340807a" timestamp="2014-06-20T15:16:56.987616+00:00" xsi:type='indicator:IndicatorType' negate="false" version="2.1.1">
+    		<indicator:Title>Snort Signature for Heartbleed</indicator:Title>
+    		<indicator:Indicated_TTP>
+        		<stixCommon:TTP idref="example:ttp-8c12783d-3ebd-42bd-8dcd-e81dab56a47a" xsi:type='ttp:TTPType' version="1.1.1"/>
+    		</indicator:Indicated_TTP>
+    		<indicator:Test_Mechanisms>
+        		<indicator:Test_Mechanism id="example:testmechanism-a1475567-50f7-4dae-b0d0-47c7ea8e79e1" xmlns:snortTM='http://stix.mitre.org/extensions/TestMechanism#Snort-1' xsi:type='snortTM:SnortTestMechanismType'>
+            		<indicator:Efficacy timestamp="2014-06-20T15:16:56.987966+00:00">
+                		<stixCommon:Value xsi:type="stixVocabs:HighMediumLowVocab-1.0">Low</stixCommon:Value>
+            		</indicator:Efficacy>
+            		<indicator:Producer>
+                		<stixCommon:Identity id="example:Identity-a0740d84-9fcd-44af-9033-94e76a53201e">
+                    		<stixCommon:Name>FOX IT</stixCommon:Name>
+                		</stixCommon:Identity>
+                		<stixCommon:References>
+                    		<stixCommon:Reference>http://blog.fox-it.com/2014/04/08/openssl-heartbleed-bug-live-blog/</stixCommon:Reference>
+                		</stixCommon:References>
+            		</indicator:Producer>
+            		<snortTM:Rule><![CDATA[alert tcp any any -> any any (msg:"FOX-SRT - Flowbit - TLS-SSL Client Hello"; flow:established; dsize:< 500; content:"|16 03|"; depth:2; byte_test:1, <=, 2, 3; byte_test:1, !=, 2, 1; content:"|01|"; offset:5; depth:1; content:"|03|"; offset:9; byte_test:1, <=, 3, 10; byte_test:1, !=, 2, 9; content:"|00 0f 00|"; flowbits:set,foxsslsession; flowbits:noalert; threshold:type limit, track by_src, count 1, seconds 60; reference:cve,2014-0160; classtype:bad-unknown; sid: 21001130; rev:9;)]]></snortTM:Rule>
+            		<snortTM:Rule><![CDATA[alert tcp any any -> any any (msg:"FOX-SRT - Suspicious - TLS-SSL Large Heartbeat Response"; flow:established; flowbits:isset,foxsslsession; content:"|18 03|"; depth: 2; byte_test:1, <=, 3, 2; byte_test:1, !=, 2, 1; byte_test:2, >, 200, 3; threshold:type limit, track by_src, count 1, seconds 600; reference:cve,2014-0160; classtype:bad-unknown; sid: 21001131; rev:5;)]]></snortTM:Rule>
+        		</indicator:Test_Mechanism>
+    		</indicator:Test_Mechanisms>
+    		<indicator:Confidence timestamp="2014-06-20T15:16:56.987649+00:00">
+        		<stixCommon:Value xsi:type="stixVocabs:HighMediumLowVocab-1.0">High</stixCommon:Value>
+    		</indicator:Confidence>
+		</stix:Indicator>
+        <stix:Indicator id="example:indicator-567b201c-4fd5-4bde-a5db-42abc340807b" timestamp="2014-06-20T15:16:56.987616+00:00" xsi:type="indicator:IndicatorType">
+            <indicator:Title>Yara test indicator</indicator:Title>
+            <indicator:Indicated_TTP>
+                <stixCommon:TTP idref="example:ttp-8c12783d-3ebd-42bd-8dcd-e81dab56a47b" xsi:type="ttp:TTPType"/>
+            </indicator:Indicated_TTP>
+            <indicator:Test_Mechanisms>
+                <indicator:Test_Mechanism xsi:type="yaraTM:YaraTestMechanismType">
+                    <indicator:Producer>
+                        <stixCommon:Identity>
+                            <stixCommon:Name>US-CERT</stixCommon:Name>
+                        </stixCommon:Identity>
+                        <stixCommon:References>
+                            <stixCommon:Reference>http://plusvic.github.io/yara/</stixCommon:Reference>
+                        </stixCommon:References>
+                    </indicator:Producer>
+                    <yaraTM:Rule><![CDATA[rule loader_creds_stealer {
+meta:
+	description = "Detects a malicious loader credential harvester"
+	author = "NCCIC Code Analysis Team"
+	incident = "10161374"
+	date = "2018/02/13"
+	hash_0 = "221C6DB5B60049E3F1CDBB6212BE7F41"
+	hash_1 = "68970B2CD5430C812BEF5B87C1ADD6EA"
+strings:
+	$s0 = {85C974228B1185D2741C8B410485C074153D00040000720EB94D5A000033C066390A}
+	$s1 = {42004D00500000006630}
+	$s2 = {3C004E0055004C004C003E}
+	$s3 = "FirstFileExW"
+	$s4 = "FindNextFileW"
+	$s5 = "SizeofResource"
+	$s6 = {2D61636365707465756C61202D642025732025732022257322}
+	$s7 = {53656C656374202A2046726F6D2057696E33325F50726F6365737353746F705472616365}
+	$s8 = {6400520065006700500072006F00760022005E00290020002600200065006300}
+	$s9 = {68006F002E006F005200650067}
+
+condition:
+	($s0 and $s1 and $s2 and $s3 and $s4 and $s5) or ($s6 and $s7 and $s8 and $s9)
+}]]></yaraTM:Rule>
+                </indicator:Test_Mechanism>
+            </indicator:Test_Mechanisms>
+        </stix:Indicator>
+    </stix:Indicators>
+</stix:STIX_Package>

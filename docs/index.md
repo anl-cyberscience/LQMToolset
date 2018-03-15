@@ -26,6 +26,7 @@ Splunk           | Data Routing
 Syslog           | Data Routing 
 Bro              | Data Translation
 Flextext         | Data Translation
+Snort            | Automated Rule Injection
 
 ### Open source
 The code for `LQMT` is open source, and [available on Github](https://github.com/anl-cyberscience/LQMToolset). New tools and features are actively being developed for `LQMT`, but user contributions are welcome via pull requests.

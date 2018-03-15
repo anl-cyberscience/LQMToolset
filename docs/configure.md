@@ -52,6 +52,7 @@ Parsers             | Enabled by Default
 `IIDcombinedUrl`    | `False`
 `IIDdynamicBadHosts`| `False`
 `IIDrecentBadIP`    | `False`
+`STIXParser`        | `False`
 
 Setting | Explanation
 --------: | :-----------
@@ -63,6 +64,24 @@ Setting | Explanation
         # The enabled and disabled params use lists to track which parsers to override.
         enable = [ 'IIDcombinedUrl', 'IIDdynamicBadHosts', 'IIDrecentBadIP' ]
         disable = [ 'STIX', 'Cfm20Alert' ]
+
+## Individual Parser Configurations
+As necessary, each parser can take in a configuration file to control the Parser behavior.  Refer to they systemconfig.py to view the default configuration file associations.  Additionally, sample configurations are contained at lqmt/resources/parser_configs.
+
+### STIX Parser
+The STIX parser allows for certain controlling behaviors.  An example is as follows.
+
+    [[Filters]]
+        sources = [ 'US-CERT' ]
+        elements = [ 'indicators', 'incidents' ]
+        rules = [ 'snort' ]
+
+Setting | Explanation
+------: | :----------
+`sources`  | (Optional) A list containing case-insensitive names to match in the Information_Source element of the STIX_Header.
+`elements` | (Optional) A list of the case-insensitive XML element titles to specifically extract from the STIX file `$.<string>`.  At this time it must be one of the top level values `STIX_Header`, `Observables`, `Indicators`, `TTPs`, `Exploit_Targets`, `Incidents`, `Courses_Of_Action`, `Campaigns`, `Threat_Actors`, `Related_Packages`.
+`rules`    | (Optional) A list of case-insensitive Rule types to extract, currently only supports entries for `snort`, `yara` to automatically identify.
+
 
 # Tool Chains
 Tool Chains are built from tool instances, which are created from the available tools in LQMToolset. Chaining these tool instances together creates Tool Chains. To configure a new device, an entry must be added in the configuration file.
@@ -384,6 +403,63 @@ Setting                 | Explanation
 `file`                  | Path and name of where you want the file output(Ex: /home/bro/lqmt-bro-feed.txt). By default, LQMT will output the file in the directory where LQMT as a file named `lqmt-bro-feed.txt`.
 `increment_file`        | Used to increment the output file. When set to `True`, the output file name will be incremented with a timestamp. When set to `False` the output will be appended to any prexisting file of the same name. Defaults to `False`
 `null_value`            | Value to be used to represent that a field is empty. Bro's default value is a hyphen ('-'), so by default LQMT uses a hyphen.
+
+### Snort
+Extract [Snort](https://www.snort.org/documents) rules from a STIX CTI datafile and append to a Snort rules definition file.
+The ingested CTI datafile must contain Test Mechanism entries that contain Snort rules - [STIX Documentation](http://stixproject.github.io/data-model/1.1.1/snortTM/SnortTestMechanismType/).
+An example of the STIX data model is in this [Implementation](https://stixproject.github.io/documentation/idioms/snort-test-mechanism/) section.
+```xml
+    <indicator:Test_Mechanisms>
+        <indicator:Test_Mechanism id="example:testmechanism-a1475567-50f7-4dae-b0d0-47c7ea8e79e1" xmlns:snortTM='http://stix.mitre.org/extensions/TestMechanism#Snort-1' xsi:type='snortTM:SnortTestMechanismType'>
+            <indicator:Efficacy timestamp="2014-06-20T15:16:56.987966+00:00">
+                <stixCommon:Value xsi:type="stixVocabs:HighMediumLowVocab-1.0">Low</stixCommon:Value>
+            </indicator:Efficacy>
+            <indicator:Producer>
+                <stixCommon:Identity id="example:Identity-a0740d84-9fcd-44af-9033-94e76a53201e">
+                    <stixCommon:Name>FOX IT</stixCommon:Name>
+                </stixCommon:Identity>
+                <stixCommon:References>
+                    <stixCommon:Reference>http://blog.fox-it.com/2014/04/08/openssl-heartbleed-bug-live-blog/</stixCommon:Reference>
+                </stixCommon:References>
+            </indicator:Producer>
+            <snortTM:Rule><![CDATA[alert tcp any any -> any any (msg:"FOX-SRT - Flowbit - TLS-SSL Client Hello"; flow:established; dsize:< 500; content:"|16 03|"; depth:2; byte_test:1, <=, 2, 3; byte_test:1, !=, 2, 1; content:"|01|"; offset:5; depth:1; content:"|03|"; offset:9; byte_test:1, <=, 3, 10; byte_test:1, !=, 2, 9; content:"|00 0f 00|"; flowbits:set,foxsslsession; flowbits:noalert; threshold:type limit, track by_src, count 1, seconds 60; reference:cve,2014-0160; classtype:bad-unknown; sid: 21001130; rev:9;)]]></snortTM:Rule>
+            <snortTM:Rule><![CDATA[alert tcp any any -> any any (msg:"FOX-SRT - Suspicious - TLS-SSL Large Heartbeat Response"; flow:established; flowbits:isset,foxsslsession; content:"|18 03|"; depth: 2; byte_test:1, <=, 3, 2; byte_test:1, !=, 2, 1; byte_test:2, >, 200, 3; threshold:type limit, track by_src, count 1, seconds 600; reference:cve,2014-0160; classtype:bad-unknown; sid: 21001131; rev:5;)]]></snortTM:Rule>
+        </indicator:Test_Mechanism>
+    </indicator:Test_Mechanisms>
+```
+
+    [[Tools.Snort]]
+        name = "snort-tool"
+        config_paths = ['/etc/nsm/<interface0>', '/etc/nsm/<interface1>']
+        config_filename = 'snort.conf'
+        rule_paths = ['/etc/nsm/rules']
+        rule_filename = 'example.rules'
+        max_rules_count = 50
+        
+
+Setting                 | Explanation
+----------------------: | :----------
+`name`                  | (Required) A unique name identifying this tool instance. 
+`config_paths`          | (Required) List of paths to Snort config file - example is based on Security Onion with one configuration per interface.
+`config_filename`       | (Optional) String filename for the config file (at each path), defaults to 'snort.conf' if not configured.
+`rule_paths`            | (Required) List of paths for where to insert Rules files.
+`rule_filename`         | (Optional) String filename for the rule file (at each path), defaults to TBD if not configured.
+`max_rules_count`       | (Optional) Integer representing the maximum number of rules to have in a rules file.  Set to or allow to default to -1 to turn off management.
+
+#### Setup and Configuration
+The Tool will automatically attempt to add "include <rule_path>/<rule_filename>" to each defined Snort configuration file.
+If the Snort configuration file does not exist, the tool will exit with no action.  If the include entry for the rule file exists, the tool will not add a new inclusion.
+It is important to note, the Tool adds the full path for each Rules file to the Snort configuration and does not utilize variables such as $RULE_PATH.
+
+#### Implementation Details
+The Tool automatically managements the Rules file to ensure each line is a unique entry.  
+The method for performing this action utilizes Python Sets which are unordered.  Therefore, the rule entries may change order after updates.
+When configured to control the total number of rules in the file, the Tool decides the number of new rules to add and removes existing rules to accomodate.
+It is important to note that this removal is performed in an unordered manner, therefore, it does not occur in a FIFO manner.
+
+#### Limitations
+STIX allows for Event Filters, Rate Filters, and Event Suppressions to be expressed within the [SnortTestMechanismType](http://stixproject.github.io/data-model/1.1.1/snortTM/SnortTestMechanismType/).
+These are currently not utilized in the Tool.  If modifying the Tool to use, the Parser does pass them in the Full Rules object that contains the full context as a dictionary.
 
 # Logging
 

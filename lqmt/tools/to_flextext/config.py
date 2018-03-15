@@ -33,7 +33,10 @@ class FlexTextConfig(ToolConfig):
         self.source_configs = {}
         for parser_name, parsers in self.system_config['parsers'].items():
             # Exceptions: LQMTools is a part of every set of parser
-            del (parsers['configs']['LQMTools'])
+            # del (parsers['configs']['LQMTools'])
+            # TODO: needs testing, change because new parser
+            if 'LQMTools' in parsers['configs']:
+                del (parsers['configs']['LQMTools'])
 
             # If it's more specific, like MBL, then you need to first check that it exists first during iteration by
             # checking the parser_name
