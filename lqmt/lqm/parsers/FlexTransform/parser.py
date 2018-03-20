@@ -39,8 +39,9 @@ class FlexTransformParser(object):
         :param parserConfiguration: Path to the configuration file being added
         """
         if parserName not in self._transform.Parsers:
-            config_file = open(os.path.join(self._current_dir, parserConfiguration), 'r')
-            self._transform.add_parser(parserName, config_file)
+            if parserName != 'STIXparserConfig':  # TODO: added to skip different parser config
+                config_file = open(os.path.join(self._current_dir, parserConfiguration), 'r')
+                self._transform.add_parser(parserName, config_file)
 
     def parse(self, datafile, meta=None):
         """

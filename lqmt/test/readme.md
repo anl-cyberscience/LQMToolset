@@ -3,7 +3,8 @@
         - [X] cfm13 
         - [ ] cfm20
         - [ ] stix-tlp  
-    - [ ] cfm13 to idf 
+    - [ ] cfm13 to idf
+    - [X] STIX parser 
 - [ ] Configuration Validation
     - [ ] System Configuration
     - [ ] User Configuration
@@ -21,6 +22,7 @@
             - [ ] to_flextext
             - [ ] to_paloalto
             - [ ] to_syslog
+            - [ ] to_snort
 - [ ] Whitelist Validation
     - [X] ipv4 address
     - [X] ipv4 subnets

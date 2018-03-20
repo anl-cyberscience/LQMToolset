@@ -50,7 +50,10 @@ setup(
         'toml',
         'FlexTransform>=1.2.1',
         'requests',
-        'arrow'
+        'arrow',
+        'stix',
+        'stix-ramrod',
+        'jsonpath-rw'
     ],
     entry_points={
         'console_scripts': [

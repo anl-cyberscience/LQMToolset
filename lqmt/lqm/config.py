@@ -14,6 +14,7 @@ from lqmt.lqm.systemconfig import SystemConfig
 from lqmt.lqm.tool import ToolChain
 from lqmt.whitelist.master import MasterWhitelist
 from lqmt.lqm.parsers.FlexTransform import parser as ft_parser
+from lqmt.lqm.parsers.STIXParser import parser as stix_parser
 
 sys.path.append('tpl/toml')
 
@@ -108,7 +109,10 @@ class LQMToolConfig(object):
         for key, parserinfo in parsers.items():
 
             # gets parser class from flexT
-            parserClass = getattr(ft_parser, parserinfo['parser_class'])
+            if parserinfo['parser_class'] == 'STIXParser':
+                parserClass = getattr(stix_parser, parserinfo['parser_class'])
+            else:  # gets parser class from flexT, all others use FlexT
+                parserClass = getattr(ft_parser, parserinfo['parser_class'])
 
             # if particular configs were defined for the parser, pass them to FlexT parser and append to self._parsers
             if parserinfo['default_enabled'] is True:
@@ -209,7 +213,10 @@ class LQMToolConfig(object):
                 for cfgData in tools[key]:
                     tool = toolInfo.create(cfgData, toolClasses['CSV'], self._config['UnprocessedCSV'])
                     tool.toolName = key
+                    if 'accepted_formats' in self._config['tools'][key]:
+                        tool.dataFormat = self._config['tools'][key]['accepted_formats']
                     theseTools[self.get_tool_type(key)][tool.getName()] = tool
+
         return theseTools
 
     @staticmethod

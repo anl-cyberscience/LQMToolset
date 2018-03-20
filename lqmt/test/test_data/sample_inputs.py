@@ -302,3 +302,29 @@ STIX = """<stix:STIX_Package
         </stix:Indicators>
     </stix:STIX_Package>
     """
+
+STIXRULES = 'test_data/sample_files/stix_rules_example.xml'
+
+YARAEXAMPLE = """rule loader_creds_stealer {
+meta:
+	description = "Detects a malicious loader credential harvester"
+	author = "NCCIC Code Analysis Team"
+	incident = "10161374"
+	date = "2018/02/13"
+	hash_0 = "221C6DB5B60049E3F1CDBB6212BE7F41"
+	hash_1 = "68970B2CD5430C812BEF5B87C1ADD6EA"
+strings:
+	$s0 = {85C974228B1185D2741C8B410485C074153D00040000720EB94D5A000033C066390A}
+	$s1 = {42004D00500000006630}
+	$s2 = {3C004E0055004C004C003E}
+	$s3 = "FirstFileExW"
+	$s4 = "FindNextFileW"
+	$s5 = "SizeofResource"
+	$s6 = {2D61636365707465756C61202D642025732025732022257322}
+	$s7 = {53656C656374202A2046726F6D2057696E33325F50726F6365737353746F705472616365}
+	$s8 = {6400520065006700500072006F00760022005E00290020002600200065006300}
+	$s9 = {68006F002E006F005200650067}
+
+condition:
+	($s0 and $s1 and $s2 and $s3 and $s4 and $s5) or ($s6 and $s7 and $s8 and $s9)
+}"""
