@@ -1,3 +1,4 @@
+import os
 import time
 import uuid
 from unittest import TestCase, main
@@ -14,12 +15,8 @@ class TestSTIXParser(TestCase):
         self.sys_config = self.sys_config['parsers']
         self.stixparser = STIXParser()
         self.time = str(time.time()).split('.')[0]
-
-        # TODO: test ideas
-        #   Add snort, yara rules, confirm full context grabbed & specific rules
-        #   Add just snort, confirm just snort rules
-        #   Add just yara, confrim just yara rules
-        #   Confirm full file provided as raw (line 1 and line n and # of lines)
+        self.directory = os.path.dirname(__file__)
+        self.test_file = self.directory + "/" + STIXRULES
 
     def getMeta(self):
         """
@@ -66,7 +63,7 @@ class TestSTIXParser(TestCase):
         # Test runs with no source filtering to confirm parsed
         self.__default_config()
 
-        alerts = self.stixparser.parse(STIXRULES, self.getMeta())
+        alerts = self.stixparser.parse(self.test_file, self.getMeta())
 
         # confirm Parser filled all data variables, and found snort and yara rules
         self.assertIsNotNone(alerts)
@@ -80,7 +77,7 @@ class TestSTIXParser(TestCase):
         self.__default_config()
         self.stixparser._sources = ['Test Source']
 
-        alerts = self.stixparser.parse(STIXRULES, self.getMeta())
+        alerts = self.stixparser.parse(self.test_file, self.getMeta())
 
         # confirm Parser filled all data variables, and found snort and yara rules
         self.assertIsNotNone(alerts)
@@ -94,7 +91,7 @@ class TestSTIXParser(TestCase):
         self.__default_config()
         self.stixparser._sources = ['Test Custodian']
 
-        alerts = self.stixparser.parse(STIXRULES, self.getMeta())
+        alerts = self.stixparser.parse(self.test_file, self.getMeta())
 
         # confirm Parser filled all data variables, and found snort and yara rules
         self.assertIsNotNone(alerts)
@@ -108,7 +105,7 @@ class TestSTIXParser(TestCase):
         self.__default_config()
         self.stixparser._sources = ['Test Originator']
 
-        alerts = self.stixparser.parse(STIXRULES, self.getMeta())
+        alerts = self.stixparser.parse(self.test_file, self.getMeta())
 
         # confirm Parser filled all data variables, and found snort and yara rules
         self.assertIsNotNone(alerts)
@@ -122,7 +119,7 @@ class TestSTIXParser(TestCase):
         self.__default_config()
         self.stixparser._sources = ['Not Found']
 
-        alerts = self.stixparser.parse(STIXRULES, self.getMeta())
+        alerts = self.stixparser.parse(self.test_file, self.getMeta())
 
         # confirm Parser returned empty list
         self.assertEquals(alerts, [])
@@ -132,7 +129,7 @@ class TestSTIXParser(TestCase):
         self.__default_config()
         self.stixparser._sources = ['Test Originator', 'Not Found']
 
-        alerts = self.stixparser.parse(STIXRULES, self.getMeta())
+        alerts = self.stixparser.parse(self.test_file, self.getMeta())
 
         # confirm Parser filled all data variables, and found snort and yara rules
         self.assertIsNotNone(alerts)
@@ -146,7 +143,7 @@ class TestSTIXParser(TestCase):
         self.__default_config()
         self.stixparser._elements = ['StIx_header', 'Indicators']
 
-        alerts = self.stixparser.parse(STIXRULES, self.getMeta())
+        alerts = self.stixparser.parse(self.test_file, self.getMeta())
 
         # confirm Parser filled all data variables, and found snort and yara rules
         self.assertIsNotNone(alerts)
@@ -158,7 +155,7 @@ class TestSTIXParser(TestCase):
         self.stixparser._elements = []
         self.stixparser._rules = []
 
-        alerts = self.stixparser.parse(STIXRULES, self.getMeta())
+        alerts = self.stixparser.parse(self.test_file, self.getMeta())
 
         # ensure empty full context & empty rules dict
         self.assertEquals(alerts[0]._rules, {})
@@ -169,7 +166,7 @@ class TestSTIXParser(TestCase):
         self.stixparser._elements = []
         self.stixparser._rules = ['snort']
 
-        alerts = self.stixparser.parse(STIXRULES, self.getMeta())
+        alerts = self.stixparser.parse(self.test_file, self.getMeta())
 
         self.assertEquals(len(alerts[0]._rules['snort']), 2)  # snort entry size 2
         self.assertEquals(alerts[0]._rules['snort'][0], 'alert tcp any any -> any any (msg:"FOX-SRT - Flowbit - TLS-SSL Client Hello"; flow:established; dsize:< 500; content:"|16 03|"; depth:2; byte_test:1, <=, 2, 3; byte_test:1, !=, 2, 1; content:"|01|"; offset:5; depth:1; content:"|03|"; offset:9; byte_test:1, <=, 3, 10; byte_test:1, !=, 2, 9; content:"|00 0f 00|"; flowbits:set,foxsslsession; flowbits:noalert; threshold:type limit, track by_src, count 1, seconds 60; reference:cve,2014-0160; classtype:bad-unknown; sid: 21001130; rev:9;)')
@@ -181,7 +178,7 @@ class TestSTIXParser(TestCase):
         self.stixparser._elements = []
         self.stixparser._rules = ['yara']
 
-        alerts = self.stixparser.parse(STIXRULES, self.getMeta())
+        alerts = self.stixparser.parse(self.test_file, self.getMeta())
 
         self.assertEquals(len(alerts[0]._rules['yara']), 1)  # snort entry size 2
         self.assertEquals(alerts[0]._rules['yara'][0], YARAEXAMPLE)
@@ -191,7 +188,7 @@ class TestSTIXParser(TestCase):
         self.__default_config()
         self.stixparser._elements = []
 
-        alerts = self.stixparser.parse(STIXRULES, self.getMeta())
+        alerts = self.stixparser.parse(self.test_file, self.getMeta())
 
         # if xsi:type is in the entry, it grabbed the full context
         self.assertEquals(len(alerts[0]._full_rules), 2)
