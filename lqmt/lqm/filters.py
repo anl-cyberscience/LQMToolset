@@ -264,15 +264,15 @@ class PostFilter(object):
         :return Bool
         """
 
-        if not self.checkType(alert._indicatorType, 'type'):
+        if not self.checkType(alert._indicatorType, 'indicator_types'):
             return False
-        if not self.checkType(alert._directSource, 'source'):
+        if not self.checkType(alert._directSource, 'direct_sources'):
             return False
-        if not self.checkType(alert._action1, 'action'):
+        if not self.checkType(alert._action1, 'actions'):
             return False
-        if not self.checkType(alert._restriction, 'restriction'):
+        if not self.checkType(alert._restriction, 'restrictions'):
             return False
-        if not self.checkType(alert._sensitivity, 'sensitivity'):
+        if not self.checkType(alert._sensitivity, 'sensitivities'):
             return False
         
         return True
@@ -283,6 +283,13 @@ class PostFilter(object):
         :param check: The value being checked
         :param type: The type of filter to check for
         """
+        
+        # Includes
+        if isinstance(check, str): 
+            if check.lower() in self.config['include'][type]:
+                return True
+
+        # Excludes
         if isinstance(check, str): 
             if check.lower() in self.config['exclude'][type]:
                 return False

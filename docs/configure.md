@@ -15,9 +15,10 @@ Setting        | Explanation
 `post_process_location` | Used in conjunction with the `track` post process option. Used to specify a custom location for where your track file will be placed. 
 
 
-# Source Filters
-This setting specifies meta-data file based filtering of files before being processed.  This allows a user to include or exclude files from being parsed and utilized in tools.  The parameters are not required and do not need to be present in the configuration file.
+# Filters
+LQMT offers two forms of filtering data, `Source` filters, and `Post` filters. `Source` filters are meta-data file based filtering that takes place before data processing begins. This allows a user to include or exclude files from being parsed and utilized in tools. `Post` filtering takes place after data processing, and allows you to include or exclude data from being utilized in tools. `Source` and `Post` filters are NOT required for use of LQMT and do NOT need to be present in the configuration file. 
 
+## Source Filters
     [[Filter.Source]]
         site_includes = [ 'SITE1' ]
         site_excludes = [ 'SITE2' ]
@@ -30,17 +31,37 @@ This setting specifies meta-data file based filtering of files before being proc
 
 Setting        | Explanation
 ----------------------: | :----------
-`site_includes`     | (Optional) A list of `SendingSite` entries that are allowed.  An empty list or no entry results in `True` to not filter for this setting.
-`site_excludes`     | (Optional) A list of `SendingSite` entries that are to be filtered out.  An empty list or no entry results in `True` to not filter for this setting. 
-`payload_types`     | (Optional) A list of `PayloadType` entries that are allowed (e.g. `Alert`, `Report`, etc).  An empty list or no entry results in `True` to not filter for this setting. 
-`payload_formats`   | (Optional) A list of `PayloadFormat` entries that are allowed (e.g. `STIX`, `Cfm13Alert`, etc).  An empty list or no entry results in `True` to not filter for this setting.
-`sensitivities`     | (Optional) A list of `DataSensitivity` entries that are allowed (e.g. `ouo`, `noSensitivity`, etc).  An empty list or no entry results in `True` to not filter for this setting.
-`restrictions`      | (Optional) A list of `SharingRestrictions` entries that are allowed (e.g. `WHITE`, `AMBER`, etc).  An empty list or no entry results in `True` to not filter for this setting.
-`reconnaissance`    | (Optional) A list of `ReconPolicy` entries that are allowed (e.g. `Touch`, `NoTouch`, etc).  An empty list or no entry results in `True` to not filter for this setting.
-`max_file_age`      | (Optional) A string formatted `%d %s` for the maximum age file to be processed.  This supports an offset for seconds `'s', 'sec', 'secs', 'second', 'seconds'`, minutes `'m', 'min', 'minute', 'minutes'`, hours `'h', 'hr', 'hrs', 'hour', 'hours'`, days `'d', 'day', 'days'`, weeks `'w', 'week', 'weeks'`, months `'mon', 'month', 'months'`, years `'y', 'yr', 'yrs', 'year', 'years'`.
+`site_includes`         | (Optional) A list of `SendingSite` entries that are allowed.  An empty list or no entry results in `True` to not filter for this setting.
+`site_excludes`         | (Optional) A list of `SendingSite` entries that are to be filtered out.  An empty list or no entry results in `True` to not filter for this setting. 
+`payload_types`         | (Optional) A list of `PayloadType` entries that are allowed (e.g. `Alert`, `Report`, etc).  An empty list or no entry results in `True` to not filter for this setting. 
+`payload_formats`       | (Optional) A list of `PayloadFormat` entries that are allowed (e.g. `STIX`, `Cfm13Alert`, etc).  An empty list or no entry results in `True` to not filter for this setting.
+`sensitivities`         | (Optional) A list of `DataSensitivity` entries that are allowed (e.g. `ouo`, `noSensitivity`, etc).  An empty list or no entry results in `True` to not filter for this setting.
+`restrictions`          | (Optional) A list of `SharingRestrictions` entries that are allowed (e.g. `WHITE`, `AMBER`, etc).  An empty list or no entry results in `True` to not filter for this setting.
+`reconnaissance`        | (Optional) A list of `ReconPolicy` entries that are allowed (e.g. `Touch`, `NoTouch`, etc).  An empty list or no entry results in `True` to not filter for this setting.
+`max_file_age`          | (Optional) A string formatted `%d %s` for the maximum age file to be processed.  This supports an offset for seconds `'s', 'sec', 'secs', 'second', 'seconds'`, minutes `'m', 'min', 'minute', 'minutes'`, hours `'h', 'hr', 'hrs', 'hour', 'hours'`, days `'d', 'day', 'days'`, weeks `'w', 'week', 'weeks'`, months `'mon', 'month', 'months'`, years `'y', 'yr', 'yrs', 'year', 'years'`.
+
+## Post Filters
+`Post` filters work off the logic of includes and excludes. As such, the configuration is built to reflect that. Each Include and Exclude section can use any of the variables defined below. In the case where an include and exclude are both used on the same variable, the include will take priority. 
+
+Each `Post` filter is modeled off of the [intermediate data format](#intermediate-data-format). For further details about the intermediate data format, [see below](#intermediate-data-format). 
+
+
+    [[Filter.Include]]
+        indicator_types = ['IPv4']
+
+    [[Filter.Exclude]]
+        direct_sources = ['ANL']
+
+Setting             | Explaination
+------------------: | :------------------
+`indicator_types`   | (Optional) A list of `indicatorType` entries that are to be allowed or prohibited.
+`direct_sources`    | (Optional) A list of `directSource` entries that are to be allowed or prohibited. 
+`actions`           | (Optional) A list of `action` entries that are to be allowed or prohibited.
+`restrictions`      | (Optional) A list of `restriction` entries that are to be allowed or prohibited. 
+`sensitivities`     | (Optional) A list of `sensitivity` entries that are to be allowed or prohibited. 
 
 # Parsers
-LQMT uses special parsers for each type of alert file to get all the data into one common format. By default, the majority of the parsers are enabled, but some parsers are disabled by default. Detailed below are the types of parsers LQMT uses, which are enabled by default, and how you can configure LQMT to disable or enable them. 
+LQMT uses special parsers for each type of alert file to get all the data into one common format. By default, the majority of the parsers are enabled, but others are not. Detailed below are the types of parsers LQMT uses, and of which are enabled by default.
 
 Parsers             | Enabled by Default
 ------------------: | :----------------

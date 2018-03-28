@@ -2,7 +2,7 @@ import ast
 import logging
 from lqmt.lqm.logging import LQMLogging
 from .config import LQMToolConfig
-from lqmt.lqm.sourcefilter import PostFilter
+from lqmt.lqm.filters import PostFilter
 
 # based on filename, place file either in the metafiles dict or the datafiles list
 # NOTE: Assumes metafiles begin with . and datafiles do not.

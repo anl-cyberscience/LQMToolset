@@ -49,8 +49,8 @@ class LQMToolConfig(object):
         self._userConfig = {}
         self._pre_filters = []
         self._filter = {
-            'exclude': {'type': [], 'source': [], 'restriction': [], 'action': []},
-            'include': {}
+            'exclude': {'indicator_types': [], 'direct_sources': [], 'actions': [], 'restrictions': [], 'sensitivities': []},
+            'include': {'indicator_types': [], 'direct_sources': [], 'actions': [], 'restrictions': [], 'sensitivities': []}
         }
 
         # load config files
