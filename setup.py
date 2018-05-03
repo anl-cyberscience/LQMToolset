@@ -53,7 +53,12 @@ setup(
         'arrow',
         'stix',
         'stix-ramrod',
-        'jsonpath-rw'
+        'jsonpath-rw',
+        'pyshark',
+        'pyparsing',
+        # 'itertools',
+        'idstools'
+        # 'zipfile'
     ],
     entry_points={
         'console_scripts': [

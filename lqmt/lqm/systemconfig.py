@@ -52,6 +52,10 @@ class SystemConfig:
                 },
                 'Snort': {
                     'module': 'to_snort', 'config_class': 'SnortConfig', 'tool_class': 'ToSnort',
+                    'accepted_formats': ['StixFile', 'RuleFile']
+                },
+                'From_Snort': {
+                    'module': 'from_snort', 'config_class': 'FromSnortConfig', 'tool_class': 'FromSnort',
                     'accepted_formats': ['StixFile']
                 }
             },
@@ -156,7 +160,16 @@ class SystemConfig:
                     'configs': {
                         'STIXparserConfig': 'resources/parser_configs/stixparser.toml'
                     },
-                    'format': ['stix-tlp', 'STIX', 'OtherFormat'],
+                    'format': ['stix-tlp', 'STIX'],  # OtherFormat
+                    'default_enabled': False
+                },
+                'RuleParser': {
+                    'module': 'lqmt.lqm.parsers.RuleParser',
+                    'parser_class': 'RuleParser',
+                    'configs': {
+                        'RuleParserConfig': 'resources/parser_configs/ruleparser.toml'
+                    },
+                    'format': ['SnortRules', 'YaraRules'],  # OtherFormat, SnortJson, AnyFormat
                     'default_enabled': False
                 }
             }
