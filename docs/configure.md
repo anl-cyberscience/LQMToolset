@@ -297,7 +297,7 @@ Ingest CTI data into your Splunk instance in a keyword value format.
 
     [[Tools.Splunk]]
         name        = "splunk-tool"
-        host        = "test-splunk.dev.yourdomain.gov"
+        host        = "https://test-splunk.dev.yourdomain.gov"
         port        = 8089
         username    = "serviceuser"
         password    = "greatpassword123"
