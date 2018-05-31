@@ -16,7 +16,7 @@ class FromSnortConfig(ToolConfig):
             self.mode = 'full'
         self.data_age = self.validation('max_file_age', str, required=True, default='5 minutes')
         self.rule_list = self.validation('rules', list, required=True, default=['/etc/nsm/rules/downloaded.rules'])
-        self.result_path = self.validation('result_path', str, required=True, default='/Users/grantj/Documents/lqmt_test/results')
+        self.result_path = self.validation('result_path', str, required=True, default='lqmt/results')
         # TODO: For now do not enable returning these snort context information
         # self.config_paths = self.validation('config_paths', list, default=['/etc/nsm'])
         # self.rules_paths = self.validation('rule_paths', list, default=['/etc/nsm/rules'])
