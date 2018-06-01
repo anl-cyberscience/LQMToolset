@@ -149,7 +149,7 @@ class RuleParser(object):
                     self._logger.warning(
                         "LQMT-Rule-Parser: Unrecognized or unconfigured rule type={0}".format(rule_type))
 
-            alerts.append(alert)
+                alerts.append(alert)
         except Exception as e:
             self._logger.error("LQMT-Rule-Parser: Problem with parsed data. Exception={0}".format(e))
 
