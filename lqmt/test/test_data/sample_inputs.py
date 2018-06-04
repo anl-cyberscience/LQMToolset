@@ -305,6 +305,9 @@ STIX = """<stix:STIX_Package
 
 STIXRULES = 'test_data/sample_files/stix_rules_example.xml'
 
+SNORTEXAMPLE = 'test_data/sample_files/snort_rules_example.rules'
+YARAFILE = 'test_data/sample_files/yara_rules_example.yara'
+
 YARAEXAMPLE = """rule loader_creds_stealer {
 meta:
 	description = "Detects a malicious loader credential harvester"

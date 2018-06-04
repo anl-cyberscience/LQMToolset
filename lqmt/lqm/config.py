@@ -15,6 +15,7 @@ from lqmt.lqm.tool import ToolChain
 from lqmt.whitelist.master import MasterWhitelist
 from lqmt.lqm.parsers.FlexTransform import parser as ft_parser
 from lqmt.lqm.parsers.STIXParser import parser as stix_parser
+from lqmt.lqm.parsers.RuleParser import parser as rule_parser
 
 sys.path.append('tpl/toml')
 
@@ -111,6 +112,8 @@ class LQMToolConfig(object):
             # gets parser class from flexT
             if parserinfo['parser_class'] == 'STIXParser':
                 parserClass = getattr(stix_parser, parserinfo['parser_class'])
+            elif parserinfo['parser_class'] == 'RuleParser':
+                parserClass = getattr(rule_parser, parserinfo['parser_class'])
             else:  # gets parser class from flexT, all others use FlexT
                 parserClass = getattr(ft_parser, parserinfo['parser_class'])
 
@@ -222,7 +225,7 @@ class LQMToolConfig(object):
     @staticmethod
     def get_tool_type(toolname):
         tool_type = 'push'
-        if 'pull' in toolname.lower():
+        if 'pull' in toolname.lower() or 'from' in toolname.lower():  # TODO: Added from, a variable might be better than name contents
             tool_type = 'pull'
 
         return tool_type

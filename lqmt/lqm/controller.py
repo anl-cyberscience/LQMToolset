@@ -34,6 +34,10 @@ class LQMToolController:
         """
         Function for initializing and running all the user defined "from" tools.
         """
+        # TODO: if no push tools configured, do we still want to process?
+        if not self.toolChains['push']:
+            return
+
         alert_files = self._initialize()
         if alert_files:
             for data, unparsed_metadata in alert_files:

@@ -31,6 +31,9 @@ class PullTool:
     def getActionsToProcess(self):
         return None
 
+    def initialize(self):  # TODO: Added to make work for pull tools
+        pass
+
 
 class PullToolConfig:
     """"Base class for all to tool configs"""

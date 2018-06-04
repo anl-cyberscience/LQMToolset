@@ -53,6 +53,7 @@ Parsers             | Enabled by Default
 `IIDdynamicBadHosts`| `False`
 `IIDrecentBadIP`    | `False`
 `STIXParser`        | `False`
+`RuleParser`        | `False`
 
 Setting | Explanation
 --------: | :-----------
@@ -82,6 +83,19 @@ Setting | Explanation
 `elements` | (Optional) A list of the case-insensitive XML element titles to specifically extract from the STIX file `$.<string>`.  At this time it must be one of the top level values `STIX_Header`, `Observables`, `Indicators`, `TTPs`, `Exploit_Targets`, `Incidents`, `Courses_Of_Action`, `Campaigns`, `Threat_Actors`, `Related_Packages`.
 `rules`    | (Optional) A list of case-insensitive Rule types to extract, currently only supports entries for `snort`, `yara` to automatically identify.
 
+### Rule Parser
+The Rule parser allows for parsing Snort and Yara rules from an input file.  An example is as follows.
+
+    [[Filters]]
+        sources = [ 'US-CERT' ]
+        rules = [ 'snort', 'yara' ]
+        start_offset = 0
+
+Setting | Explanation
+------: | :----------
+`sources`         | (Optional) A list containing case-insensitive names to match in the SendingSite, Originator, Custodian elements of the CFM Meta Data File.
+`rules`           | (Optional) A list of the case-insensitive rule titles to specifically extract. At this time it must be one of the values `snort`, `yara`.
+`start_offset`    | (Optional) An integer represents the line offset inside a rules file. This is intended to be used in scenarios a file may have a header to skip before rules.
 
 # Tool Chains
 Tool Chains are built from tool instances, which are created from the available tools in LQMToolset. Chaining these tool instances together creates Tool Chains. To configure a new device, an entry must be added in the configuration file.
@@ -435,6 +449,7 @@ An example of the STIX data model is in this [Implementation](https://stixprojec
         rule_paths = ['/etc/nsm/rules']
         rule_filename = 'example.rules'
         max_rules_count = 50
+        mode = "append"
         
 
 Setting                 | Explanation
@@ -445,6 +460,31 @@ Setting                 | Explanation
 `rule_paths`            | (Required) List of paths for where to insert Rules files.
 `rule_filename`         | (Optional) String filename for the rule file (at each path), defaults to TBD if not configured.
 `max_rules_count`       | (Optional) Integer representing the maximum number of rules to have in a rules file.  Set to or allow to default to -1 to turn off management.
+`mode`                  | (Optional) String defining rule writing mode `full` vs. `append`.  Full overwrites the full file, append smartly enters only unique new rules.
+
+### From Snort
+This tool is capable of searching Snort alert and capture logs to zip a data for transmission.  It currently only supports Full logging mode for Snort.
+It is advised that review be performed on alert matching and pcap matching code to ensure it meets the users needs.  
+
+    [[Tools.From_Snort]]
+        name = "snort-pull-tool"
+        alert_paths = ['/var/log/snort/log']
+        packet_paths = ['/var/log/snort/log']
+        mode = 'match'
+        rules = ['/snort/rules/<name>.rules']
+        max_file_age = '2 weeks'
+        result_path = '/lqmt/results'
+
+
+Setting                 | Explanation
+----------------------: | :----------
+`name`                  | (Required) A unique name identifying this tool instance. 
+`alert_paths`           | (Required) List of paths to Snort alert log files.
+`packet_paths`          | (Required) List of paths to Snort pcap capture log files.
+`mode`                  | (Optional) String defining the alert and capture mode - `full` vs. `match`. In match mode, the tool attempts to grab only alert entries and PCAP matches to the alert IP addresses.
+`rules`                 | (Required) List of full paths and file names to the Snort rules files to extract Snort IDs for matching in alerts.
+`max_file_age`          | (Required) String defining the maximum file modification age to look for matches. Time can be defined similar to Splunk entries `sec`, `min`, `hr`, `day`, `week`, `mon`, `yr`.
+`result_path`           | (Required) Folder path to write the final package, allows for providing to a transmission tool (CFM client, NiFi, etc.)
 
 #### Setup and Configuration
 The Tool will automatically attempt to add "include <rule_path>/<rule_filename>" to each defined Snort configuration file.
