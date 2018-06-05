@@ -31,6 +31,9 @@ class PullTool:
     def getActionsToProcess(self):
         return None
 
+    def initialize(self):  # TODO: Added to make work for pull tools
+        pass
+
 
 class PullToolConfig:
     """"Base class for all to tool configs"""
@@ -132,6 +135,7 @@ class Tool:
         self._config = config  # the configuration object
         self._alertActions = set(alertActions)  # The alert actions this tool handles
         self.toolName = ""  # The name of the tool defined by the tools class
+        self.dataFormat = []
 
     def getConfig(self):
         return self._config
@@ -271,7 +275,9 @@ class ToolChain:
             if self._actionsToProcess is None:
                 self._actionsToProcess = tool.getActionsToProcess()
             else:
-                self._actionsToProcess &= tool.getActionsToProcess()
+                # self._actionsToProcess &= tool.getActionsToProcess()
+                # TODO: Needs some testing, believe this is a bug that prevents multiple tools with different Actions
+                self._actionsToProcess |= tool.getActionsToProcess()
         self._alertsProcessed = 0
         self._alertsNotProcessed = 0
 
@@ -313,13 +319,22 @@ class ToolChain:
                 # if indicator isn't whitelisted, proceed with processing. Otherwise ignore processing
                 # and log the whitelist block.
                 if isWhitelisted is False:
-                    self._alertsProcessed += 1
+                    # self._alertsProcessed += 1
+                    alert_used = False
                     for tool in self._tools:
-                        # FlexText requires the datafile instead of the processed data.
-                        if tool.toolName == "FlexText" or tool.toolName == 'MBL':
-                            tool.process(datafile, meta)
-                        else:
-                            tool.process(data)
+                        if type(data).__name__ in tool.dataFormat:
+                            alert_used = True
+                            # FlexText requires the datafile instead of the processed data.
+                            if tool.toolName == "FlexText" or tool.toolName == 'MBL':
+                                tool.process(datafile, meta)
+                            else:
+                                tool.process(data)
+
+                    # if no tool maps to the format type, increment alert not processed
+                    if alert_used is True:
+                        self._alertsProcessed += 1
+                    else:
+                        self._alertsNotProcessed += 1
                 else:
                     self._logger.info(
                         "Alert not processed. IP Indicator is whitelisted. Whitelisted IP:{0}".format(

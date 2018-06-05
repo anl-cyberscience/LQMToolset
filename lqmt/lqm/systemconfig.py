@@ -3,41 +3,60 @@ class SystemConfig:
         self.system_config = {
             'tools': {
                 'Checkpoint': {
-                    'module': 'to_checkpoint', 'config_class': 'CheckpointConfig', 'tool_class': 'ToCheckpoint'
+                    'module': 'to_checkpoint', 'config_class': 'CheckpointConfig', 'tool_class': 'ToCheckpoint',
+                    'accepted_formats': ['Alert']
                 },
                 'PaloAlto': {
                     'module': 'to_paloalto', 'config_class': 'PaloAltoConfig', 'tool_class': 'ToPaloAlto',
-                    'additional_paths': ['tpl']
+                    'additional_paths': ['tpl'], 'accepted_formats': ['Alert']
                 },
                 'CSV': {
-                    'module': 'to_csv', 'config_class': 'CSVConfig', 'tool_class': 'ToCSV'
+                    'module': 'to_csv', 'config_class': 'CSVConfig', 'tool_class': 'ToCSV',
+                    'accepted_formats': ['Alert']
                 },
                 'CEF': {
-                    'module': 'to_cef', 'config_class': 'CEFConfig', 'tool_class': 'ToCEF'
+                    'module': 'to_cef', 'config_class': 'CEFConfig', 'tool_class': 'ToCEF',
+                    'accepted_formats': ['Alert']
                 },
                 'ArcSight': {
-                    'module': 'to_arcsight', 'config_class': 'ArcSightConfig', 'tool_class': 'ToArcSight'
+                    'module': 'to_arcsight', 'config_class': 'ArcSightConfig', 'tool_class': 'ToArcSight',
+                    'accepted_formats': ['Alert']
                 },
                 'SysLog': {
-                    'module': 'to_syslog', 'config_class': 'SysLogConfig', 'tool_class': 'ToSysLog'
+                    'module': 'to_syslog', 'config_class': 'SysLogConfig', 'tool_class': 'ToSysLog',
+                    'accepted_formats': ['Alert']
                 },
                 'FlexText': {
-                    'module': 'to_flextext', 'config_class': 'FlexTextConfig', 'tool_class': 'ToFlexText'
+                    'module': 'to_flextext', 'config_class': 'FlexTextConfig', 'tool_class': 'ToFlexText',
+                    'accepted_formats': ['Alert']
                 },
                 'Splunk': {
-                    'module': 'to_splunk', 'config_class': 'SplunkConfig', 'tool_class': 'ToSplunk'
+                    'module': 'to_splunk', 'config_class': 'SplunkConfig', 'tool_class': 'ToSplunk',
+                    'accepted_formats': ['Alert']
                 },
                 'Bro': {
-                    'module': 'to_bro', 'config_class': 'BroConfig', 'tool_class': 'ToBro'
+                    'module': 'to_bro', 'config_class': 'BroConfig', 'tool_class': 'ToBro',
+                    'accepted_formats': ['Alert']
                 },
                 'MBL': {
-                    'module': 'to_mbl', 'config_class': 'MBLConfig', 'tool_class': 'ToMBL'
+                    'module': 'to_mbl', 'config_class': 'MBLConfig', 'tool_class': 'ToMBL',
+                    'accepted_formats': ['Alert']
                 },
                 'From_MBL': {
-                    'module': 'from_mbl', 'config_class': 'FromMBLConfig', 'tool_class': 'FromMBL'
+                    'module': 'from_mbl', 'config_class': 'FromMBLConfig', 'tool_class': 'FromMBL',
+                    'accepted_formats': ['Alert']
                 },
                 'Pull_Test': {
-                    'module': 'pull_test', 'config_class': 'PullTestConfig', 'tool_class': 'PullTest'
+                    'module': 'pull_test', 'config_class': 'PullTestConfig', 'tool_class': 'PullTest',
+                    'accepted_formats': ['Alert']
+                },
+                'Snort': {
+                    'module': 'to_snort', 'config_class': 'SnortConfig', 'tool_class': 'ToSnort',
+                    'accepted_formats': ['StixFile', 'RuleFile']
+                },
+                'From_Snort': {
+                    'module': 'from_snort', 'config_class': 'FromSnortConfig', 'tool_class': 'FromSnort',
+                    'accepted_formats': ['StixFile']
                 }
             },
             'UnprocessedCSV': {
@@ -133,6 +152,24 @@ class SystemConfig:
                         'IIDrecentBadIP': 'resources/sampleConfigurations/iid_ipv4_recent.cfg'
                     },
                     'format': 'IIDrecentBadIP',
+                    'default_enabled': False
+                },
+                'STIXParser': {
+                    'module': 'lqmt.lqm.parsers.STIXParser',
+                    'parser_class': 'STIXParser',
+                    'configs': {
+                        'STIXparserConfig': 'resources/parser_configs/stixparser.toml'
+                    },
+                    'format': ['stix-tlp', 'STIX'],  # OtherFormat
+                    'default_enabled': False
+                },
+                'RuleParser': {
+                    'module': 'lqmt.lqm.parsers.RuleParser',
+                    'parser_class': 'RuleParser',
+                    'configs': {
+                        'RuleParserConfig': 'resources/parser_configs/ruleparser.toml'
+                    },
+                    'format': ['SnortRules', 'YaraRules'],  # OtherFormat, SnortJson, AnyFormat
                     'default_enabled': False
                 }
             }

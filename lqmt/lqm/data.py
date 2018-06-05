@@ -491,3 +491,84 @@ class Alert(object):
             return dict_fields
         else:
             return fields
+
+
+class StixFile(object):
+    def __init__(self):
+        self._rawfile = None
+        self._action = 'OtherAction'
+        self._elements = None
+        self._sources = None
+        self._stix_elements = None
+        self._rules = {}  # fully parsed rules
+        self._full_rules = []  # full context of rules
+
+    def isWhitelisted(self, wl):
+        """Return whether or not this Alert is whitelisted"""
+        # TODO: currently not supporting white listing
+        return False
+
+    def getAction(self):
+        return self._action
+
+    def setRawFile(self, file):
+        self._rawfile = file
+
+    def getRawFile(self):
+        return self._rawfile
+
+    def setStixElements(self, elements):
+        self._stix_elements = elements
+
+    def getStixElements(self):
+        return self._stix_elements
+
+    def setRules(self, rules):
+        self._rules = rules
+
+    def getRules(self, key=None):
+        ret = {}
+
+        # TODO: grab the list of rules for the dictionary key
+        if key in self._rules:
+            return self._rules[key]
+        else:
+            return self._rules
+
+    def setFullRules(self, rules):
+        self._full_rules = rules
+
+    def getFullRules(self):
+        return self._full_rules
+
+
+class RuleFile(object):
+    def __init__(self):
+        self._rawfile = None
+        self._action = 'OtherAction'
+        self._sources = None
+        self._rules = {}  # fully parsed rules
+
+    def isWhitelisted(self, wl):
+        """Return whether or not this Alert is whitelisted"""
+        # TODO: currently not supporting white listing
+        return False
+
+    def getAction(self):
+        return self._action
+
+    def setRawFile(self, file):
+        self._rawfile = file
+
+    def getRawFile(self):
+        return self._rawfile
+
+    def setRules(self, rules):
+        self._rules = rules
+
+    def getRules(self, key=None):
+        # grab the list of rules for the dictionary key
+        if key in self._rules:
+            return self._rules[key]
+        else:
+            return self._rules

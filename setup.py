@@ -50,7 +50,15 @@ setup(
         'toml',
         'FlexTransform>=1.2.1',
         'requests',
-        'arrow'
+        'arrow',
+        'stix',
+        'stix-ramrod',
+        'jsonpath-rw',
+        'pyshark',
+        'pyparsing',
+        # 'itertools',
+        'idstools'
+        # 'zipfile'
     ],
     entry_points={
         'console_scripts': [

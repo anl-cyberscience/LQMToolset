@@ -1,0 +1,4 @@
+[[Filters]]
+	sources = [ ]
+	elements = [ ]
+	rules = [ 'snort' ]

@@ -1,0 +1,4 @@
+[[Filters]]
+	sources = [ ]
+	rules = [ 'snort', 'yara' ]
+	start_offset = 0
