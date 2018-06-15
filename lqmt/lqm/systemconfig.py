@@ -57,6 +57,10 @@ class SystemConfig:
                 'From_Snort': {
                     'module': 'from_snort', 'config_class': 'FromSnortConfig', 'tool_class': 'FromSnort',
                     'accepted_formats': ['StixFile']
+                },
+                'From_MetaMaker': {
+                    'module': 'metamaker', 'config_class': 'MetaMakerConfig', 'tool_class': 'MetaMakerTool', 
+                    'accepted_formats': ['None']
                 }
             },
             'UnprocessedCSV': {
