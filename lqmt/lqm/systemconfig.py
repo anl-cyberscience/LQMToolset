@@ -31,7 +31,11 @@ class SystemConfig:
                     'accepted_formats': ['Alert']
                 },
                 'Splunk': {
-                    'module': 'to_splunk', 'config_class': 'SplunkConfig', 'tool_class': 'ToSplunk',
+                    'module': 'splunk', 'config_class': 'SplunkConfig', 'tool_class': 'ToSplunk',
+                    'accepted_formats': ['Alert']
+                },
+                'Splunk_RSA': {
+                    'module': 'splunk', 'config_class': 'SplunkConfig', 'tool_class': 'SplunkRSA',
                     'accepted_formats': ['Alert']
                 },
                 'Bro': {
@@ -40,14 +44,6 @@ class SystemConfig:
                 },
                 'MBL': {
                     'module': 'to_mbl', 'config_class': 'MBLConfig', 'tool_class': 'ToMBL',
-                    'accepted_formats': ['Alert']
-                },
-                'From_MBL': {
-                    'module': 'from_mbl', 'config_class': 'FromMBLConfig', 'tool_class': 'FromMBL',
-                    'accepted_formats': ['Alert']
-                },
-                'Pull_Test': {
-                    'module': 'pull_test', 'config_class': 'PullTestConfig', 'tool_class': 'PullTest',
                     'accepted_formats': ['Alert']
                 },
                 'Snort': {

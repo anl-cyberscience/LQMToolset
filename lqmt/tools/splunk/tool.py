@@ -2,7 +2,7 @@ import logging
 import requests
 from lqmt.lqm.tool import Tool
 from lqmt.lqm.data import AlertAction
-from lqmt.tools.to_splunk.splunk_api import ApiHandler, create_message
+from lqmt.tools.splunk.splunk_api import ApiHandler, create_message
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 

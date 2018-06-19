@@ -1,7 +1,7 @@
 import logging
 from lqmt.lqm.tool import Tool
 from lqmt.lqm.data import AlertAction
-from lqmt.tools.to_splunk.splunk_api import ApiHandler
+from lqmt.tools.splunk.splunk_api import ApiHandler
 from lqmt.lqm.parsers.FlexTransform.parser import FlexTransformParser
 import hashlib
 

@@ -80,7 +80,7 @@ class ApiHandler:
         self.authenticate()
         return self
 
-    def __exit__(self):
+    def __exit__(self, exception_type, exception_value, traceback):
         self._logger.debug("Total messages processed: {0}".format(self._messages_processed))
         self.requests.post(url=self.url, headers={'Connection': 'close'}, verify=self.cert_check)
 
@@ -151,10 +151,6 @@ class ApiHandler:
             self._messages_processed += 1
         else:
             r.raise_for_status()
-
-        # self._logger.debug("Message sent to Splunk. "
-        #                    "\nURL Used: '{0}'; "
-        #                    "\nStatus code returned: '{1}';".format(url, r.status_code))
 
     def send_post_request(self, message, url):
 
