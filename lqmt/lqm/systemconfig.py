@@ -34,9 +34,9 @@ class SystemConfig:
                     'module': 'splunk', 'config_class': 'SplunkConfig', 'tool_class': 'ToSplunk',
                     'accepted_formats': ['Alert']
                 },
-                'Splunk_RSA': {
+                'SplunkRSA': {
                     'module': 'splunk', 'config_class': 'SplunkConfig', 'tool_class': 'SplunkRSA',
-                    'accepted_formats': ['Alert']
+                    'accepted_formats': ['QueryFile']
                 },
                 'Bro': {
                     'module': 'to_bro', 'config_class': 'BroConfig', 'tool_class': 'ToBro',
@@ -166,6 +166,13 @@ class SystemConfig:
                         'RuleParserConfig': 'resources/parser_configs/ruleparser.toml'
                     },
                     'format': ['SnortRules', 'YaraRules'],  # OtherFormat, SnortJson, AnyFormat
+                    'default_enabled': False
+                },
+                'QueryParser': {
+                    'module': 'lqmt.lqm.parsers.QueryParser',
+                    'parser_class': 'QueryParser',
+                    'configs': {},
+                    'format': 'DS_Query',
                     'default_enabled': False
                 }
             }

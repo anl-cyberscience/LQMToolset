@@ -65,7 +65,7 @@ class ApiHandler:
         self.service = {
             'auth': "/services/auth/login/",
             'stream': "/services/receivers/stream/",
-            'search': "/services/search/jobs"}
+            'search': "/services/search/jobs/"}
         self.headers = {}
         self.job_id = ""
         self.response = ""
@@ -80,7 +80,7 @@ class ApiHandler:
         self.authenticate()
         return self
 
-    def __exit__(self, exception_type, exception_value, traceback):
+    def __exit__(self):
         self._logger.debug("Total messages processed: {0}".format(self._messages_processed))
         self.requests.post(url=self.url, headers={'Connection': 'close'}, verify=self.cert_check)
 
@@ -113,9 +113,9 @@ class ApiHandler:
 
             return self.splunk_token
 
-    def send_message(self, message, source=None, sourcetype=None, index=None):
+    def stream_data(self, message, source=None, sourcetype=None, index=None):
         """
-        Method for sending messages to Splunk via REST api. If the authentication function hasn't been run yet, then
+        Method for sending messages to Splunk via REST api using the stream endpoint. If the authentication function hasn't been run yet, then
         it is called.
         :param source: Used to override previously set source value
         :param sourcetype: Used to override previously set sourcetype
@@ -151,6 +151,42 @@ class ApiHandler:
             self._messages_processed += 1
         else:
             r.raise_for_status()
+
+    def submit_search(self, message, source=None, sourcetype=None, index=None):
+        """
+        Method for submitting a search 
+        :param message: 
+        :param source:
+        :param sourcetype:    
+        :param index:
+        """
+        # Override's for source, sourcetype, and index
+        if source is not None:
+            self.source = formatUrlParam("source", source)
+
+        if sourcetype is not None:
+            self.sourcetype = formatUrlParam("sourcetype", sourcetype, True)
+
+        if index is not None:
+            self.index = formatUrlParam("index", index, True)
+        
+        # Authenticatte
+        if not self.authenticated:
+            self.authenticate()
+        
+        # Build url
+        url = self.url + self.service['search'] 
+
+        # job_id = self.send_post_request(message, url)
+        message = {'search': message}
+        # r = self.requests.post(url, data=message, headers=self.headers, verify=self.cert_check)
+        job_id = self.send_post_request(message, url)
+        # print(r.text)
+        print(job_id)
+        result = self.fetch_job(job_id)
+
+        return result
+
 
     def send_post_request(self, message, url):
 
@@ -189,7 +225,7 @@ class ApiHandler:
         if self.response.ok:
             while job_status != "DONE":
                 self._logger.debug("Fetching Job - Job still pending.")
-                status_response = requests.get(self.url + "/services/search/jobs/" + job_id + "/",
+                status_response = requests.get(self.url + self.service['search'] + job_id + "/",
                                                auth=(self.username, self.password),
                                                verify=self.cert_check)
 

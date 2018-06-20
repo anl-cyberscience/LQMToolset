@@ -3,7 +3,7 @@ from lqmt.whitelist.master import IndicatorTypes
 
 class AlertAction(object):
     """Enum of all possible actions"""
-    enums = ["All", "Block", "Notify", "Watch", "SendReport", "Revoke", "OtherAction"]
+    enums = ["All", "Block", "Notify", "Watch", "SendReport", "Revoke", "Query", "OtherAction"]
 
     @staticmethod
     def get(action):
@@ -572,3 +572,140 @@ class RuleFile(object):
             return self._rules[key]
         else:
             return self._rules
+
+class QueryFields(object):
+    """
+    Class to aid in properly formatting fields as strings and checking for existence of query fields
+    """
+    def __init__(self):
+        self._fields = {"indicator": "S", "indicatorType": "S", "action": "S",
+                        "uuid": "S", "originator": "S", "query_str": "S"}
+
+    def isValid(self, field):
+        return field in self._fields
+
+    def getStringRepresentation(self, field, val):
+        """Return a string representation of the specified field"""
+        #NOTE: Method seems to be redundant. Replaced with a call that just casts the field value to a str.
+        # Will remove this function later. 
+        if not self.isValid(field):
+            raise Exception("Alert field {0} is not a valid field".format(field))
+        ftype = self._fields[field]
+        if ftype == "I":
+            if val is not None:
+                return val
+            else:
+                return ""
+        elif ftype == "S":
+            if val is not None:
+                return val
+            else:
+                return ""
+        elif ftype == "E":
+            if val is not None:
+                return '"' + val.name + '"'
+            else:
+                return ""
+
+    @property
+    def fields(self):
+        return self._fields
+
+
+class QueryFile(object):
+    """The QueryFile object represents the DSearch Query API flow"""
+    _queryFields = QueryFields()
+
+    @staticmethod
+    def isValidField(field):
+        return QueryFile._queryFields.isValid(field)
+
+    def __init__(self):
+        self._indicator = None
+        self._indicatorType = None
+        self._action = None
+        self._uuid = None
+        self._originator = None
+        self._query_str = None
+
+    # setters
+    def setFromDict(self, d):
+        """Set the fields from the dictionary"""
+        if 'indicator' in d:
+            self._indicator = d['indicator']
+        if 'indicatorType' in d:
+            self._indicatorType = d['indicatorType']
+        if 'action' in d:
+            self._action = d['action']
+        if 'uuid' in d:
+            self._uuid = d['uuid']
+        if 'originator' in d:
+            self._originator = d['originator']
+        if 'query_str' in d:
+            self._query_str = d['query_str']
+
+    def isWhitelisted(self, wl):
+        """Return whether or not this Alert is whitelisted"""
+        # TODO: currently not supporting white listing
+        return False
+
+    def getIndicator(self):
+        return self._indicator
+
+    def getIndicatorType(self):
+        return self._indicatorType
+
+    def getAction(self):
+        return self._action
+
+    def getUUID(self):
+        return self._uuid
+
+    def getOriginator(self):
+        return self._originator
+
+    def getQueryString(self):
+        return self._query_str
+
+    def getFields(self, fieldNames, dictionary=False):
+        fields = []
+        for field in fieldNames:
+            fields.append(str(self._getField(field)))
+            # fields.append(QueryFile._queryFields.getStringRepresentation(field, self._getField(field)))
+
+        # uses zip functions to convert the two lists into a dictionary. fieldNames used as keys, fields as values
+        if dictionary:
+            fields = dict(zip(fieldNames, fields))
+
+        return fields
+
+    def _getField(self, field):
+        val = None
+        tfld = "_" + field
+        if hasattr(self, tfld):
+            val = getattr(self, tfld)
+        return val
+
+    def getAllFields(self, dictionary=False, parseEmpty=False, emptyValue=None):
+        """
+        Method to get all supported fields from the intermediate data format.
+        :param dictionary: Option to return the results as a dictionary. Defaults to False.
+        :param parseEmpty: Option to parse out any empty values.
+        :param emptyValue: Option to fill in empty fields with a different value
+        :return: Returns either a list or dictionary of all fields and their parsed value. Defaults to a list.
+        """
+        keys = list(QueryFile._queryFields.fields.keys())
+        fields = self.getFields(keys)
+        if dictionary:
+            dict_fields = {}
+            keys.reverse()
+            for value in fields:
+                if value is not "":
+                    dict_fields[keys.pop()] = value
+                elif parseEmpty:
+                    keys.pop()
+                elif emptyValue:
+                    dict_fields[keys.pop()] = '"{0}"'.format(emptyValue)
+            return dict_fields
+        else:
+            return fields
