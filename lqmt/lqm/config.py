@@ -16,6 +16,7 @@ from lqmt.whitelist.master import MasterWhitelist
 from lqmt.lqm.parsers.FlexTransform import parser as ft_parser
 from lqmt.lqm.parsers.STIXParser import parser as stix_parser
 from lqmt.lqm.parsers.RuleParser import parser as rule_parser
+from lqmt.lqm.parsers.PdfParser import parser as pdf_parser
 
 sys.path.append('tpl/toml')
 
@@ -110,10 +111,20 @@ class LQMToolConfig(object):
         for key, parserinfo in parsers.items():
 
             # gets parser class from flexT
+            # TODO: evaluate this code as a replacement to the following block
+            # parser_dict = {'STIXParser': stix_parser, 'RuleParser': rule_parser, 'PdfParser': pdf_parser}
+            # parser_key = parserinfo['parser_class']
+            # if parser_key in parser_dict:
+            #     parserClass = getattr(parser_dict[parser_key], parserinfo['parser_class'])
+            # else:  # gets parser class from flexT, all others use FlexT
+            #     parserClass = getattr(ft_parser, parserinfo['parser_class'])
+
             if parserinfo['parser_class'] == 'STIXParser':
                 parserClass = getattr(stix_parser, parserinfo['parser_class'])
             elif parserinfo['parser_class'] == 'RuleParser':
                 parserClass = getattr(rule_parser, parserinfo['parser_class'])
+            elif parserinfo['parser_class'] == 'PdfParser':
+                parserClass = getattr(pdf_parser, parserinfo['parser_class'])
             else:  # gets parser class from flexT, all others use FlexT
                 parserClass = getattr(ft_parser, parserinfo['parser_class'])
 

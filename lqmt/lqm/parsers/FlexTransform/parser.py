@@ -38,7 +38,7 @@ class FlexTransformParser(object):
         :param parserName: Name of the parser being added
         :param parserConfiguration: Path to the configuration file being added
         """
-        incompat_list = ['STIXparserConfig', 'RuleParserConfig']
+        incompat_list = ['STIXparserConfig', 'RuleParserConfig', 'PdfParserConfig']
         if parserName not in self._transform.Parsers:
             if parserName not in incompat_list:  # TODO: added to skip different parser config
                 config_file = open(os.path.join(self._current_dir, parserConfiguration), 'r')

@@ -572,3 +572,23 @@ class RuleFile(object):
             return self._rules[key]
         else:
             return self._rules
+
+
+class PdfFile(object):
+    def __init__(self):
+        self._binfile = None
+        self._action = 'OtherAction'
+
+    def isWhitelisted(self, wl):
+        """Return whether or not this Alert is whitelisted"""
+        # TODO: currently not supporting white listing
+        return False
+
+    def getAction(self):
+        return self._action
+
+    def setBinFile(self, file):
+        self._binfile = file
+
+    def getBinFile(self):
+        return self._binfile

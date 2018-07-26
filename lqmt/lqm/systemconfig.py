@@ -57,6 +57,14 @@ class SystemConfig:
                 'From_Snort': {
                     'module': 'from_snort', 'config_class': 'FromSnortConfig', 'tool_class': 'FromSnort',
                     'accepted_formats': ['StixFile']
+                },
+                'Mattermost': {
+                    'module': 'to_mattermost', 'config_class': 'MattermostConfig', 'tool_class': 'ToMattermost',
+                    'accepted_formats': ['PdfFile']
+                },
+                'From_Mattermost': {
+                    'module': 'from_mattermost', 'config_class': 'FromMattermostConfig', 'tool_class': 'FromMattermost',
+                    'accepted_formats': ['PdfFile']
                 }
             },
             'UnprocessedCSV': {
@@ -170,6 +178,15 @@ class SystemConfig:
                         'RuleParserConfig': 'resources/parser_configs/ruleparser.toml'
                     },
                     'format': ['SnortRules', 'YaraRules'],  # OtherFormat, SnortJson, AnyFormat
+                    'default_enabled': False
+                },
+                'PdfParser': {
+                    'module': 'lqmt.lqm.parsers.PdfParser',
+                    'parser_class': 'PdfParser',
+                    'configs': {
+                        'PdfParserConfig': 'resources/parser_configs/pdfparser.toml'
+                    },
+                    'format': ['PDF', 'OtherPDF'],  # Could allow Binary/Agnostic formats
                     'default_enabled': False
                 }
             }
