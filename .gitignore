@@ -15,6 +15,7 @@ bin/
 include/
 lib/
 pip-selfcheck.json
+venv/
 
 # vim stuff
 *.swp
