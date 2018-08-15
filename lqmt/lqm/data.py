@@ -577,6 +577,7 @@ class RuleFile(object):
 class PdfFile(object):
     def __init__(self):
         self._binfile = None
+        self.name = None
         self._action = 'OtherAction'
 
     def isWhitelisted(self, wl):
@@ -587,8 +588,9 @@ class PdfFile(object):
     def getAction(self):
         return self._action
 
-    def setBinFile(self, file):
+    def setBinFile(self, file, filename=None):
         self._binfile = file
+        self.name = filename
 
     def getBinFile(self):
         return self._binfile
