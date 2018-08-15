@@ -103,7 +103,7 @@ class PdfParser(object):
                 if os.path.exists(datafile):
                     with open(datafile, 'rb') as file:
                         data = file.read()
-                        alert.setBinFile(data)
+                        alert.setBinFile(data, filename=os.path.basename(file.name))
 
             alerts.append(alert)
 
