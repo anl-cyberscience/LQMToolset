@@ -45,6 +45,7 @@ setup(
     packages=find_packages(exclude=['contrib', 'doc', 'tests*']),
     install_requires=[
         'lxml',
+        'mattermostdriver',
         'netaddr',
         'pan-python',
         'toml',
