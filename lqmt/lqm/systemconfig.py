@@ -60,7 +60,7 @@ class SystemConfig:
                 },
                 'Mattermost': {
                     'module': 'to_mattermost', 'config_class': 'MattermostConfig', 'tool_class': 'ToMattermost',
-                    'accepted_formats': ['PdfFile']
+                    'accepted_formats': ['PdfFile', 'StixFile', 'RuleFile']
                 },
                 'From_Mattermost': {
                     'module': 'from_mattermost', 'config_class': 'FromMattermostConfig', 'tool_class': 'FromMattermost',
