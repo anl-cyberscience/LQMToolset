@@ -496,6 +496,9 @@ class Alert(object):
 class StixFile(object):
     def __init__(self):
         self._rawfile = None
+        self._binfile = None
+        self._name = None
+        self._meta = None
         self._action = 'OtherAction'
         self._elements = None
         self._sources = None
@@ -511,11 +514,26 @@ class StixFile(object):
     def getAction(self):
         return self._action
 
-    def setRawFile(self, file):
+    def setRawFile(self, file, fname=None):
         self._rawfile = file
+        self._name = fname
+        self._binfile = bytearray()
+        self._binfile.extend(file.encode('utf-8'))
 
     def getRawFile(self):
         return self._rawfile
+
+    def getBinFile(self):
+        return self._binfile
+
+    def setMeta(self, meta):
+        self._meta = meta
+
+    def getMeta(self):
+        return self._meta
+
+    def getName(self):
+        return self._name
 
     def setStixElements(self, elements):
         self._stix_elements = elements
@@ -545,9 +563,12 @@ class StixFile(object):
 class RuleFile(object):
     def __init__(self):
         self._rawfile = None
+        self._binfile = None
+        self._name = None
         self._action = 'OtherAction'
         self._sources = None
         self._rules = {}  # fully parsed rules
+        self._meta = None
 
     def isWhitelisted(self, wl):
         """Return whether or not this Alert is whitelisted"""
@@ -557,11 +578,26 @@ class RuleFile(object):
     def getAction(self):
         return self._action
 
-    def setRawFile(self, file):
+    def setRawFile(self, file, fname=None):
         self._rawfile = file
+        self._name = fname
+        self._binfile = bytearray()
+        self._binfile.extend(file.encode('utf-8'))
 
     def getRawFile(self):
         return self._rawfile
+
+    def getBinFile(self):
+        return self._binfile
+
+    def getName(self):
+        return self._name
+
+    def setMeta(self, meta):
+        self._meta = meta
+
+    def getMeta(self):
+        return self._meta
 
     def setRules(self, rules):
         self._rules = rules
@@ -577,8 +613,9 @@ class RuleFile(object):
 class PdfFile(object):
     def __init__(self):
         self._binfile = None
-        self.name = None
+        self._name = None
         self._action = 'OtherAction'
+        self._meta = None
 
     def isWhitelisted(self, wl):
         """Return whether or not this Alert is whitelisted"""
@@ -590,7 +627,16 @@ class PdfFile(object):
 
     def setBinFile(self, file, filename=None):
         self._binfile = file
-        self.name = filename
+        self._name = filename
 
     def getBinFile(self):
         return self._binfile
+
+    def setMeta(self, meta):
+        self._meta = meta
+
+    def getMeta(self):
+        return self._meta
+
+    def getName(self):
+        return self._name
