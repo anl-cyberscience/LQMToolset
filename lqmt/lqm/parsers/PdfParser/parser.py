@@ -98,6 +98,7 @@ class PdfParser(object):
             if meta:
                 # filter by sources
                 source_match = self.__check_meta(meta)
+                alert.setMeta(meta)
 
             if source_match:
                 if os.path.exists(datafile):

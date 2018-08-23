@@ -148,7 +148,7 @@ class STIXParser(object):
 
         return ret
 
-    def custom_parser(self, datafile):
+    def custom_parser(self, datafile, meta=None):
         """
         Custom parser for the XML STIX file.
         Successful parsing results in a STIX File object for a tool containing the raw file, requested elements,
@@ -164,11 +164,14 @@ class STIXParser(object):
         try:
             alert = StixFile()
 
+            if meta:
+                alert.setMeta(meta)
+
             # open to set the raw file text in the alert object
             if os.path.exists(datafile):
                 with open(datafile, 'r') as file:
                     data = file.read()
-                    alert.setRawFile(data)
+                    alert.setRawFile(data, fname=os.path.basename(file.name))
 
             try:
                 # attempt to map as a STIX Package, if fails force an update with ramrod
@@ -258,7 +261,7 @@ class STIXParser(object):
                 self._logger.warning("Did not find match the requested source as the datafile producer.")
 
             if parse_data:
-                alerts = self.custom_parser(datafile)
+                alerts = self.custom_parser(datafile, meta)
 
         except Exception as e:
             self._logger.error("LQMT-STIX-Parser: Problem with parsed data. Exception={0}".format(e))

@@ -128,12 +128,13 @@ class RuleParser(object):
                 source_match = self.__check_meta(meta)
                 # determine the file format - snort versus yara
                 rule_type = self.__check_filetype(meta)
+                alert.setMeta(meta)
 
             if source_match:
                 if os.path.exists(datafile):
                     with open(datafile, 'r') as file:
                         data = file.read()
-                        alert.setRawFile(data)
+                        alert.setRawFile(data, fname=os.path.basename(file.name))
 
                 if rule_type == 'snort' and 'snort' in self._rules:
                     with open(datafile, 'r') as file:
