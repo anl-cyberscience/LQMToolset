@@ -84,7 +84,8 @@ class ToMattermost(Tool):
         message = fname + ' uploaded from LQMT'
 
         if meta:
-            t = arrow.get(meta['SentTimestamp'])
+            t = arrow.Arrow.fromtimestamp(meta['SentTimestamp'])
+            t = arrow.Arrow.fromtimestamp(meta['SentTimestamp'])
             m = t.format('MMM D, hh:mm:ss A ZZ')
             message = meta['SendingSite'] + ' posted ' + fname + ' on ' + m + '\n'
             message += 'Sensitivity: ' + meta['DataSensitivity'] + '\n' + \
