@@ -56,9 +56,8 @@ setup(
         'jsonpath-rw',
         'pyshark',
         'pyparsing',
-        # 'itertools',
-        'idstools'
-        # 'zipfile'
+        'idstools',
+        'xmltodict'
     ],
     entry_points={
         'console_scripts': [
