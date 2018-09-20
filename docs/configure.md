@@ -11,8 +11,8 @@ This setting specifies root source directories and what to do with the files onc
 Setting        | Explanation
 ----------------------: | :----------
 `dirs`                  | A list of directory paths, whose contents will be scanned for input files to process.
-`post_process`          | An action for LQMToolset to perform after processing a file. Allowed values include `delete`, `move`, and `track`. While `delete` is self-explanatory, `move` will mark the input files to be moved after processing to another directory. `track` will mark the input files to be tracked in another text file. `move` is the default value when nothing is set in the user configuration file. 
-`post_process_location` | Used in conjunction with the `track` post process option. Used to specify a custom location for where your track file will be placed. 
+`post_process`          | An action for LQMToolset to perform after processing a file. Allowed values include `delete`, `move`, and `track`. While `delete` is self-explanatory, `move` will mark the input files to be moved after processing to another directory. `track` will mark the input files to be tracked in another text file. `move` is the default value when nothing is set in the user configuration file.
+`post_process_location` | Used in conjunction with the `track` post process option. Used to specify a custom location for where your track file will be placed.
 
 
 # Source Filters
@@ -31,8 +31,8 @@ This setting specifies meta-data file based filtering of files before being proc
 Setting        | Explanation
 ----------------------: | :----------
 `site_includes`     | (Optional) A list of `SendingSite` entries that are allowed.  An empty list or no entry results in `True` to not filter for this setting.
-`site_excludes`     | (Optional) A list of `SendingSite` entries that are to be filtered out.  An empty list or no entry results in `True` to not filter for this setting. 
-`payload_types`     | (Optional) A list of `PayloadType` entries that are allowed (e.g. `Alert`, `Report`, etc).  An empty list or no entry results in `True` to not filter for this setting. 
+`site_excludes`     | (Optional) A list of `SendingSite` entries that are to be filtered out.  An empty list or no entry results in `True` to not filter for this setting.
+`payload_types`     | (Optional) A list of `PayloadType` entries that are allowed (e.g. `Alert`, `Report`, etc).  An empty list or no entry results in `True` to not filter for this setting.
 `payload_formats`   | (Optional) A list of `PayloadFormat` entries that are allowed (e.g. `STIX`, `Cfm13Alert`, etc).  An empty list or no entry results in `True` to not filter for this setting.
 `sensitivities`     | (Optional) A list of `DataSensitivity` entries that are allowed (e.g. `ouo`, `noSensitivity`, etc).  An empty list or no entry results in `True` to not filter for this setting.
 `restrictions`      | (Optional) A list of `SharingRestrictions` entries that are allowed (e.g. `WHITE`, `AMBER`, etc).  An empty list or no entry results in `True` to not filter for this setting.
@@ -40,7 +40,7 @@ Setting        | Explanation
 `max_file_age`      | (Optional) A string formatted `%d %s` for the maximum age file to be processed.  This supports an offset for seconds `'s', 'sec', 'secs', 'second', 'seconds'`, minutes `'m', 'min', 'minute', 'minutes'`, hours `'h', 'hr', 'hrs', 'hour', 'hours'`, days `'d', 'day', 'days'`, weeks `'w', 'week', 'weeks'`, months `'mon', 'month', 'months'`, years `'y', 'yr', 'yrs', 'year', 'years'`.
 
 # Parsers
-LQMT uses special parsers for each type of alert file to get all the data into one common format. By default, the majority of the parsers are enabled, but some parsers are disabled by default. Detailed below are the types of parsers LQMT uses, which are enabled by default, and how you can configure LQMT to disable or enable them. 
+LQMT uses special parsers for each type of alert file to get all the data into one common format. By default, the majority of the parsers are enabled, but some parsers are disabled by default. Detailed below are the types of parsers LQMT uses, which are enabled by default, and how you can configure LQMT to disable or enable them.
 
 Parsers             | Enabled by Default
 ------------------: | :----------------
@@ -60,7 +60,7 @@ Setting | Explanation
 `enable`  | A list of parsers to enable.
 `disable` | A list of parsers to disable.
 
-## Configuration 
+## Configuration
     [Parsers]
         # The enabled and disabled params use lists to track which parsers to override.
         enable = [ 'IIDcombinedUrl', 'IIDdynamicBadHosts', 'IIDrecentBadIP' ]
@@ -148,16 +148,16 @@ Setting              | Explanation
 `actions_to_process` | A list of actions for this tool to process: `Block`, `Revoke`, `Notify`, `Watch`, `SendReport`, `OtherAction`, `All`.
 
 #### Device Setup & Configuration
-LQMT uses Palo Alto's Dynamic Block Lists (also called External Block Lists or EBLs) to block IPs. There is a limit to the number of IP addresses that can be blocked by a Palo Alto device. See your devices documentation for these limits. Each Palo Alto device can have up to 10 block lists and each block list is limited to 300 less than the device's limit. The Palo Alto accesses the EBLs via http request to a web server. Configuring one is beyond the scope of this document. 
+LQMT uses Palo Alto's Dynamic Block Lists (also called External Block Lists or EBLs) to block IPs. There is a limit to the number of IP addresses that can be blocked by a Palo Alto device. See your devices documentation for these limits. Each Palo Alto device can have up to 10 block lists and each block list is limited to 300 less than the device's limit. The Palo Alto accesses the EBLs via http request to a web server. Configuring one is beyond the scope of this document.
 
-Requirements: 
+Requirements:
 
 - Web server to host the Dynamic Block List files
     - Only needs to be accessible from the machine LQMT is installed on
     - The LQMT machine also needs to have write access to the location it reads the EBLs from as it will write the files to that location
 - The LQMT machine needs to trust the root CA for the Palo Alto web server
     - One will need to be created if one hasn't already been imported
-        - The default certificate created by the device will not work. 
+        - The default certificate created by the device will not work.
     - To create one,
         - Log in to the web UI as an administrator
         - Select the Device tab
@@ -195,7 +195,7 @@ Requirements:
         - <https://www.paloaltonetworks.com/documentation/61/pan-os/pan-os/policy/use-a-dynamic-block-list-in-policy.html>
 
 #### Limitations
-The Palo Alto module currently only blocks IP addresses and network ranges (CIDR). Any other block that are not supported will be output to the field specified in the unhandled_blocks configuration parameter. 
+The Palo Alto module currently only blocks IP addresses and network ranges (CIDR). Any other block that are not supported will be output to the field specified in the unhandled_blocks configuration parameter.
 
 ### Checkpoint
 Place or remove blocks on Checkpoint devices. The connection to Checkpoint devices is done through a shared SSL key which needs to be generated on the machine LQMTools is installed on and copied to the Checkpoint device.
@@ -209,11 +209,11 @@ Place or remove blocks on Checkpoint devices. The connection to Checkpoint devic
         default_duration = 259200
         unprocessed_file = "unprocessed.txt"
         actions_to_process = "All"
-        
+
 
 Setting                 | Explanation
 ----------------------: | :----------
-`name`                  | A unique name identifying this tool instance. 
+`name`                  | A unique name identifying this tool instance.
 `hostname`              | The Checkpoint device's hostname or IP address.
 `port`                  | The port number through which to connect via SSH.
 `username`              | The username with which to login to the Checkpoint device.
@@ -225,16 +225,16 @@ Setting                 | Explanation
 #### Device Setup & Configuration
 The LQMTool module for checkpoint devices uses the checkpoint firewall's Suspicious Activities Monitoring Protocol (samp) to block IP addresses via the command line interface and ssh from the LQMT machine. The following outlines the steps necessary to configure the device for use with LQMT. The following assumes the computer that is running the LQMT software is named lqmt.domain.com, the checkpoint computer is named cp.domain.com
 
-- Use the web UI to create a new user with an adminRole, set the shell to /bin/bash, and ensure that command line access is granted. For purposes of this document, the username cfm will be used. 
-- Set up password-less ssh access for the cfm user just created. The exact steps will depend on the machine running LQMT, but the basics: 
-    - Create an RSA key pair if not already done. This can be done by running the command: `ssh-keygen -t rsa` on lqmt.domain.com and accepting all the defaults. For these purposes, it is best to not have a passphrase for this key pair. 
+- Use the web UI to create a new user with an adminRole, set the shell to /bin/bash, and ensure that command line access is granted. For purposes of this document, the username cfm will be used.
+- Set up password-less ssh access for the cfm user just created. The exact steps will depend on the machine running LQMT, but the basics:
+    - Create an RSA key pair if not already done. This can be done by running the command: `ssh-keygen -t rsa` on lqmt.domain.com and accepting all the defaults. For these purposes, it is best to not have a passphrase for this key pair.
     - Copy the public key to the admin user's account on the checkpoint device. Depending on the open-ssl version on the LQMT computer, you could use the command: `ssh -copy-id cfm@cp.domain.com`. If that command isn't available, you can run the following on lqmt.domain.com as the user that will be running LQMT:  `cat ~/.ssh/id_rsa.pub | ssh user@123.45.56.78 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys`
-    - Verify password-less access by trying to ssh to the checkpoint machine: 
+    - Verify password-less access by trying to ssh to the checkpoint machine:
         - `ssh cfm@cp.domain.com`
-    - In addition, the checkpoint device needs to be configured as a firewall in order for the LQMT to be effective. 
+    - In addition, the checkpoint device needs to be configured as a firewall in order for the LQMT to be effective.
 
 #### Limitations
-The Checkpoint module currently only blocks IP addresses and network ranges(CIDR). Any other blocks that are not supported will be output to the file specified in the unhandled_blocks configuration parameter. 
+The Checkpoint module currently only blocks IP addresses and network ranges(CIDR). Any other blocks that are not supported will be output to the file specified in the unhandled_blocks configuration parameter.
 
 ### ArcSight
 The ArcSight tool places or removes blocks on ArcSight devices.
@@ -268,8 +268,8 @@ Setting | Explanation
 `name`  | A unique name identifying this tool instance.
 
 ### Syslog
-The Syslog tool is used to log information to remote Syslog servers. 
-   
+The Syslog tool is used to log information to remote Syslog servers.
+
     [[Tools.SysLog]]
         name = "syslog-1"
         host = "syslog1.yourdomain.com"
@@ -278,8 +278,8 @@ The Syslog tool is used to log information to remote Syslog servers.
         messageHead = "WY rsyslogd: Message from LQMT - "
         messageFields = ["indicatorType", "indicator", "action1"]
 
-Example output in syslog: 
-    
+Example output in syslog:
+
     Aug 26 14:23:01 WY rsyslogd: Message from LQMT - indicatorType="IPv4Address" indicator="192.168.1.1" action1="Block"
     Aug 26 14:23:01 WY rsyslogd: Message from LQMT - indicatorType="IPv4Address" indicator="192.168.1.2" action1="Block"
     Aug 26 14:24:05 WY rsyslogd: Message from LQMT - indicatorType="IPv4Address" indicator="192.168.1.5" action1="Block"
@@ -288,13 +288,13 @@ Setting         | Explanation
 --------------: | :-----------
 `name`          | A unique name identifying this tool instance.
 `host`          | The hostname or IP address of the remote syslog server.
-`port`          | The port number the Syslog server is listening on. Note: Syslog defaults to 514, so if left blank LQMT will also default to 514 for communication. 
+`port`          | The port number the Syslog server is listening on. Note: Syslog defaults to 514, so if left blank LQMT will also default to 514 for communication.
 `protocol`      | The IP protocol to use: `tcp` or `udp`.
-`messageHead`   | Used at the beginning of every message sent to Syslog. 
-`messageFields` | Used to specify what fields you want extracted from the alerts and sent in the message to Syslog. 
+`messageHead`   | Used at the beginning of every message sent to Syslog.
+`messageFields` | Used to specify what fields you want extracted from the alerts and sent in the message to Syslog.
 
 ### FlexText
-FlexText is a tool used to output parsed alert data in a user-defined, character delimited, format. 
+FlexText is a tool used to output parsed alert data in a user-defined, character delimited, format.
 
     [[Tools.FlexText]]
         name                = "flextext-tool"
@@ -322,11 +322,11 @@ Setting               | Explanation
 `doubleQuote`         | Determines how the quoteChar itself is quoted. If `True` then the character is doubled. If `False`, the character is prefixed to the quoteChar.
 `quoteStyle`          | Sets the style of the quoting. Can be one of four values. `Minimal`: only quotes fields that contain special characters. `NonNumeric`: only quotes non-numeric fields. `All`: quotes all fields. `None`: No fields are quoted
 `primarySchemaConfig` | Defines the path to the primary schema configuration. Most users won't need to change the default setting; if you do, then some understanding of FlexTransform is suggested.
-`fileDestination`     | Sets the destination of the output file. 
+`fileDestination`     | Sets the destination of the output file.
 `incrementFile`       | Used to increment the output file. When set to `True`, the output file name will be incremented with a timestamp. When set to `False` the output will be appended to any prexisting file of the same name. Defaults to `False`
 
 ### Splunk
-Ingest CTI data into your Splunk instance in a keyword value format. 
+Ingest CTI data into your Splunk instance in a keyword value format.
 
     [[Tools.Splunk]]
         name        = "splunk-tool"
@@ -342,21 +342,21 @@ Ingest CTI data into your Splunk instance in a keyword value format.
 
 Setting                 | Explanation
 ----------------------: | :-----------
-`name`                  | A unique name identifying this tool instance. 
+`name`                  | A unique name identifying this tool instance.
 `host`                  | Host address of your Splunk instance.
 `port`                  | Port used to communicate with your Splunk instances REST API interface. Defaults to `8089`.
 `username`              | Username that you want to authenticate with.
 `password`              | Password that you want to authenticate with.
 `cert_check`            | Used to disable the the certificate check. This is helpful for testing on a machine that you haven't imported your Splunk SSL cert on yet. Defaults to `false`.
-`source`                | Name of the source you want the data to be identified by. Defaults to `lqmt`. 
-`sourcetype`            | The sourcetype that you want to ingest the data into. 
+`source`                | Name of the source you want the data to be identified by. Defaults to `lqmt`.
+`sourcetype`            | The sourcetype that you want to ingest the data into.
 `index`                 | The index that you want to ingest data into.
-`fields`                | Fields, identified from the intermediate format, to be extracted. If `fields` are not provided, then it defaults to a value of ['all'], which will automatically extract all supported field types. 
+`fields`                | Fields, identified from the intermediate format, to be extracted. If `fields` are not provided, then it defaults to a value of ['all'], which will automatically extract all supported field types.
 
 
-#### Device Setup and Configuration 
-LQMT authenticates using Splunk's token-based authentication endpoint. This requires you to provide a username and 
-password. It is recommended that you create a new role specifically for REST API usage as well as a new user that 
+#### Device Setup and Configuration
+LQMT authenticates using Splunk's token-based authentication endpoint. This requires you to provide a username and
+password. It is recommended that you create a new role specifically for REST API usage as well as a new user that
 belongs to this role. Having a specific user and role just for REST API access will make auditing your REST API usage
 much easier.
 
@@ -367,40 +367,40 @@ The following steps will walk you through creating a role with enough permission
 2. From the `Access Control` screen, click the `Add New` action in the `Roles` row.
 3. Assign this role any name you see fit. We will use `splunk_rest_api` in this example.
 4. Everything will be left default with the exception of the `Capabilities` section. Go to the `Capabilities` section
-and add the `edit_tcp` capability from the `Available capabilities` section to the `Selected capabilities` section. 
-5. By default, Splunk should allow this role to access the `main` index under the `Indexes searched by default` section 
-and the `All non-internal indexes` index under the `Indexes` section. Verify with your Splunk admin that you won't need 
+and add the `edit_tcp` capability from the `Available capabilities` section to the `Selected capabilities` section.
+5. By default, Splunk should allow this role to access the `main` index under the `Indexes searched by default` section
+and the `All non-internal indexes` index under the `Indexes` section. Verify with your Splunk admin that you won't need
 access to any other indexes.
 6. Once completed, hit `Save`
 
-You should now have a custom role created for using the Splunk REST API. 
+You should now have a custom role created for using the Splunk REST API.
 
 ##### User Creation
-The following steps will walk you through creating a new Splunk user and assigning them to a role. 
+The following steps will walk you through creating a new Splunk user and assigning them to a role.
 
 1. Log into the web interface of your Splunk instance and go to `Settings` and then `Access Controls`.
 2. From the `Access Control` screen, click the `Add New` action in the `Users` row.
 3. Name your user. In our case, we will name our user `splunk_rest_api_user`
-4. Fill in the `Full name`, `Email address`, and `Time zone` fields as you see fit. They are not needed, but can still 
-used if you desire. 
-5. Under the `Assign to roles` section, select the role that you previously created for REST API usage. Our role was 
+4. Fill in the `Full name`, `Email address`, and `Time zone` fields as you see fit. They are not needed, but can still
+used if you desire.
+5. Under the `Assign to roles` section, select the role that you previously created for REST API usage. Our role was
 named `splunk_rest_api`, so we will select that.
 6. By default, splunk will have the `user` role pre-selected in the `Selected roles` section. We recommend removing this
-role if you are only using this account for user Splunk REST API. 
+role if you are only using this account for user Splunk REST API.
 7. Set a password for your user.
 8. One completed, hit `Save`
 
-You should now have a user created specifically for using Splunk's REST API. This user can now be used in your LQMT 
-instance for pushing data to your Splunk instance. 
+You should now have a user created specifically for using Splunk's REST API. This user can now be used in your LQMT
+instance for pushing data to your Splunk instance.
 
 #### Implementation Details
-LQMT supports Splunk using Splunk's [REST API](http://dev.splunk.com/restapi). LQMT authenticates against Splunks 
+LQMT supports Splunk using Splunk's [REST API](http://dev.splunk.com/restapi). LQMT authenticates against Splunks
 /services/auth/login endpoint. Once authenticated, LQMT receives a token from Splunk and uses this for future
-interactions. When the token exprires, LQMT just reauthenticates and receives a new token. 
-The token's lifetime is determined by how you configure your Splunk instance - more information can be 
+interactions. When the token exprires, LQMT just reauthenticates and receives a new token.
+The token's lifetime is determined by how you configure your Splunk instance - more information can be
 [found here](http://docs.splunk.com/Documentation/Splunk/6.5.1/Admin/Configureusertimeouts)
 
-### Bro 
+### Bro
 Convert CTI data into Bro's [Intelligence Framework](https://www.bro.org/sphinx/frameworks/intel.html) format. Data in this format can be easily read by your Bro instance.
 
     [[Tools.Bro]]
@@ -412,8 +412,8 @@ Convert CTI data into Bro's [Intelligence Framework](https://www.bro.org/sphinx/
 
 Setting                 | Explanation
 ----------------------: | :-----------
-`name`                  | A unique name identifying this tool instance. 
-`header_fields`         | Specify the fields you want converted and included in the output. Valid fields are extrated from the [Intermediate Data Format](#intermediate-data-format). By default, LQMT will extract all valid fields from the intermediate data foramt. 
+`name`                  | A unique name identifying this tool instance.
+`header_fields`         | Specify the fields you want converted and included in the output. Valid fields are extrated from the [Intermediate Data Format](#intermediate-data-format). By default, LQMT will extract all valid fields from the intermediate data foramt.
 `file`                  | Path and name of where you want the file output(Ex: /home/bro/lqmt-bro-feed.txt). By default, LQMT will output the file in the directory where LQMT as a file named `lqmt-bro-feed.txt`.
 `increment_file`        | Used to increment the output file. When set to `True`, the output file name will be incremented with a timestamp. When set to `False` the output will be appended to any prexisting file of the same name. Defaults to `False`
 `null_value`            | Value to be used to represent that a field is empty. Bro's default value is a hyphen ('-'), so by default LQMT uses a hyphen.
@@ -450,11 +450,11 @@ An example of the STIX data model is in this [Implementation](https://stixprojec
         rule_filename = 'example.rules'
         max_rules_count = 50
         mode = "append"
-        
+
 
 Setting                 | Explanation
 ----------------------: | :----------
-`name`                  | (Required) A unique name identifying this tool instance. 
+`name`                  | (Required) A unique name identifying this tool instance.
 `config_paths`          | (Required) List of paths to Snort config file - example is based on Security Onion with one configuration per interface.
 `config_filename`       | (Optional) String filename for the config file (at each path), defaults to 'snort.conf' if not configured.
 `rule_paths`            | (Required) List of paths for where to insert Rules files.
@@ -478,7 +478,7 @@ It is advised that review be performed on alert matching and pcap matching code 
 
 Setting                 | Explanation
 ----------------------: | :----------
-`name`                  | (Required) A unique name identifying this tool instance. 
+`name`                  | (Required) A unique name identifying this tool instance.
 `alert_paths`           | (Required) List of paths to Snort alert log files.
 `packet_paths`          | (Required) List of paths to Snort pcap capture log files.
 `mode`                  | (Optional) String defining the alert and capture mode - `full` vs. `match`. In match mode, the tool attempts to grab only alert entries and PCAP matches to the alert IP addresses.
@@ -494,12 +494,63 @@ It is important to note, the Tool adds the full path for each Rules file to the 
 #### Implementation Details
 The Tool automatically managements the Rules file to ensure each line is a unique entry.  
 The method for performing this action utilizes Python Sets which are unordered.  Therefore, the rule entries may change order after updates.
-When configured to control the total number of rules in the file, the Tool decides the number of new rules to add and removes existing rules to accomodate.
+When configured to control the total number of rules in the file, the Tool decides the number of new rules to add and removes existing rules to accommodate.
 It is important to note that this removal is performed in an unordered manner, therefore, it does not occur in a FIFO manner.
 
 #### Limitations
 STIX allows for Event Filters, Rate Filters, and Event Suppressions to be expressed within the [SnortTestMechanismType](http://stixproject.github.io/data-model/1.1.1/snortTM/SnortTestMechanismType/).
 These are currently not utilized in the Tool.  If modifying the Tool to use, the Parser does pass them in the Full Rules object that contains the full context as a dictionary.
+
+### To_Mattermost
+============
+Tool that allows pushing of binary files to a Mattermost server
+
+    [[Tools.Mattermost]]
+        name = 'mattermost-tool'
+        scheme = 'https'
+        url = 'URL OF MATTERMOST INSTANCE'
+        port = 'PORT OF MATTERMOST INSTANCE'
+        login = 'username'
+        password = 'password'
+        channel_id = 'CHANNEL ID TO SEND FILE IN MATTERMOST'
+
+Setting                 | Explanation
+----------------------: | :----------
+`name`                  | A unique name identifying this server
+`scheme`                | Protocol used to access server (i.e. 'http' or 'https')
+`url`                   | The URL of the mattermost server to access
+`port`                  | Port to use for access, often '8065' or '443'
+`login`                 | The username with permissions to upload a file to the channel on the mattermost server
+`password`              | The corresponding password to the username listed above
+`channel_id`            | The alphanumeric string representing the channel on the mattermost server to upload the files
+
+### Email
+This tool allows users to distribute files via email, & is currently limited to the following formats: PDFs, STIX, & Rules.
+
+    [[Tools.Email]]
+      name = 'email-tool'
+      outgoing_host = 'mailrelay.anl.gov'
+      sender = 'mghenderson@anl.gov'
+      recipients = [ 'mhend@ameslab.gov' ]
+      subject = "CFM File received: {filename}"
+
+Settings              |  Explanation
+--------------------: | :------------
+`name`                |  (Required) A unique name identifying this tool instance.
+`outgoing_host`       |  (Required) Hostname or IP address of mail host.
+`port`                |  (Optional) Port number for SMTP service on mail host.
+`sender`              |  (Required) Address that the email should originate form.
+`recipients`          |  (Required) List of email addresses to send file to.
+`subject`             |  (Required) Text to use in the subject line of the email.
+`body`                |  (Optional) Text to use in the body of the email.
+
+#### Setup & Configurations
+The `subject` & `body` text can be formatted using python string formatting to include two pieces of information about the files being processed.
+
+Settings              |  Explanation
+--------------------: | :--------------
+`filename`            | (Optional) Filename of the file attached to the email.
+`type`                | (Optional) Type of the file attached to email (e.g. STIX, PDF, etc)
 
 # Logging
 
@@ -569,7 +620,7 @@ The following sections specify the format of the whitelist file mentioned above.
     http://www.somesite.com/blah
 
 # Intermediate Data Format
-The intermediate data format is a subset/simplification of the complete threat data that can be directly used by a variety of systems. 
+The intermediate data format is a subset/simplification of the complete threat data that can be directly used by a variety of systems.
 
 Field Name                      | Description
 ------------------------------: | :-----------
@@ -606,7 +657,7 @@ Field Name                      | Description
 `relatedID`                     | UUID of a related indicator
 `relationType`                  | enum (supersedes, extends, superseded by, extended by)
 `comment`                       | A string that represents a comment that was included with the alert.
-`fileHasMore`                   | Boolean: false (default) = data has been translated, true = More details on the data item are present in file. 
+`fileHasMore`                   | Boolean: false (default) = data has been translated, true = More details on the data item are present in file.
 
-# Actions 
-The most common action seen for the fields `action1`, and `action2` is `block`, but occasionaly a `revoke` action will be put out for alerts that a no longer needed or were sent out by mistake. `revoke` actions are taken care of automatically with the supported firewall tools, but you should take special note of them when using a custom outputs like FlexText. Not all data processed should be assumed to be malicious or worthy of a block action, and the `action` fields are meant to be better help determine what actions should be taken on data. 
+# Actions
+The most common action seen for the fields `action1`, and `action2` is `block`, but occasionaly a `revoke` action will be put out for alerts that a no longer needed or were sent out by mistake. `revoke` actions are taken care of automatically with the supported firewall tools, but you should take special note of them when using a custom outputs like FlexText. Not all data processed should be assumed to be malicious or worthy of a block action, and the `action` fields are meant to be better help determine what actions should be taken on data.
