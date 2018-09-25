@@ -177,7 +177,7 @@ class ToMattermost(Tool):
                 self.__mm_post_file(msg, upload_resp)  # now create post to MM
 
         except Exception as e:
-            self.__mm_post_error({'message': e, 'status_code': -1})  # attempt to post failure context to MM
+            self.__mm_post_error({'message': str(e), 'status_code': -1})  # attempt to post failure context to MM
 
     def __mm_post_file(self, msg, up_resp):
         """
@@ -210,7 +210,7 @@ class ToMattermost(Tool):
                 self._logger.info('Successfully posted message to MM. ID={0}'.format(post_resp['id']))
 
         except Exception as e:
-            self.__mm_post_error({'message': e, 'status_code': -1})  # attempt to post failure context to MM
+            self.__mm_post_error({'message': str(e), 'status_code': -1})  # attempt to post failure context to MM
 
     def process(self, file):
         """
