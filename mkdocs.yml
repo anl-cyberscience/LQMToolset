@@ -1,4 +1,5 @@
 site_name: LQMToolset
+theme: readthedocs
 pages:
     - index.md
     - install.md
