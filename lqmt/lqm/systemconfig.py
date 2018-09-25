@@ -65,7 +65,11 @@ class SystemConfig:
                 'From_Mattermost': {
                     'module': 'from_mattermost', 'config_class': 'FromMattermostConfig', 'tool_class': 'FromMattermost',
                     'accepted_formats': ['PdfFile']
-                }
+                },
+                'Email': {
+                    'module': 'to_email', 'config_class': 'EmailConfig', 'tool_class': 'ToEmail',
+                    'accepted_formats': ['PdfFile', 'StixFile', 'RuleFile']
+                },
             },
             'UnprocessedCSV': {
                 'name': 'for-unprocessed',
