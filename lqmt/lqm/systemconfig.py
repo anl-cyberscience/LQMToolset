@@ -70,6 +70,10 @@ class SystemConfig:
                     'module': 'to_email', 'config_class': 'EmailConfig', 'tool_class': 'ToEmail',
                     'accepted_formats': ['PdfFile', 'StixFile', 'RuleFile']
                 },
+                'Slack': {
+                    'module': 'to_slack', 'config_class': 'SlackConfig', 'tool_class': 'ToSlack',
+                    'accepted_formats': ['PdfFile', 'StixFile', 'RuleFile']
+                },
             },
             'UnprocessedCSV': {
                 'name': 'for-unprocessed',
