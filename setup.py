@@ -58,7 +58,8 @@ setup(
         'pyshark',
         'pyparsing',
         # 'itertools',
-        'idstools'
+        'idstools',
+        'slackclient',
         # 'zipfile'
     ],
     entry_points={
