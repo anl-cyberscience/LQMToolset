@@ -34,11 +34,13 @@ class ProcessHandlerMove(ProcessedHandler):
     def __init__(self):
         # _pdir is the directory that will be created as a child directory in the directory that contains the
         # processed file.
+        # TODO: if post_process_location is added, processed dir would need to match
         self._processed_dir = "processed"
         self._curdir = None
         self._logger = logging.getLogger("LQMT.PostProcess.Move")
 
     def processed(self, fpath):
+        # TODO: add using post_process_location similar to track
         # move the processed file to _pdir
         file_dir, file_name = os.path.split(fpath)
         os.rename(os.path.join(file_dir, file_name), os.path.join(self._curdir, file_name))
@@ -79,11 +81,18 @@ class ProcessHandlerDoNothing(ProcessedHandler):
     """This ProcessedHandler class implements doing nothing after processing.
     This should only be used for debugging"""
 
+    def __init__(self):
+        self._processed_dir = "processed"
+
     def processed(self, fpath):
         pass
 
     def isProcessed(self, fpath):
         return False
+
+    def skipDirectory(self, path):
+        # skip this directory if it is the _pdir directory
+        return os.path.basename(path) == self._processed_dir
 
 
 class ProcessHandlerTrackFile(ProcessedHandler):
