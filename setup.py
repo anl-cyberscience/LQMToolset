@@ -14,16 +14,7 @@ setup(
     author_email='fedhelp@anl.gov',
     classifiers=[
         # See: https://pypi.python.org/pypi?%3Aaction=list_classifiers
-
-        # How mature is this project? Common values are
-        # Development Status :: 1 - Planning
-        # Development Status :: 2 - Pre-Alpha
-        # Development Status :: 3 - Alpha
-        # Development Status :: 4 - Beta
-        # Development Status :: 5 - Production/Stable
-        # Development Status :: 6 - Mature
-        # Development Status :: 7 - Inactive
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable'
 
         # Indicate who your project is intended for
         'Intended Audience :: Information Technology',
@@ -34,15 +25,10 @@ setup(
 
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.2',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6'
+        'Programming Language :: Python :: 3.5+',
     ],
     keywords='firewall endpoint last quarter mile toolset palo alto syslog checkpoint flextext',
-    packages=find_packages(exclude=['contrib', 'doc', 'tests*']),
+    packages=find_packages(exclude=['docs', 'test']),
     install_requires=[
         'lxml',
         'netaddr',

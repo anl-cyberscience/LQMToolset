@@ -5,10 +5,10 @@ def main():
     import sys
 
     # need to put this check early so any imports farther down don't trigger an exception
-    req_version = (3, 2)
+    req_version = (3, 5)
     cur_version = sys.version_info
     if cur_version <= req_version:
-        print("Your python version {0}.{1}.{2}-{3} is too old.  LQMTools requires at least version 3.2".format(
+        print("Your python version {0}.{1}.{2}-{3} is too old.  LQMTools requires at least version 3.5".format(
             cur_version[0], cur_version[1], cur_version[2], cur_version[3]))
         sys.exit(1)
 
