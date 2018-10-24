@@ -66,7 +66,7 @@ class FlexTextConfig(ToolConfig):
         self.primary_schema_config = self.validation('primarySchemaConfig', str, default="resources/schemaDefinitions"
                                                                                          "/lqmtools.json")
         self.increment_file = self.validation('incrementFile', bool)
-        self.file = self.validation('fileDestination', str, required=True)
+        self.file_destination = self.validation('fileDestination', str, required=True)
 
         # fields variable is configured differently for legacy purposes. The fields variable was originally a string,
         # so we are first checking to see if it's a string (legacy configs), if so we convert it to a list. Then we
@@ -78,7 +78,7 @@ class FlexTextConfig(ToolConfig):
             self.fields = self.validation('fields', list, required=True)
 
         if self.increment_file:
-            base, extension = os.path.splitext(self.file)
+            base, extension = os.path.splitext(self.file_destination)
             file_name = "." + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
             self.file_destination = base + file_name + extension
 
